@@ -4453,7 +4453,7 @@ export default function App() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v1.0.0 · A Kleinman Creation
+            Wedding HQ v1.1.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4493,7 +4493,7 @@ export default function App() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v1.0.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v1.1.0</span>
         </div>
       </div>
 
@@ -4524,7 +4524,7 @@ export default function App() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>LEONSIRAWEDDINGHQ v1.0.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>LEONSIRAWEDDINGHQ v1.1.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
