@@ -1909,10 +1909,13 @@ const Events = () => {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
         {events.map(ev => (
-          <Card key={ev.id} style={{ cursor: "pointer" }} onClick={() => openEdit(ev)}>
+          <Card key={ev.id}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
               <Badge label={ev.type} color={typeColor[ev.type] || "mist"} />
-              <span style={{ fontSize: 12, color: T.mist }}>{fmtDate(ev.date)}</span>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <span style={{ fontSize: 12, color: T.mist }}>{fmtDate(ev.date)}</span>
+                <button onClick={() => openEdit(ev)} style={{ background: T.linen, border: "none", borderRadius: 6, padding: "3px 10px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: T.carbon }}>Edit</button>
+              </div>
             </div>
             <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: T.carbon }}>{ev.name}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
@@ -2035,10 +2038,13 @@ const Activities = ({ activities: seedActivities }) => {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
         {activities.map(a => (
-          <Card key={a.id} style={{ cursor: "pointer" }} onClick={() => openEdit(a)}>
+          <Card key={a.id}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
               <Badge label={a.category} color={catColor[a.category] || "mist"} />
-              {a.rsvpRequired && <Badge label="RSVP Required" color="warning" />}
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                {a.rsvpRequired && <Badge label="RSVP Required" color="warning" />}
+                <button onClick={() => openEdit(a)} style={{ background: T.linen, border: "none", borderRadius: 6, padding: "3px 10px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: T.carbon }}>Edit</button>
+              </div>
             </div>
             <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 800, color: T.carbon }}>{a.name}</h3>
             <div style={{ fontSize: 12, color: T.mist, marginBottom: 6 }}>{fmtDate(a.date)}</div>
@@ -3173,10 +3179,13 @@ const Vendors = ({ vendors: seedVendors, canEdit }) => {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
         {vendors.map(v => (
-          <Card key={v.id} style={{ cursor: canEdit !== false ? "pointer" : "default" }} onClick={() => canEdit !== false && openEdit(v)}>
+          <Card key={v.id}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
               <Badge label={v.service} color="olive" />
-              <span style={{ fontSize: 13, fontWeight: 800, color: T.carbon }}>{fmtCurrency(v.cost)}</span>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: T.carbon }}>{fmtCurrency(v.cost)}</span>
+                {canEdit !== false && <button onClick={() => openEdit(v)} style={{ background: T.linen, border: "none", borderRadius: 6, padding: "3px 10px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: T.carbon }}>Edit</button>}
+              </div>
             </div>
             <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 800, color: T.carbon }}>{v.name}</h3>
             <div style={{ fontSize: 13, color: T.slate, marginBottom: 6 }}>{v.contact}</div>
@@ -5005,7 +5014,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v2.5.0 · A Kleinman Creation
+            Wedding HQ v2.6.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -5045,7 +5054,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v2.5.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v2.6.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -5077,7 +5086,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.5.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.6.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
