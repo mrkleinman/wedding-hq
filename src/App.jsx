@@ -1,7 +1,25 @@
 import { useState, useCallback, useMemo, useRef, useEffect, createContext, useContext } from "react";
+import React from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, writeBatch } from "firebase/firestore";
+
+// ── Error Boundary ──
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  render() {
+    if (this.state.error) return (
+      <div style={{ padding: 24, background: "#1C1C1E", minHeight: "100vh", color: "#fff" }}>
+        <div style={{ color: "#C41230", fontWeight: 800, fontSize: 18, marginBottom: 12 }}>⚠ App Error</div>
+        <div style={{ background: "#2C2C2E", borderRadius: 8, padding: 16, fontSize: 12, fontFamily: "monospace", color: "#ff6b6b", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
+          {this.state.error?.message}{"\n\n"}{this.state.error?.stack}
+        </div>
+      </div>
+    );
+    return this.props.children;
+  }
+}
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -4583,7 +4601,7 @@ Only include an action if the user is clearly asking you to make a change. For q
 // ============================================================
 // MAIN APP — Phase 4 with Firebase Auth + Firestore Sync
 // ============================================================
-export default function App() {
+function AppInner() {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -4783,7 +4801,7 @@ export default function App() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v1.4.0 · A Kleinman Creation
+            Wedding HQ v1.5.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4823,7 +4841,7 @@ export default function App() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v1.4.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v1.5.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4855,7 +4873,7 @@ export default function App() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.4.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.5.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
@@ -4981,5 +4999,13 @@ export default function App() {
       {/* FOOTER SPACER for bottom nav */}
       <div style={{ height: 56 }} />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppInner />
+    </ErrorBoundary>
   );
 }
