@@ -273,16 +273,6 @@ const SEED_TIMELINE = [
 const SEED_HOTELS = [];
 
 
-  { id: "tl009", date: "2026-11-07", time: "15:00", title: "Cake Cutting", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "" },
-  { id: "tl010", date: "2026-11-07", time: "16:00", title: "Lunch Reception Ends", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "" },
-];
-
-const SEED_HOTELS = [
-  { id: "h001", guestId: "g001", guest: "Margaret Chen", hotel: "Mandarin Oriental", roomType: "Deluxe River View", checkIn: "2026-09-16", checkOut: "2026-09-20", flightNumber: "SQ461", arrival: "2026-09-16 14:30", departure: "2026-09-20 10:00", transferRequired: true, notes: "" },
-  { id: "h002", guestId: "g002", guest: "David Chen", hotel: "Mandarin Oriental", roomType: "Deluxe River View", checkIn: "2026-09-16", checkOut: "2026-09-20", flightNumber: "SQ461", arrival: "2026-09-16 14:30", departure: "2026-09-20 10:00", transferRequired: true, notes: "" },
-  { id: "h003", guestId: "g029", guest: "Marcus Hall", hotel: "Capella Bangkok", roomType: "River Pool Villa", checkIn: "2026-09-17", checkOut: "2026-09-20", flightNumber: "BA011", arrival: "2026-09-17 08:00", departure: "2026-09-20 14:00", transferRequired: true, notes: "Best Man" },
-  { id: "h004", guestId: "b001", guest: "Grace Santos", hotel: "Mandarin Oriental", roomType: "Suite", checkIn: "2026-09-15", checkOut: "2026-09-21", flightNumber: "PR721", arrival: "2026-09-15 18:00", departure: "2026-09-21 09:00", transferRequired: true, notes: "Bride's mother" },
-];
 
 // ============================================================
 // UTILITY FUNCTIONS
