@@ -118,7 +118,7 @@ const LoginScreen = ({ onLogin }) => {
             <span style={{ color: "#fff" }}>H</span>
             <span style={{ color: "#C41230" }}>Q</span>
           </div>
-          <div style={{ fontSize: 13, color: "#AEAEB2" }}>Bangkok Wedding · 18 September 2026</div>
+          <div style={{ fontSize: 13, color: "#AEAEB2" }}>Bangkok Wedding · 7 November 2026</div>
         </div>
 
         <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 16, padding: 28, border: "1px solid rgba(255,255,255,0.08)" }}>
@@ -252,158 +252,29 @@ const T = {
 // ============================================================
 // SEED DATA
 // ============================================================
-const SEED_GUESTS = [
-  // Immediate Family - Groom
-  { id: "g001", firstName: "Margaret", lastName: "Chen", side: "Groom", category: "Immediate Family", group: "Immediate Family", relationship: "Mother", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Vegetarian", hotel: "Mandarin Oriental", notes: "" },
-  { id: "g002", firstName: "David", lastName: "Chen", side: "Groom", category: "Immediate Family", group: "Immediate Family", relationship: "Father", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Mandarin Oriental", notes: "" },
-  { id: "g003", firstName: "James", lastName: "Chen", side: "Groom", category: "Immediate Family", group: "Immediate Family", relationship: "Brother", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Mandarin Oriental", notes: "" },
-  { id: "g004", firstName: "Sophie", lastName: "Lee", side: "Groom", category: "Immediate Family", group: "Immediate Family", relationship: "Brother's Partner", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Gluten Free", hotel: "Mandarin Oriental", notes: "" },
-  { id: "g005", firstName: "Emily", lastName: "Chen", side: "Groom", category: "Immediate Family", group: "Immediate Family", relationship: "Sister", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g006", firstName: "Liam", lastName: "Chen", side: "Groom", category: "Immediate Family", group: "Immediate Family", relationship: "Nephew", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  // Extended Family - Dad Side
-  { id: "g007", firstName: "Robert", lastName: "Chen", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Uncle", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Sukhothai", notes: "" },
-  { id: "g008", firstName: "Linda", lastName: "Chen", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Aunt", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Vegetarian", hotel: "Sukhothai", notes: "" },
-  { id: "g009", firstName: "Michael", lastName: "Tan", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Uncle", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g010", firstName: "Helen", lastName: "Tan", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Aunt", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g011", firstName: "William", lastName: "Chen", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Uncle", rsvp: "Maybe", ceremonyRsvp: "Maybe", lunchRsvp: "Maybe", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  { id: "g012", firstName: "Nancy", lastName: "Chen", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Aunt", rsvp: "Maybe", ceremonyRsvp: "Maybe", lunchRsvp: "Maybe", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  { id: "g013", firstName: "George", lastName: "Wong", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Uncle", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g014", firstName: "Patricia", lastName: "Wong", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Aunt", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g015", firstName: "Thomas", lastName: "Lim", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Uncle", rsvp: "Declined", ceremonyRsvp: "Declined", lunchRsvp: "Declined", travelLikelihood: "Unlikely", dietary: "", hotel: "", notes: "Cannot travel" },
-  { id: "g016", firstName: "Barbara", lastName: "Lim", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Aunt", rsvp: "Declined", ceremonyRsvp: "Declined", lunchRsvp: "Declined", travelLikelihood: "Unlikely", dietary: "", hotel: "", notes: "Cannot travel" },
-  { id: "g017", firstName: "Charles", lastName: "Ng", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Uncle", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g018", firstName: "Dorothy", lastName: "Ng", side: "Groom", category: "Extended Family", group: "Dad Side", relationship: "Aunt", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  // Cousins
-  { id: "g019", firstName: "Kevin", lastName: "Chen", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "g020", firstName: "Karen", lastName: "Chen", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "g021", firstName: "Daniel", lastName: "Wong", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g022", firstName: "Lisa", lastName: "Tan", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Maybe", ceremonyRsvp: "Maybe", lunchRsvp: "Maybe", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  { id: "g023", firstName: "Jason", lastName: "Lim", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g024", firstName: "Michelle", lastName: "Ng", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g025", firstName: "Ryan", lastName: "Ong", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  { id: "g026", firstName: "Stephanie", lastName: "Koh", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "Vegan", hotel: "", notes: "" },
-  { id: "g027", firstName: "Brandon", lastName: "Yeo", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g028", firstName: "Chloe", lastName: "Tay", side: "Groom", category: "Cousins", group: "Cousins", relationship: "Cousin", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  // Wedding Party
-  { id: "g029", firstName: "Marcus", lastName: "Hall", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Best Man", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "Best Man speech" },
-  { id: "g030", firstName: "Sarah", lastName: "Hall", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Best Man's Spouse", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Vegetarian", hotel: "Capella", notes: "" },
-  { id: "g031", firstName: "Alex", lastName: "Rivera", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "g032", firstName: "Nina", lastName: "Rivera", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman's Spouse", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "g033", firstName: "Tom", lastName: "Bradley", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "g034", firstName: "Claire", lastName: "Bradley", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman's Spouse", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Gluten Free", hotel: "Capella", notes: "" },
-  { id: "g035", firstName: "Jake", lastName: "Morrison", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g036", firstName: "Amy", lastName: "Morrison", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman's Spouse", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g037", firstName: "Chris", lastName: "Patel", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "g038", firstName: "Priya", lastName: "Patel", side: "Groom", category: "Wedding Party", group: "Wedding Party", relationship: "Groomsman's Spouse", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Vegetarian", hotel: "Capella", notes: "" },
-  // Karate Core
-  { id: "g039", firstName: "Sensei", lastName: "Yamamoto", side: "Groom", category: "Friends", group: "Karate Core", relationship: "Karate Sensei", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g040", firstName: "Ken", lastName: "Watanabe", side: "Groom", category: "Friends", group: "Karate Core", relationship: "Dojo Friend", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g041", firstName: "Hiroshi", lastName: "Tanaka", side: "Groom", category: "Friends", group: "Karate Core", relationship: "Dojo Friend", rsvp: "Maybe", ceremonyRsvp: "Maybe", lunchRsvp: "Maybe", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  { id: "g042", firstName: "Yuki", lastName: "Sato", side: "Groom", category: "Friends", group: "Karate Core", relationship: "Dojo Friend", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  // Muay Thai Friends
-  { id: "g043", firstName: "Arjun", lastName: "Singh", side: "Groom", category: "Friends", group: "Muay Thai Friends", relationship: "Gym Friend", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "", notes: "" },
-  { id: "g044", firstName: "Dmitri", lastName: "Volkov", side: "Groom", category: "Friends", group: "Muay Thai Friends", relationship: "Gym Friend", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "g045", firstName: "Marco", lastName: "Rossi", side: "Groom", category: "Friends", group: "Muay Thai Friends", relationship: "Gym Friend", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  // Close Friends
-  { id: "g046", firstName: "Lucas", lastName: "Bennett", side: "Groom", category: "Friends", group: "Close Friends", relationship: "Close Friend", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "g047", firstName: "Olivia", lastName: "Carter", side: "Groom", category: "Friends", group: "Close Friends", relationship: "Close Friend", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Vegan", hotel: "", notes: "" },
-  { id: "g048", firstName: "Noah", lastName: "Davies", side: "Groom", category: "Friends", group: "Close Friends", relationship: "Close Friend", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  // Bride Side - Immediate Family
-  { id: "b001", firstName: "Grace", lastName: "Santos", side: "Bride", category: "Immediate Family", group: "Immediate Family", relationship: "Mother", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Mandarin Oriental", notes: "" },
-  { id: "b002", firstName: "Antonio", lastName: "Santos", side: "Bride", category: "Immediate Family", group: "Immediate Family", relationship: "Father", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Mandarin Oriental", notes: "" },
-  { id: "b003", firstName: "Isabella", lastName: "Santos", side: "Bride", category: "Immediate Family", group: "Immediate Family", relationship: "Sister", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Mandarin Oriental", notes: "" },
-  { id: "b004", firstName: "Rafael", lastName: "Santos", side: "Bride", category: "Immediate Family", group: "Immediate Family", relationship: "Brother", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  // Bride Extended Family
-  { id: "b005", firstName: "Carmen", lastName: "Reyes", side: "Bride", category: "Extended Family", group: "Mum Side", relationship: "Aunt", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Sukhothai", notes: "" },
-  { id: "b006", firstName: "Luis", lastName: "Reyes", side: "Bride", category: "Extended Family", group: "Mum Side", relationship: "Uncle", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Sukhothai", notes: "" },
-  { id: "b007", firstName: "Maria", lastName: "Garcia", side: "Bride", category: "Extended Family", group: "Mum Side", relationship: "Aunt", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "Vegetarian", hotel: "", notes: "" },
-  { id: "b008", firstName: "Carlos", lastName: "Garcia", side: "Bride", category: "Extended Family", group: "Mum Side", relationship: "Uncle", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "b009", firstName: "Ana", lastName: "Lopez", side: "Bride", category: "Extended Family", group: "Mum Side", relationship: "Aunt", rsvp: "Maybe", ceremonyRsvp: "Maybe", lunchRsvp: "Maybe", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  { id: "b010", firstName: "Jose", lastName: "Lopez", side: "Bride", category: "Extended Family", group: "Mum Side", relationship: "Uncle", rsvp: "Maybe", ceremonyRsvp: "Maybe", lunchRsvp: "Maybe", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  // Bride Friends
-  { id: "b011", firstName: "Sofia", lastName: "Kim", side: "Bride", category: "Friends", group: "Close Friends", relationship: "Best Friend", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Capella", notes: "" },
-  { id: "b012", firstName: "Emma", lastName: "Johnson", side: "Bride", category: "Friends", group: "Close Friends", relationship: "Close Friend", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Gluten Free", hotel: "Capella", notes: "" },
-  { id: "b013", firstName: "Ava", lastName: "Wilson", side: "Bride", category: "Friends", group: "Close Friends", relationship: "Close Friend", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "b014", firstName: "Mia", lastName: "Taylor", side: "Bride", category: "Friends", group: "Close Friends", relationship: "Close Friend", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  // We Are Majulah
-  { id: "b015", firstName: "Farah", lastName: "Abdullah", side: "Groom", category: "Friends", group: "We Are Majulah", relationship: "Community", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "Halal", hotel: "", notes: "" },
-  { id: "b016", firstName: "Amir", lastName: "Hassan", side: "Groom", category: "Friends", group: "We Are Majulah", relationship: "Community", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Maybe", dietary: "Halal", hotel: "", notes: "" },
-  { id: "b017", firstName: "Priscilla", lastName: "Tan", side: "Groom", category: "Friends", group: "We Are Majulah", relationship: "Community", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "", notes: "" },
-  // Storyteller
-  { id: "b018", firstName: "Zara", lastName: "Ahmed", side: "Groom", category: "Friends", group: "Storyteller", relationship: "Colleague", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", travelLikelihood: "Likely", dietary: "", hotel: "", notes: "" },
-  { id: "b019", firstName: "Ethan", lastName: "Brooks", side: "Groom", category: "Friends", group: "Storyteller", relationship: "Colleague", rsvp: "Maybe", ceremonyRsvp: "Maybe", lunchRsvp: "Maybe", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "" },
-  // VIPs
-  { id: "b020", firstName: "Richard", lastName: "Lim", side: "Groom", category: "VIP", group: "VIPs", relationship: "Mentor", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "", hotel: "Mandarin Oriental", notes: "VIP treatment" },
-  { id: "b021", firstName: "Christine", lastName: "Ho", side: "Bride", category: "VIP", group: "VIPs", relationship: "Godmother", rsvp: "Confirmed", ceremonyRsvp: "Confirmed", lunchRsvp: "Confirmed", travelLikelihood: "Certain", dietary: "Vegetarian", hotel: "Mandarin Oriental", notes: "VIP treatment" },
-  // Buffer
-  { id: "b022", firstName: "TBD", lastName: "Guest 01", side: "Groom", category: "Buffer", group: "Buffer", relationship: "TBD", rsvp: "Not Invited", ceremonyRsvp: "Not Invited", lunchRsvp: "Not Invited", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "Buffer slot" },
-  { id: "b023", firstName: "TBD", lastName: "Guest 02", side: "Bride", category: "Buffer", group: "Buffer", relationship: "TBD", rsvp: "Not Invited", ceremonyRsvp: "Not Invited", lunchRsvp: "Not Invited", travelLikelihood: "Maybe", dietary: "", hotel: "", notes: "Buffer slot" },
-];
+const SEED_GUESTS = [];
 
-const SEED_TASKS = [
-  { id: "t001", ref: "T-001", task: "Book Thai Ceremony Venue", category: "Venue", owner: "Groom", dueDate: "2026-07-01", priority: "Critical", status: "Done", notes: "Mandarin Oriental confirmed", budgetRef: "B-001" },
-  { id: "t002", ref: "T-002", task: "Confirm Lunch Reception Catering", category: "Catering", owner: "Bride", dueDate: "2026-07-15", priority: "Critical", status: "In Progress", notes: "Tasting scheduled", budgetRef: "B-003" },
-  { id: "t003", ref: "T-003", task: "Send Save the Dates", category: "Communications", owner: "Both", dueDate: "2026-06-20", priority: "High", status: "Done", notes: "Via WithJoy", budgetRef: "" },
-  { id: "t004", ref: "T-004", task: "Finalise Guest List - Groom Side", category: "Guests", owner: "Groom", dueDate: "2026-07-01", priority: "High", status: "In Progress", notes: "150 allocation", budgetRef: "" },
-  { id: "t005", ref: "T-005", task: "Book Hotel Room Block - Mandarin Oriental", category: "Accommodation", owner: "Groom", dueDate: "2026-07-10", priority: "High", status: "In Progress", notes: "30 rooms needed", budgetRef: "B-011" },
-  { id: "t006", ref: "T-006", task: "Hire Wedding Photographer", category: "Vendors", owner: "Both", dueDate: "2026-06-30", priority: "Critical", status: "Done", notes: "Studio Siam confirmed", budgetRef: "B-005" },
-  { id: "t007", ref: "T-007", task: "Book Videographer", category: "Vendors", owner: "Both", dueDate: "2026-07-01", priority: "High", status: "In Progress", notes: "Shortlist of 3", budgetRef: "B-006" },
-  { id: "t008", ref: "T-008", task: "Order Wedding Cake", category: "Catering", owner: "Bride", dueDate: "2026-08-01", priority: "Medium", status: "Not Started", notes: "", budgetRef: "B-008" },
-  { id: "t009", ref: "T-009", task: "Arrange Airport Transfers", category: "Travel", owner: "Groom", dueDate: "2026-08-15", priority: "High", status: "Not Started", notes: "International guests", budgetRef: "B-012" },
-  { id: "t010", ref: "T-010", task: "Plan Welcome Dinner", category: "Events", owner: "Both", dueDate: "2026-07-20", priority: "Medium", status: "Not Started", notes: "", budgetRef: "B-015" },
-  { id: "t011", ref: "T-011", task: "Confirm Muay Thai Session Venue", category: "Activities", owner: "Groom", dueDate: "2026-07-25", priority: "Medium", status: "In Progress", notes: "Fairtex or Lumpinee", budgetRef: "" },
-  { id: "t012", ref: "T-012", task: "Design Wedding Invitation", category: "Communications", owner: "Bride", dueDate: "2026-06-25", priority: "High", status: "Done", notes: "", budgetRef: "B-014" },
-  { id: "t013", ref: "T-013", task: "Book Florist", category: "Vendors", owner: "Bride", dueDate: "2026-07-05", priority: "High", status: "In Progress", notes: "Thai orchid arrangements", budgetRef: "B-007" },
-  { id: "t014", ref: "T-014", task: "Arrange Bridal Hair & Makeup", category: "Vendors", owner: "Bride", dueDate: "2026-07-10", priority: "High", status: "Not Started", notes: "", budgetRef: "" },
-  { id: "t015", ref: "T-015", task: "Plan Golf Day", category: "Activities", owner: "Groom", dueDate: "2026-08-01", priority: "Low", status: "Not Started", notes: "Thai Country Club or Royal Gems", budgetRef: "" },
-];
+const SEED_TASKS = [];
 
-const SEED_BUDGET = [
-  { id: "bud001", ref: "B-001", item: "Thai Ceremony Venue", category: "Venue", vendor: "Mandarin Oriental", estimated: 15000, actual: 14500, depositPaid: true, fullyPaid: false, notes: "Deposit paid", taskRef: "T-001" },
-  { id: "bud002", ref: "B-002", item: "Lunch Reception Venue", category: "Venue", vendor: "Mandarin Oriental", estimated: 25000, actual: 25000, depositPaid: true, fullyPaid: false, notes: "", taskRef: "" },
-  { id: "bud003", ref: "B-003", item: "Catering - Ceremony", category: "Catering", vendor: "MO Catering", estimated: 8000, actual: 0, depositPaid: false, fullyPaid: false, notes: "Quote pending", taskRef: "T-002" },
-  { id: "bud004", ref: "B-004", item: "Catering - Reception", category: "Catering", vendor: "MO Catering", estimated: 35000, actual: 0, depositPaid: false, fullyPaid: false, notes: "Per head TBC", taskRef: "" },
-  { id: "bud005", ref: "B-005", item: "Photography", category: "Photography", vendor: "Studio Siam", estimated: 6000, actual: 5800, depositPaid: true, fullyPaid: false, notes: "10hr package", taskRef: "T-006" },
-  { id: "bud006", ref: "B-006", item: "Videography", category: "Photography", vendor: "TBC", estimated: 4000, actual: 0, depositPaid: false, fullyPaid: false, notes: "Shortlisting", taskRef: "T-007" },
-  { id: "bud007", ref: "B-007", item: "Flowers & Decoration", category: "Flowers", vendor: "Bangkok Blooms", estimated: 8000, actual: 0, depositPaid: false, fullyPaid: false, notes: "", taskRef: "T-013" },
-  { id: "bud008", ref: "B-008", item: "Wedding Cake", category: "Catering", vendor: "TBC", estimated: 1200, actual: 0, depositPaid: false, fullyPaid: false, notes: "", taskRef: "T-008" },
-  { id: "bud009", ref: "B-009", item: "Wedding Dress", category: "Attire", vendor: "Private Label", estimated: 5000, actual: 4800, depositPaid: true, fullyPaid: true, notes: "Paid in full", taskRef: "" },
-  { id: "bud010", ref: "B-010", item: "Groom Suit", category: "Attire", vendor: "Sam's Tailor", estimated: 1500, actual: 1400, depositPaid: true, fullyPaid: true, notes: "Bespoke suit", taskRef: "" },
-  { id: "bud011", ref: "B-011", item: "Hotel Block - Mandarin Oriental", category: "Accommodation", vendor: "Mandarin Oriental", estimated: 45000, actual: 0, depositPaid: false, fullyPaid: false, notes: "30 rooms × 3 nights", taskRef: "T-005" },
-  { id: "bud012", ref: "B-012", item: "Transportation & Transfers", category: "Travel", vendor: "TBC", estimated: 5000, actual: 0, depositPaid: false, fullyPaid: false, notes: "", taskRef: "T-009" },
-  { id: "bud013", ref: "B-013", item: "Entertainment - Reception", category: "Entertainment", vendor: "TBC", estimated: 3000, actual: 0, depositPaid: false, fullyPaid: false, notes: "Band or DJ", taskRef: "" },
-  { id: "bud014", ref: "B-014", item: "Invitations & Stationery", category: "Stationery", vendor: "Print & Co", estimated: 800, actual: 750, depositPaid: true, fullyPaid: true, notes: "300 sets", taskRef: "T-012" },
-  { id: "bud015", ref: "B-015", item: "Welcome Dinner", category: "Events", vendor: "TBC", estimated: 8000, actual: 0, depositPaid: false, fullyPaid: false, notes: "", taskRef: "T-010" },
-];
+const SEED_BUDGET = [];
 
-const SEED_VENDORS = [
-  { id: "v001", name: "Mandarin Oriental Bangkok", service: "Venue", contact: "Khun Siriporn", phone: "+66 2 659 9000", email: "events@mohg.com", cost: 40000, depositStatus: "Paid", paymentStatus: "Partial", contractStatus: "Signed", notes: "Primary venue" },
-  { id: "v002", name: "Studio Siam", service: "Photography", contact: "Kai Pattanapong", phone: "+66 89 123 4567", email: "kai@studiosiam.com", cost: 5800, depositStatus: "Paid", paymentStatus: "Partial", contractStatus: "Signed", notes: "10hr coverage, 2 shooters" },
-  { id: "v003", name: "Bangkok Blooms", service: "Florist", contact: "Nong Siriwan", phone: "+66 81 234 5678", email: "info@bangkokblooms.com", cost: 8000, depositStatus: "Pending", paymentStatus: "Unpaid", contractStatus: "Pending", notes: "Thai orchid specialist" },
-  { id: "v004", name: "Sam's Tailor", service: "Attire", contact: "Sam Malhotra", phone: "+66 2 234 9368", email: "sam@samstailor.com", cost: 1400, depositStatus: "Paid", paymentStatus: "Paid", contractStatus: "Signed", notes: "Bespoke groom suit" },
-  { id: "v005", name: "Print & Co Bangkok", service: "Stationery", contact: "Joy Pornpimol", phone: "+66 82 345 6789", email: "hello@printco.th", cost: 750, depositStatus: "Paid", paymentStatus: "Paid", contractStatus: "N/A", notes: "300 invitation sets" },
-  { id: "v006", name: "Fairtex Gym", service: "Activities", contact: "Kru Somchai", phone: "+66 85 456 7890", email: "events@fairtex.com", cost: 2000, depositStatus: "Pending", paymentStatus: "Unpaid", contractStatus: "Pending", notes: "Muay Thai session venue" },
-];
+const SEED_VENDORS = [];
 
 const SEED_ACTIVITIES = [
-  { id: "a001", name: "Muay Thai Session", category: "Sport", date: "2026-09-17", capacity: 20, cost: 2000, rsvpRequired: true, description: "Group Muay Thai session at Fairtex Gym", assignedGroups: ["Muay Thai Friends", "Close Friends"], notes: "Morning session 9-11am" },
-  { id: "a002", name: "Golf Day", category: "Sport", date: "2026-09-16", capacity: 16, cost: 3000, rsvpRequired: true, description: "Golf at Thai Country Club", assignedGroups: ["Wedding Party", "VIPs"], notes: "Shotgun start 7am" },
-  { id: "a003", name: "Temple Visit", category: "Culture", date: "2026-09-16", capacity: 40, cost: 500, rsvpRequired: false, description: "Visit Wat Arun and Wat Pho", assignedGroups: ["Immediate Family", "Extended Family"], notes: "Morning, dress modestly" },
-  { id: "a004", name: "Night Market Tour", category: "Culture", date: "2026-09-17", capacity: 50, cost: 0, rsvpRequired: false, description: "Chatuchak and Asiatique evening", assignedGroups: ["All"], notes: "Optional, self-organised" },
-  { id: "a005", name: "Welcome Dinner", category: "Dining", date: "2026-09-17", capacity: 80, cost: 8000, rsvpRequired: true, description: "Welcome dinner for international guests", assignedGroups: ["Immediate Family", "Wedding Party", "VIPs"], notes: "Rooftop venue TBC" },
+  { id: "a001", name: "Lunch Reception", category: "Wedding", date: "2026-11-07", capacity: 200, cost: 0, rsvpRequired: true, description: "Lunch reception at The Gardens of Dinsor Palace", assignedGroups: ["All"], notes: "11:30 AM start. 8–10 min walk from BTS Ekkamai Exit 1. Parking available." },
+  { id: "a002", name: "Church Wedding", category: "Wedding", date: "2026-11-08", capacity: 200, cost: 0, rsvpRequired: true, description: "Church wedding at Holy Redeemer Church", assignedGroups: ["All"], notes: "2:00 PM. Closest MRT is Phloen Chit, 15 min walk (1km). Parking available." },
 ];
 
 const SEED_TIMELINE = [
-  { id: "tl001", date: "2026-09-17", time: "18:00", title: "Welcome Dinner", location: "TBC Rooftop Venue", owner: "Both", type: "Event", notes: "International guests" },
-  { id: "tl002", date: "2026-09-18", time: "08:00", title: "Bridal Preparations Begin", location: "Mandarin Oriental Suite", owner: "Bride", type: "Preparation", notes: "" },
-  { id: "tl003", date: "2026-09-18", time: "09:00", title: "Groom Preparations Begin", location: "Mandarin Oriental Suite", owner: "Groom", type: "Preparation", notes: "" },
-  { id: "tl004", date: "2026-09-18", time: "10:00", title: "Thai Ceremony Begins", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Ceremony", notes: "Guests seated 09:45" },
-  { id: "tl005", date: "2026-09-18", time: "12:00", title: "Ceremony Ends", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Ceremony", notes: "" },
-  { id: "tl006", date: "2026-09-18", time: "12:30", title: "Photography Session", location: "Hotel Gardens", owner: "Both", type: "Photography", notes: "45 min couple shots" },
-  { id: "tl007", date: "2026-09-18", time: "13:30", title: "Lunch Reception Begins", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "Guests move from garden" },
-  { id: "tl008", date: "2026-09-18", time: "14:00", title: "Speeches", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "Best Man, Parents, Couple" },
-  { id: "tl009", date: "2026-09-18", time: "15:00", title: "Cake Cutting", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "" },
-  { id: "tl010", date: "2026-09-18", time: "16:00", title: "Lunch Reception Ends", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "" },
+  { id: "tl001", date: "2026-11-07", time: "11:30", title: "Lunch Reception", location: "The Gardens of Dinsor Palace, Soi Sukhumvit, Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Reception", notes: "8–10 min walk from BTS Ekkamai Exit 1. thegardenspalace.com · +66 93 124 7730" },
+  { id: "tl002", date: "2026-11-08", time: "14:00", title: "Church Wedding", location: "Holy Redeemer Church, Ruam Rudi 5 Alley, Lumphini, Pathum Wan, Bangkok", owner: "Both", type: "Ceremony", notes: "Closest MRT is Phloen Chit, 15 min walk. holyredeemerbangkok.org" },
+];
+
+const SEED_HOTELS = [];
+
+
+  { id: "tl009", date: "2026-11-07", time: "15:00", title: "Cake Cutting", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "" },
+  { id: "tl010", date: "2026-11-07", time: "16:00", title: "Lunch Reception Ends", location: "Mandarin Oriental Ballroom", owner: "Both", type: "Reception", notes: "" },
 ];
 
 const SEED_HOTELS = [
@@ -644,7 +515,7 @@ const Dashboard = ({ guests, tasks, budget, weddingDate }) => {
         <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(196,18,48,0.12)" }} />
         <div style={{ position: "absolute", bottom: -20, right: 60, width: 80, height: 80, borderRadius: "50%", background: "rgba(184,135,30,0.15)" }} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontSize: 11, color: T.mist, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>Bangkok Wedding · 18 September 2026</div>
+          <div style={{ fontSize: 11, color: T.mist, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>Bangkok Wedding · 7 November 2026</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
             <span style={{ fontSize: 64, fontWeight: 900, color: "#fff", letterSpacing: "-3px", lineHeight: 1 }}>{days}</span>
             <span style={{ fontSize: 20, color: T.mist, fontWeight: 600 }}>days to go</span>
@@ -1930,8 +1801,8 @@ const RsvpForecast = ({ guests }) => {
 // ============================================================
 const Events = () => {
   const events = [
-    { id: "e001", name: "Thai Ceremony", type: "Ceremony", date: "2026-09-18", start: "10:00", end: "12:00", venue: "Mandarin Oriental Ballroom", capacity: 300, cost: 15000, notes: "Traditional Thai ceremony" },
-    { id: "e002", name: "Lunch Reception", type: "Reception", date: "2026-09-18", start: "13:30", end: "16:00", venue: "Mandarin Oriental Ballroom", capacity: 300, cost: 35000, notes: "Seated luncheon reception" },
+    { id: "e001", name: "Thai Ceremony", type: "Ceremony", date: "2026-11-07", start: "10:00", end: "12:00", venue: "Mandarin Oriental Ballroom", capacity: 300, cost: 15000, notes: "Traditional Thai ceremony" },
+    { id: "e002", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: "13:30", end: "16:00", venue: "Mandarin Oriental Ballroom", capacity: 300, cost: 35000, notes: "Seated luncheon reception" },
     { id: "e003", name: "Welcome Dinner", type: "Social", date: "2026-09-17", start: "18:00", end: "22:00", venue: "TBC Rooftop", capacity: 80, cost: 8000, notes: "International guests welcome dinner" },
   ];
   const typeColor = { Ceremony: "rosso", Reception: "gold", Social: "olive", Sport: "info" };
@@ -3654,8 +3525,8 @@ const AiPlanner = ({ guests, tasks, budget, vendors }) => {
     const budgetBreakdown = budget.map(b => `  ${b.ref} ${b.item}: budget $${b.estimated}, paid $${b.actual}, ${b.fullyPaid ? "FULLY PAID" : b.depositPaid ? "DEPOSIT PAID" : "UNPAID"}`).join("\n");
 
     return `WEDDING HQ — LIVE DATA CONTEXT
-Bangkok Wedding · 18 September 2026 · Mandarin Oriental Bangkok
-Days until wedding: ${Math.ceil((new Date("2026-09-18") - new Date()) / (1000*60*60*24))}
+Bangkok Wedding · 7 November 2026 · Mandarin Oriental Bangkok
+Days until wedding: ${Math.ceil((new Date("2026-11-07") - new Date()) / (1000*60*60*24))}
 
 ═══ GUEST DATA ═══
 Total Invited: ${fc.invited} | Confirmed: ${fc.confirmed} | Declined: ${fc.declined} | Pending: ${fc.pending}
@@ -3715,7 +3586,7 @@ IMPORTANT RULES:
     try {
       const context = buildContext();
       const historyForAPI = newMessages.slice(1).map(m => ({ role: m.role, content: m.content }));
-      const system = `You are Wedding Planner AI for the Bangkok Wedding (18 Sep 2026, Mandarin Oriental Bangkok). You have access to live wedding data below.
+      const system = `You are Wedding Planner AI for the Bangkok Wedding (7 Nov 2026, Mandarin Oriental Bangkok). You have access to live wedding data below.
 
 ${context}
 
@@ -4104,7 +3975,7 @@ const Settings = ({ user, role, onLogout }) => {
     weddingName: "Bangkok Wedding",
     groomName: "Leon",
     brideName: "Sira",
-    weddingDate: "2026-09-18",
+    weddingDate: "2026-11-07",
     city: "Bangkok, Thailand",
     venue: "Mandarin Oriental Bangkok",
     groomAllocation: 150,
@@ -4318,8 +4189,8 @@ const MiniAI = ({ guests, tasks, budget, vendors, setGuests, setTasks, setBudget
     const guestList = guests.map(g => `${g.firstName} ${g.lastName} (${g.side}, ${g.group}, RSVP: ${g.rsvp}, Travel: ${g.travelLikelihood})`).join("\n");
     const taskList = tasks.map(t => `[${t.ref||t.id}] ${t.task} - ${t.status} - ${t.priority} - due ${t.dueDate||"none"}`).join("\n");
     const budgetList = budget.map(b => `[${b.ref}] ${b.item} - $${b.estimated} budget - $${b.actual} paid - ${b.fullyPaid?"PAID":b.depositPaid?"DEPOSIT":"UNPAID"}`).join("\n");
-    return `Bangkok Wedding · 18 Sep 2026 · Mandarin Oriental
-Days until wedding: ${Math.ceil((new Date("2026-09-18") - new Date()) / (1000*60*60*24))}
+    return `Bangkok Wedding · 7 Nov 2026 · Mandarin Oriental
+Days until wedding: ${Math.ceil((new Date("2026-11-07") - new Date()) / (1000*60*60*24))}
 Guests: ${fc.invited} invited, ${fc.confirmed} confirmed, ${fc.projected} projected
 Budget: $${totalBudget.toLocaleString()} total, $${totalSpent.toLocaleString()} spent, ${unpaid.length} unpaid items
 Overdue tasks: ${overdue.length}
@@ -4618,7 +4489,7 @@ function AppInner() {
   const [showClosing, setShowClosing] = useState(false);
   const [dbReady, setDbReady] = useState(false);
 
-  const WEDDING_DATE = "2026-09-18";
+  const WEDDING_DATE = "2026-11-07";
 
   // ── Auth listener ──
   useEffect(() => {
@@ -4801,7 +4672,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v1.6.0 · A Kleinman Creation
+            Wedding HQ v1.7.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4841,7 +4712,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v1.6.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v1.7.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4873,7 +4744,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.6.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.7.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
