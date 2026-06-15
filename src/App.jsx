@@ -22,12 +22,12 @@ class ErrorBoundary extends React.Component {
 }
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyD_9Mr7XxLwOEhixIGKH1byAowPW0F3T9E",
+  authDomain: "wedding-hq-37488.firebaseapp.com",
+  projectId: "wedding-hq-37488",
+  storageBucket: "wedding-hq-37488.firebasestorage.app",
+  messagingSenderId: "154380356628",
+  appId: "1:154380356628:web:fa6c3171ef82e10e2f6b01",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -4801,7 +4801,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v1.5.0 · A Kleinman Creation
+            Wedding HQ v1.6.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4841,7 +4841,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v1.5.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v1.6.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4873,7 +4873,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.5.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.6.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
