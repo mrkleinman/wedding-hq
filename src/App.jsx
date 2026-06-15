@@ -4,14 +4,14 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, writeBatch, deleteDoc } from "firebase/firestore";
 
-// ── Error Boundary ──
+// â”€â”€ Error Boundary â”€â”€
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null }; }
   static getDerivedStateFromError(error) { return { error }; }
   render() {
     if (this.state.error) return (
       <div style={{ padding: 24, background: "#1C1C1E", minHeight: "100vh", color: "#fff" }}>
-        <div style={{ color: "#C41230", fontWeight: 800, fontSize: 18, marginBottom: 12 }}>⚠ App Error</div>
+        <div style={{ color: "#C41230", fontWeight: 800, fontSize: 18, marginBottom: 12 }}>âš  App Error</div>
         <div style={{ background: "#2C2C2E", borderRadius: 8, padding: 16, fontSize: 12, fontFamily: "monospace", color: "#ff6b6b", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
           {this.state.error?.message}{"\n\n"}{this.state.error?.stack}
         </div>
@@ -34,7 +34,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const fbAuth = getAuth(firebaseApp);
 const fbDb = getFirestore(firebaseApp);
 
-// ── Role system ──
+// â”€â”€ Role system â”€â”€
 const ROLES = { ADMIN: 1, PARTNER: 2, PLANNER: 3, FAMILY: 4, READONLY: 5 };
 const ROLE_NAMES = { 1: "Admin", 2: "Partner", 3: "Planner", 4: "Family", 5: "Read Only" };
 const ROLE_COLORS = { 1: "#C41230", 2: "#B8871E", 3: "#5C6B3E", 4: "#1D5FA6", 5: "#6C6C70" };
@@ -55,11 +55,11 @@ const EDIT_ACCESS = {
 const canAccess = (role, module) => MODULE_ACCESS[module]?.includes(role) ?? false;
 const canEdit = (role, module) => EDIT_ACCESS[module]?.includes(role) ?? false;
 
-// ── Auth Context ──
+// â”€â”€ Auth Context â”€â”€
 const AuthContext = createContext(null);
 const useAuth = () => useContext(AuthContext);
 
-// ── Firestore helpers ──
+// â”€â”€ Firestore helpers â”€â”€
 const saveToFirestore = async (collectionName, id, data) => {
   try {
     // Strip non-serializable data (functions, undefined)
@@ -88,7 +88,7 @@ const seedCollection = async (collectionName, items) => {
   } catch (e) { console.warn("Seed error:", e); }
 };
 
-// ── Login Screen ──
+// â”€â”€ Login Screen â”€â”€
 const LoginScreen = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -118,7 +118,7 @@ const LoginScreen = ({ onLogin }) => {
             <span style={{ color: "#fff" }}>H</span>
             <span style={{ color: "#C41230" }}>Q</span>
           </div>
-          <div style={{ fontSize: 13, color: "#AEAEB2" }}>Bangkok Wedding · 7 November 2026</div>
+          <div style={{ fontSize: 13, color: "#AEAEB2" }}>Bangkok Wedding Â· 7 November 2026</div>
         </div>
 
         <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 16, padding: 28, border: "1px solid rgba(255,255,255,0.08)" }}>
@@ -134,13 +134,13 @@ const LoginScreen = ({ onLogin }) => {
           <div style={{ marginBottom: 24 }}>
             <div style={{ fontSize: 11, color: "#AEAEB2", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>Password</div>
             <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••" autoComplete="current-password"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" autoComplete="current-password"
               onKeyDown={e => e.key === "Enter" && handleLogin()}
               style={{ width: "100%", boxSizing: "border-box", background: "rgba(255,255,255,0.07)", border: "1.5px solid rgba(255,255,255,0.12)", borderRadius: 10, padding: "12px 14px", fontSize: 15, color: "#fff", outline: "none", fontFamily: "inherit" }} />
           </div>
           <button onClick={handleLogin} disabled={loading || !email || !password}
             style={{ width: "100%", background: loading ? "rgba(196,18,48,0.5)" : "#C41230", color: "#fff", border: "none", borderRadius: 10, padding: "14px", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer" }}>
-            {loading ? "Signing in…" : "Sign In"}
+            {loading ? "Signing inâ€¦" : "Sign In"}
           </button>
         </div>
         <div style={{ textAlign: "center", marginTop: 20, fontSize: 12, color: "#AEAEB2" }}>Contact Leon for access</div>
@@ -150,12 +150,12 @@ const LoginScreen = ({ onLogin }) => {
 };
 
 // ============================================================
-// DESIGN TOKENS — Tuscan Morning × Ferrari Paddock
+// DESIGN TOKENS â€” Tuscan Morning Ã— Ferrari Paddock
 // ============================================================
 // ============================================================
-// GEMINI API — centralised helper
+// GEMINI API â€” centralised helper
 // Key stored in localStorage under "gemini_api_key"
-// Set it once in Settings — all AI features use it automatically
+// Set it once in Settings â€” all AI features use it automatically
 // ============================================================
 const getGeminiKey = () => localStorage.getItem("gemini_api_key") || "";
 
@@ -261,13 +261,13 @@ const SEED_BUDGET = [];
 const SEED_VENDORS = [];
 
 const SEED_ACTIVITIES = [
-  { id: "a001", name: "Lunch Reception", category: "Wedding", date: "2026-11-07", capacity: 200, cost: 0, rsvpRequired: true, description: "Lunch reception at The Gardens of Dinsor Palace", assignedGroups: ["All"], notes: "11:30 AM start. 8–10 min walk from BTS Ekkamai Exit 1. Parking available." },
+  { id: "a001", name: "Lunch Reception", category: "Wedding", date: "2026-11-07", capacity: 200, cost: 0, rsvpRequired: true, description: "Lunch reception at The Gardens of Dinsor Palace", assignedGroups: ["All"], notes: "11:30 AM start. 8â€“10 min walk from BTS Ekkamai Exit 1. Parking available." },
   { id: "a002", name: "Church Wedding", category: "Wedding", date: "2026-11-08", capacity: 200, cost: 0, rsvpRequired: true, description: "Church wedding at Holy Redeemer Church", assignedGroups: ["All"], notes: "2:00 PM. Closest MRT is Phloen Chit, 15 min walk (1km). Parking available." },
 ];
 
 const SEED_TIMELINE = [
-  { id: "tl000", date: "2026-11-07", time: "09:00", title: "Buddhist Ceremony", location: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Ceremony", notes: "Time can be updated in Settings" },
-  { id: "tl001", date: "2026-11-07", time: "11:30", title: "Lunch Reception", location: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Reception", notes: "8–10 min walk from BTS Ekkamai Exit 1. thegardenspalace.com · +66 93 124 7730" },
+  { id: "tl000", date: "2026-11-07", time: "09:00", title: "Buddhist Ceremony", location: "The Gardens of Dinsor Palace, à¸‹à¸­à¸¢ à¸‹à¸¸à¸¡à¸žà¸¥ Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Ceremony", notes: "Time can be updated in Settings" },
+  { id: "tl001", date: "2026-11-07", time: "11:30", title: "Lunch Reception", location: "The Gardens of Dinsor Palace, à¸‹à¸­à¸¢ à¸‹à¸¸à¸¡à¸žà¸¥ Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Reception", notes: "8â€“10 min walk from BTS Ekkamai Exit 1. thegardenspalace.com Â· +66 93 124 7730" },
   { id: "tl002", date: "2026-11-08", time: "14:00", title: "Church Wedding", location: "Holy Redeemer Church, Ruam Rudi 5 Alley, Lumphini, Pathum Wan, Bangkok", owner: "Both", type: "Ceremony", notes: "Closest MRT is Phloen Chit, 15 min walk. holyredeemerbangkok.org" },
 ];
 
@@ -463,21 +463,21 @@ const Table = ({ cols, rows, emptyMsg = "No data" }) => (
 // NAVIGATION
 // ============================================================
 const NAV_ITEMS = [
-  { id: "dashboard", label: "Dashboard", icon: "◈" },
-  { id: "groups", label: "Groups", icon: "⬡" },
-  { id: "guests", label: "Guests", icon: "◎" },
-  { id: "rsvp", label: "RSVP Forecast", icon: "◑" },
-  { id: "events", label: "Events", icon: "◆" },
-  { id: "activities", label: "Activities", icon: "▲" },
-  { id: "tasks", label: "Tasks", icon: "✦" },
-  { id: "budget", label: "Budget", icon: "◈" },
-  { id: "vendors", label: "Vendors", icon: "◉" },
-  { id: "timeline", label: "Timeline", icon: "⬘" },
-  { id: "travel", label: "Travel", icon: "◈" },
-  { id: "import", label: "Import", icon: "⊕" },
-  { id: "ai", label: "AI Planner", icon: "✧" },
-  { id: "comms", label: "Comms", icon: "◎" },
-  { id: "settings", label: "Settings", icon: "⚙" },
+  { id: "dashboard", label: "Dashboard", icon: "â—ˆ" },
+  { id: "groups", label: "Groups", icon: "â¬¡" },
+  { id: "guests", label: "Guests", icon: "â—Ž" },
+  { id: "rsvp", label: "RSVP Forecast", icon: "â—‘" },
+  { id: "events", label: "Events", icon: "â—†" },
+  { id: "activities", label: "Activities", icon: "â–²" },
+  { id: "tasks", label: "Tasks", icon: "âœ¦" },
+  { id: "budget", label: "Budget", icon: "â—ˆ" },
+  { id: "vendors", label: "Vendors", icon: "â—‰" },
+  { id: "timeline", label: "Timeline", icon: "â¬˜" },
+  { id: "travel", label: "Travel", icon: "â—ˆ" },
+  { id: "import", label: "Import", icon: "âŠ•" },
+  { id: "ai", label: "AI Planner", icon: "âœ§" },
+  { id: "comms", label: "Comms", icon: "â—Ž" },
+  { id: "settings", label: "Settings", icon: "âš™" },
 ];
 
 // ============================================================
@@ -506,7 +506,7 @@ const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
         <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(196,18,48,0.12)" }} />
         <div style={{ position: "absolute", bottom: -20, right: 60, width: 80, height: 80, borderRadius: "50%", background: "rgba(184,135,30,0.15)" }} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontSize: 11, color: T.mist, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>Bangkok Wedding · 7–8 November 2026</div>
+          <div style={{ fontSize: 11, color: T.mist, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>Bangkok Wedding Â· 7â€“8 November 2026</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
             <span style={{ fontSize: 64, fontWeight: 900, color: "#fff", letterSpacing: "-3px", lineHeight: 1 }}>{days}</span>
             <span style={{ fontSize: 20, color: T.mist, fontWeight: 600 }}>days to go</span>
@@ -516,9 +516,9 @@ const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
             return (
               <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 8, marginTop: 16 }}>
                 {[
-                  { label: "Sat 7 Nov · Buddhist Ceremony", time: s.buddhistCeremonyTime || "09:00" },
-                  { label: "Sat 7 Nov · Lunch Reception", time: s.lunchReceptionTime || "11:30" },
-                  { label: "Sun 8 Nov · Church Wedding", time: s.churchWeddingTime || "14:00" },
+                  { label: "Sat 7 Nov Â· Buddhist Ceremony", time: s.buddhistCeremonyTime || "09:00" },
+                  { label: "Sat 7 Nov Â· Lunch Reception", time: s.lunchReceptionTime || "11:30" },
+                  { label: "Sun 8 Nov Â· Church Wedding", time: s.churchWeddingTime || "14:00" },
                 ].map(item => (
                   <button key={item.label} onClick={() => navigate("events")}
                     style={{ background: "rgba(255,255,255,0.07)", borderRadius: 8, padding: "10px 14px", border: "none", cursor: "pointer", textAlign: "left", width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -532,7 +532,7 @@ const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
         </div>
       </div>
 
-      {/* Allocation Grid — Groom row then Bride row */}
+      {/* Allocation Grid â€” Groom row then Bride row */}
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
         {/* Groom label */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -619,7 +619,7 @@ const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
             {overdue > 0 && <Badge label={`${overdue} Overdue`} color="danger" />}
           </div>
           {urgentTasks.length === 0 ? (
-            <div style={{ color: T.mist, fontSize: 13 }}>All urgent tasks complete 🎉</div>
+            <div style={{ color: T.mist, fontSize: 13 }}>All urgent tasks complete ðŸŽ‰</div>
           ) : urgentTasks.map(t => (
             <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 10, paddingBottom: 10, borderBottom: `1px solid ${T.linen}`, marginBottom: 10 }}>
               <div style={{ flex: 1 }}>
@@ -642,7 +642,7 @@ const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
           <div key={side.label} style={{ marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
               <span style={{ fontWeight: 700, fontSize: 14, color: T.carbon }}>{side.label}</span>
-              <span style={{ fontSize: 13, color: T.slate }}>{side.invited} / {side.max} invited · {side.confirmed} confirmed</span>
+              <span style={{ fontSize: 13, color: T.slate }}>{side.invited} / {side.max} invited Â· {side.confirmed} confirmed</span>
             </div>
             <ProgressBar value={side.invited} max={side.max} color={side.color} />
           </div>
@@ -653,7 +653,7 @@ const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
 };
 
 // ============================================================
-// MODULE: GUESTS — Sprint A
+// MODULE: GUESTS â€” Sprint A
 // ============================================================
 
 const Guests = ({ guests, setGuests }) => {
@@ -699,7 +699,7 @@ const Guests = ({ guests, setGuests }) => {
     return matchSearch && matchSide && matchRsvp && matchGroup;
   });
 
-  // Duplicate detection — same first+last name
+  // Duplicate detection â€” same first+last name
   const dupes = useMemo(() => {
     const seen = {};
     guests.forEach(g => {
@@ -710,7 +710,7 @@ const Guests = ({ guests, setGuests }) => {
     return Object.values(seen).filter(arr => arr.length > 1);
   }, [guests]);
 
-  // ── SAVE EDIT ──
+  // â”€â”€ SAVE EDIT â”€â”€
   const saveEdit = () => {
     const original = guests.find(g => g.id === editForm.id);
     Object.keys(editForm).forEach(k => {
@@ -723,18 +723,18 @@ const Guests = ({ guests, setGuests }) => {
     setView("detail");
   };
 
-  // ── SAVE NEW GUEST ──
+  // â”€â”€ SAVE NEW GUEST â”€â”€
   const saveNewGuest = () => {
     if (!newGuestForm.firstName.trim()) return;
     const id = "g" + Date.now();
     setGuests(prev => [...prev, { ...newGuestForm, id }]);
-    logChange(`${newGuestForm.firstName} ${newGuestForm.lastName}`, "created", "—", "New guest");
+    logChange(`${newGuestForm.firstName} ${newGuestForm.lastName}`, "created", "â€”", "New guest");
     showToast(`${newGuestForm.firstName} ${newGuestForm.lastName} added`);
     setNewGuestForm({ firstName: "", lastName: "", email: "", phone: "", side: "Groom", category: "Friends", group: "Unassigned", relationship: "", travelLikelihood: "Likely", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", dietary: "", hotel: "", notes: "" });
     setView("list");
   };
 
-  // ── BULK EDIT ──
+  // â”€â”€ BULK EDIT â”€â”€
   const applyBulk = () => {
     if (!bulkValue || bulkSelected.length === 0) return;
     setGuests(prev => prev.map(g => {
@@ -747,14 +747,14 @@ const Guests = ({ guests, setGuests }) => {
     setView("list");
   };
 
-  // ── MERGE DUPES ──
+  // â”€â”€ MERGE DUPES â”€â”€
   const mergeDupes = (keep, remove) => {
     setGuests(prev => prev.filter(g => g.id !== remove));
     logChange(keep.firstName + " " + keep.lastName, "merged", "duplicate removed", "kept " + keep.id);
     showToast("Duplicate removed");
   };
 
-  // ── DELETE GUEST ──
+  // â”€â”€ DELETE GUEST â”€â”€
   const deleteGuest = (id) => {
     const g = guests.find(x => x.id === id);
     setGuests(prev => prev.filter(x => x.id !== id));
@@ -775,14 +775,14 @@ const Guests = ({ guests, setGuests }) => {
     </div>
   );
 
-  // ── DETAIL VIEW ──
+  // â”€â”€ DETAIL VIEW â”€â”€
   if (view === "detail" && selectedGuest) {
     const g = selectedGuest;
     return (
       <div>
         {toast && <div style={{ position: "fixed", top: 64, right: 16, zIndex: 300, background: toast.type === "danger" ? T.danger : T.success, color: "#fff", borderRadius: 10, padding: "10px 18px", fontWeight: 700, fontSize: 13, boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}>{toast.msg}</div>}
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
-          <Btn variant="secondary" small onClick={() => setView("list")}>← Back</Btn>
+          <Btn variant="secondary" small onClick={() => setView("list")}>â† Back</Btn>
           <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, flex: 1 }}>{g.firstName} {g.lastName}</h2>
           <Btn small onClick={() => { setEditForm({ ...g }); setView("edit"); }}>Edit</Btn>
           <Btn variant="secondary" small onClick={() => deleteGuest(g.id)}>Delete</Btn>
@@ -793,14 +793,14 @@ const Guests = ({ guests, setGuests }) => {
             { label: "Group", value: g.group },
             { label: "Category", value: g.category },
             { label: "Relationship", value: g.relationship },
-            { label: "Email", value: g.email ? <a href={`mailto:${g.email}`} style={{ color: T.info }}>{g.email}</a> : <span style={{ color: T.mist }}>—</span> },
-            { label: "Phone", value: g.phone ? <a href={`tel:${g.phone}`} style={{ color: T.info }}>{g.phone}</a> : <span style={{ color: T.mist }}>—</span> },
+            { label: "Email", value: g.email ? <a href={`mailto:${g.email}`} style={{ color: T.info }}>{g.email}</a> : <span style={{ color: T.mist }}>â€”</span> },
+            { label: "Phone", value: g.phone ? <a href={`tel:${g.phone}`} style={{ color: T.info }}>{g.phone}</a> : <span style={{ color: T.mist }}>â€”</span> },
             { label: "RSVP", value: rsvpBadge(g.rsvp) },
             { label: "Ceremony", value: rsvpBadge(g.ceremonyRsvp) },
             { label: "Lunch", value: rsvpBadge(g.lunchRsvp) },
             { label: "Travel", value: g.travelLikelihood },
             { label: "Dietary", value: g.dietary || <span style={{ color: T.mist }}>None</span> },
-            { label: "Hotel", value: g.hotel || <span style={{ color: T.mist }}>—</span> },
+            { label: "Hotel", value: g.hotel || <span style={{ color: T.mist }}>â€”</span> },
           ].map(item => (
             <Card key={item.label} style={{ padding: "12px 16px" }}>
               <div style={{ fontSize: 10, color: T.mist, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>{item.label}</div>
@@ -816,7 +816,7 @@ const Guests = ({ guests, setGuests }) => {
             {historyLog.filter(h => h.guest === `${g.firstName} ${g.lastName}`).map(h => (
               <div key={h.id} style={{ display: "flex", gap: 10, padding: "6px 0", borderBottom: `1px solid ${T.linen}`, fontSize: 12 }}>
                 <span style={{ color: T.mist, flexShrink: 0 }}>{h.time}</span>
-                <span style={{ color: T.carbon }}><strong>{h.field}</strong>: {h.from} → {h.to}</span>
+                <span style={{ color: T.carbon }}><strong>{h.field}</strong>: {h.from} â†’ {h.to}</span>
               </div>
             ))}
           </Card>
@@ -825,13 +825,13 @@ const Guests = ({ guests, setGuests }) => {
     );
   }
 
-  // ── EDIT VIEW ──
+  // â”€â”€ EDIT VIEW â”€â”€
   if (view === "edit" && editForm) {
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
-          <Btn variant="secondary" small onClick={() => setView("detail")}>← Cancel</Btn>
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, flex: 1 }}>Edit — {editForm.firstName} {editForm.lastName}</h2>
+          <Btn variant="secondary" small onClick={() => setView("detail")}>â† Cancel</Btn>
+          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, flex: 1 }}>Edit â€” {editForm.firstName} {editForm.lastName}</h2>
           <Btn small onClick={saveEdit}>Save Changes</Btn>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -866,14 +866,14 @@ const Guests = ({ guests, setGuests }) => {
     );
   }
 
-  // ── ADD GUEST VIEW ──
+  // â”€â”€ ADD GUEST VIEW â”€â”€
   if (view === "add") {
     const nf = newGuestForm;
     const setNf = (k, v) => setNewGuestForm(p => ({ ...p, [k]: v }));
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-          <Btn variant="secondary" small onClick={() => setView("list")}>← Cancel</Btn>
+          <Btn variant="secondary" small onClick={() => setView("list")}>â† Cancel</Btn>
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>Add New Guest</h2>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -935,7 +935,7 @@ const Guests = ({ guests, setGuests }) => {
     );
   }
 
-  // ── BULK EDIT VIEW ──
+  // â”€â”€ BULK EDIT VIEW â”€â”€
   if (view === "bulk") {
     const bulkFieldOptions = [
       { value: "rsvp", label: "RSVP Status" },
@@ -953,7 +953,7 @@ const Guests = ({ guests, setGuests }) => {
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
-          <Btn variant="secondary" small onClick={() => { setView("list"); setBulkSelected([]); }}>← Cancel</Btn>
+          <Btn variant="secondary" small onClick={() => { setView("list"); setBulkSelected([]); }}>â† Cancel</Btn>
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, flex: 1 }}>Bulk Edit</h2>
           <Badge label={`${bulkSelected.length} selected`} color="rosso" />
         </div>
@@ -968,9 +968,9 @@ const Guests = ({ guests, setGuests }) => {
             <div style={{ flex: 1, minWidth: 140 }}>
               <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, marginBottom: 5 }}>New Value</div>
               <Select value={bulkValue} onChange={setBulkValue}
-                options={["Select…", ...(bulkValueOptions[bulkField] || [])]} />
+                options={["Selectâ€¦", ...(bulkValueOptions[bulkField] || [])]} />
             </div>
-            <Btn onClick={applyBulk} disabled={!bulkValue || bulkValue === "Select…" || bulkSelected.length === 0}>Apply to {bulkSelected.length} guests</Btn>
+            <Btn onClick={applyBulk} disabled={!bulkValue || bulkValue === "Selectâ€¦" || bulkSelected.length === 0}>Apply to {bulkSelected.length} guests</Btn>
           </div>
         </Card>
         <Card style={{ padding: 0 }}>
@@ -983,7 +983,7 @@ const Guests = ({ guests, setGuests }) => {
               <input type="checkbox" checked={bulkSelected.includes(g.id)} onChange={e => setBulkSelected(prev => e.target.checked ? [...prev, g.id] : prev.filter(id => id !== g.id))} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{g.firstName} {g.lastName}</div>
-                <div style={{ fontSize: 11, color: T.mist }}>{g.group} · {g.side}</div>
+                <div style={{ fontSize: 11, color: T.mist }}>{g.group} Â· {g.side}</div>
               </div>
               {rsvpBadge(g.rsvp)}
             </div>
@@ -993,25 +993,25 @@ const Guests = ({ guests, setGuests }) => {
     );
   }
 
-  // ── DUPLICATES VIEW ──
+  // â”€â”€ DUPLICATES VIEW â”€â”€
   if (view === "dupes") {
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-          <Btn variant="secondary" small onClick={() => setView("list")}>← Back</Btn>
+          <Btn variant="secondary" small onClick={() => setView("list")}>â† Back</Btn>
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>Duplicate Detection</h2>
           <Badge label={`${dupes.length} groups`} color={dupes.length > 0 ? "warning" : "success"} />
         </div>
         {dupes.length === 0 ? (
-          <Card><EmptyState icon="✓" title="No duplicates found" sub="All guest names are unique" /></Card>
+          <Card><EmptyState icon="âœ“" title="No duplicates found" sub="All guest names are unique" /></Card>
         ) : dupes.map((group, i) => (
           <Card key={i} style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: T.warning, marginBottom: 12 }}>⚠ Possible duplicate — {group[0].firstName} {group[0].lastName}</div>
+            <div style={{ fontSize: 13, fontWeight: 800, color: T.warning, marginBottom: 12 }}>âš  Possible duplicate â€” {group[0].firstName} {group[0].lastName}</div>
             {group.map((g, j) => (
               <div key={g.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 0", borderBottom: j < group.length - 1 ? `1px solid ${T.linen}` : "none" }}>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{g.firstName} {g.lastName}</div>
-                  <div style={{ fontSize: 11, color: T.mist }}>{g.group} · {g.side} · {g.relationship}</div>
+                  <div style={{ fontSize: 11, color: T.mist }}>{g.group} Â· {g.side} Â· {g.relationship}</div>
                   <div style={{ marginTop: 4 }}>{rsvpBadge(g.rsvp)}</div>
                 </div>
                 <div style={{ display: "flex", gap: 6 }}>
@@ -1026,17 +1026,17 @@ const Guests = ({ guests, setGuests }) => {
     );
   }
 
-  // ── HISTORY VIEW ──
+  // â”€â”€ HISTORY VIEW â”€â”€
   if (view === "history") {
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-          <Btn variant="secondary" small onClick={() => setView("list")}>← Back</Btn>
+          <Btn variant="secondary" small onClick={() => setView("list")}>â† Back</Btn>
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>Change History</h2>
           <Badge label={`${historyLog.length} changes`} color="info" />
         </div>
         {historyLog.length === 0 ? (
-          <Card><EmptyState icon="◎" title="No changes yet" sub="Changes made to guests will appear here" /></Card>
+          <Card><EmptyState icon="â—Ž" title="No changes yet" sub="Changes made to guests will appear here" /></Card>
         ) : (
           <Card style={{ padding: 0 }}>
             {historyLog.map(h => (
@@ -1044,10 +1044,10 @@ const Guests = ({ guests, setGuests }) => {
                 <span style={{ fontSize: 11, color: T.mist, flexShrink: 0, paddingTop: 2 }}>{h.time}</span>
                 <div>
                   <span style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{h.guest}</span>
-                  <span style={{ fontSize: 12, color: T.slate }}> · {h.field}</span>
+                  <span style={{ fontSize: 12, color: T.slate }}> Â· {h.field}</span>
                   <div style={{ fontSize: 12, color: T.mist, marginTop: 2 }}>
                     <span style={{ color: T.danger }}>{h.from}</span>
-                    <span> → </span>
+                    <span> â†’ </span>
                     <span style={{ color: T.success }}>{h.to}</span>
                   </div>
                 </div>
@@ -1059,7 +1059,7 @@ const Guests = ({ guests, setGuests }) => {
     );
   }
 
-  // ── LIST VIEW ──
+  // â”€â”€ LIST VIEW â”€â”€
   return (
     <div>
       {toast && <div style={{ position: "fixed", top: 64, right: 16, zIndex: 300, background: toast.type === "danger" ? T.danger : T.success, color: "#fff", borderRadius: 10, padding: "10px 18px", fontWeight: 700, fontSize: 13, boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}>{toast.msg}</div>}
@@ -1068,7 +1068,7 @@ const Guests = ({ guests, setGuests }) => {
         subtitle={`${filtered.length} of ${guests.length} guests`}
         action={
           <div style={{ display: "flex", gap: 8 }}>
-            {dupes.length > 0 && <Btn small variant="secondary" onClick={() => setView("dupes")}>⚠ {dupes.length} Dupes</Btn>}
+            {dupes.length > 0 && <Btn small variant="secondary" onClick={() => setView("dupes")}>âš  {dupes.length} Dupes</Btn>}
             <Btn small variant="secondary" onClick={() => setView("history")}>History</Btn>
             <Btn small variant="secondary" onClick={() => { setBulkSelected(filtered.map(g => g.id)); setView("bulk"); }}>Bulk Edit</Btn>
             <Btn small onClick={() => setView("add")}>+ Add Guest</Btn>
@@ -1077,7 +1077,7 @@ const Guests = ({ guests, setGuests }) => {
       />
       <Card style={{ marginBottom: 16, padding: "14px 16px" }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <Input value={search} onChange={setSearch} placeholder="Search name, group, relationship…" style={{ flex: 2, minWidth: 160 }} />
+          <Input value={search} onChange={setSearch} placeholder="Search name, group, relationshipâ€¦" style={{ flex: 2, minWidth: 160 }} />
           <Select value={filterSide} onChange={setFilterSide} options={sides} style={{ flex: 1, minWidth: 90 }} />
           <Select value={filterRsvp} onChange={setFilterRsvp} options={rsvpOptions} style={{ flex: 1, minWidth: 110 }} />
           <Select value={filterGroup} onChange={setFilterGroup} options={groups} style={{ flex: 1, minWidth: 130 }} />
@@ -1096,7 +1096,7 @@ const Guests = ({ guests, setGuests }) => {
             { key: "group", label: "Group", render: r => <span style={{ fontSize: 12, color: T.slate }}>{r.group}</span> },
             { key: "rsvp", label: "RSVP", render: r => rsvpBadge(r.rsvp) },
             { key: "travel", label: "Travel", render: r => <span style={{ fontSize: 12, color: T.slate }}>{r.travelLikelihood}</span> },
-            { key: "dietary", label: "Dietary", render: r => r.dietary ? <Badge label={r.dietary} color="olive" /> : <span style={{ color: T.mist, fontSize: 12 }}>—</span> },
+            { key: "dietary", label: "Dietary", render: r => r.dietary ? <Badge label={r.dietary} color="olive" /> : <span style={{ color: T.mist, fontSize: 12 }}>â€”</span> },
             { key: "edit", label: "", render: r => (
               <button onClick={() => { setEditForm({ ...r }); setSelectedId(r.id); setView("edit"); }} style={{ background: T.linen, border: "none", borderRadius: 6, padding: "4px 10px", fontSize: 12, color: T.slate, cursor: "pointer", fontWeight: 700 }}>Edit</button>
             )},
@@ -1137,7 +1137,7 @@ const Groups = ({ guests, setGuests }) => {
     if (sides.length > 1) return <Badge label="Mixed" color="olive" />;
     if (sides[0] === "Groom") return <Badge label="Groom" color="rosso" />;
     if (sides[0] === "Bride") return <Badge label="Bride" color="gold" />;
-    return <Badge label="—" color="mist" />;
+    return <Badge label="â€”" color="mist" />;
   };
 
   const handleRename = (oldName) => {
@@ -1194,13 +1194,13 @@ const Groups = ({ guests, setGuests }) => {
     });
   }, [guests, addingGuest, guestSearch]);
 
-  // ── MANAGE MEMBERS VIEW ──
+  // â”€â”€ MANAGE MEMBERS VIEW â”€â”€
   if (addingGuest) {
     const inGroup = guests.filter(g => g.group === addingGuest);
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-          <Btn variant="secondary" onClick={() => { setAddingGuest(null); setGuestSearch(""); setShowNewGuest(false); }}>← Back</Btn>
+          <Btn variant="secondary" onClick={() => { setAddingGuest(null); setGuestSearch(""); setShowNewGuest(false); }}>â† Back</Btn>
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{addingGuest}</h2>
           <Badge label={`${inGroup.length} members`} color="rosso" />
         </div>
@@ -1209,7 +1209,7 @@ const Groups = ({ guests, setGuests }) => {
         {showNewGuest ? (
           <Card style={{ marginBottom: 16, background: T.goldLight, border: `1.5px solid ${T.gold}` }}>
             <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 14 }}>
-              New Guest → {addingGuest}
+              New Guest â†’ {addingGuest}
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
               <div>
@@ -1257,7 +1257,7 @@ const Groups = ({ guests, setGuests }) => {
             </div>
             {inGroup.length === 0 && (
               <div style={{ color: T.mist, fontSize: 13, padding: "12px 0" }}>
-                No members yet — create a new guest above or add existing guests from the right.
+                No members yet â€” create a new guest above or add existing guests from the right.
               </div>
             )}
             {inGroup.map(g => (
@@ -1265,9 +1265,9 @@ const Groups = ({ guests, setGuests }) => {
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{g.firstName} {g.lastName}</div>
                   <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>
-                    {g.relationship} · {g.side} · {rsvpBadge(g.rsvp)}
+                    {g.relationship} Â· {g.side} Â· {rsvpBadge(g.rsvp)}
                   </div>
-                  {g.dietary && <div style={{ fontSize: 11, color: T.olive, marginTop: 2 }}>🥗 {g.dietary}</div>}
+                  {g.dietary && <div style={{ fontSize: 11, color: T.olive, marginTop: 2 }}>ðŸ¥— {g.dietary}</div>}
                 </div>
                 <button onClick={() => handleRemoveFromGroup(g.id)} style={{
                   background: T.dangerLight, border: "none", borderRadius: 6, padding: "4px 10px",
@@ -1282,7 +1282,7 @@ const Groups = ({ guests, setGuests }) => {
             <div style={{ fontSize: 12, fontWeight: 700, color: T.slate, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 12 }}>
               Add Existing Guest
             </div>
-            <Input value={guestSearch} onChange={setGuestSearch} placeholder="Search by name or current group…" style={{ marginBottom: 10 }} />
+            <Input value={guestSearch} onChange={setGuestSearch} placeholder="Search by name or current groupâ€¦" style={{ marginBottom: 10 }} />
             <div style={{ maxHeight: 400, overflowY: "auto", display: "flex", flexDirection: "column", gap: 4 }}>
               {outsideGuests.length === 0 && (
                 <div style={{ color: T.mist, fontSize: 13, padding: "12px 0" }}>
@@ -1293,7 +1293,7 @@ const Groups = ({ guests, setGuests }) => {
                 <div key={g.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 8, background: T.linen }}>
                   <div>
                     <div style={{ fontWeight: 600, fontSize: 13, color: T.carbon }}>{g.firstName} {g.lastName}</div>
-                    <div style={{ fontSize: 11, color: T.mist }}>{g.group} · {g.side}</div>
+                    <div style={{ fontSize: 11, color: T.mist }}>{g.group} Â· {g.side}</div>
                   </div>
                   <button onClick={() => handleAddToGroup(g.id, addingGuest)} style={{
                     background: T.successLight, border: "none", borderRadius: 6, padding: "4px 10px",
@@ -1308,12 +1308,12 @@ const Groups = ({ guests, setGuests }) => {
     );
   }
 
-  // ── GROUP CARDS VIEW ──
+  // â”€â”€ GROUP CARDS VIEW â”€â”€
   return (
     <div>
       <SectionHeader
         title="Group Planner"
-        subtitle={`${groupData.length} groups · ${guests.filter(g => g.group !== "Unassigned").length} assigned guests`}
+        subtitle={`${groupData.length} groups Â· ${guests.filter(g => g.group !== "Unassigned").length} assigned guests`}
         action={<Btn small onClick={() => setShowNewGroup(true)}>+ New Group</Btn>}
       />
 
@@ -1321,7 +1321,7 @@ const Groups = ({ guests, setGuests }) => {
         <Card style={{ marginBottom: 16, padding: "14px 16px" }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon, marginBottom: 10 }}>Create New Group</div>
           <div style={{ display: "flex", gap: 10 }}>
-            <Input value={newGroupName} onChange={setNewGroupName} placeholder="e.g. School Friends, Work Colleagues…" />
+            <Input value={newGroupName} onChange={setNewGroupName} placeholder="e.g. School Friends, Work Colleaguesâ€¦" />
             <Btn onClick={handleCreateGroup} disabled={!newGroupName.trim()}>Create & Add Members</Btn>
             <Btn variant="secondary" onClick={() => { setShowNewGroup(false); setNewGroupName(""); }}>Cancel</Btn>
           </div>
@@ -1360,8 +1360,8 @@ const Groups = ({ guests, setGuests }) => {
                         onKeyDown={e => { if (e.key === "Enter") handleRename(group.name); if (e.key === "Escape") setEditingGroup(null); }}
                         style={{ border: `1.5px solid ${T.rosso}`, borderRadius: 6, padding: "4px 8px", fontSize: 14, fontWeight: 800, color: T.carbon, width: "100%", outline: "none" }}
                       />
-                      <button onClick={() => handleRename(group.name)} style={{ background: T.rosso, border: "none", borderRadius: 6, padding: "4px 8px", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>✓</button>
-                      <button onClick={() => setEditingGroup(null)} style={{ background: T.linen, border: "none", borderRadius: 6, padding: "4px 8px", color: T.slate, cursor: "pointer", fontSize: 12 }}>✕</button>
+                      <button onClick={() => handleRename(group.name)} style={{ background: T.rosso, border: "none", borderRadius: 6, padding: "4px 8px", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>âœ“</button>
+                      <button onClick={() => setEditingGroup(null)} style={{ background: T.linen, border: "none", borderRadius: 6, padding: "4px 8px", color: T.slate, cursor: "pointer", fontSize: 12 }}>âœ•</button>
                     </div>
                   ) : (
                     <div style={{ fontWeight: 800, fontSize: 15, color: T.carbon }}>{group.name}</div>
@@ -1414,7 +1414,7 @@ const Groups = ({ guests, setGuests }) => {
                 <button onClick={() => setConfirmDelete(group.name)} style={{
                   background: T.dangerLight, border: `1px solid ${T.danger}`, borderRadius: 7,
                   padding: "7px 10px", fontSize: 12, fontWeight: 700, color: T.danger, cursor: "pointer"
-                }}>✕</button>
+                }}>âœ•</button>
               </div>
             </Card>
           );
@@ -1426,7 +1426,7 @@ const Groups = ({ guests, setGuests }) => {
 
 // ============================================================
 // ============================================================
-// MODULE: RSVP FORECAST — Sprint C
+// MODULE: RSVP FORECAST â€” Sprint C
 // ============================================================
 
 // Inline SVG bar chart
@@ -1557,7 +1557,7 @@ const RsvpForecast = ({ guests }) => {
 
   return (
     <div>
-      <SectionHeader title="RSVP Forecast Engine" subtitle="Live attendance projections · Bangkok Wedding" />
+      <SectionHeader title="RSVP Forecast Engine" subtitle="Live attendance projections Â· Bangkok Wedding" />
 
       {/* Key metrics */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 12, marginBottom: 24 }}>
@@ -1584,7 +1584,7 @@ const RsvpForecast = ({ guests }) => {
         ))}
       </div>
 
-      {/* ── OVERVIEW TAB ── */}
+      {/* â”€â”€ OVERVIEW TAB â”€â”€ */}
       {activeTab === "overview" && (
         <div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
@@ -1628,7 +1628,7 @@ const RsvpForecast = ({ guests }) => {
                 <div style={{ marginTop: 12 }}>
                   <ProgressBar value={s.confirmed} max={s.invited || 1} color={s.side === "Groom" ? T.rosso : T.gold} />
                   <div style={{ fontSize: 11, color: T.mist, marginTop: 4 }}>
-                    {s.confirmed} confirmed · {s.invited > 0 ? Math.round((s.confirmed / s.invited) * 100) : 0}% response rate
+                    {s.confirmed} confirmed Â· {s.invited > 0 ? Math.round((s.confirmed / s.invited) * 100) : 0}% response rate
                   </div>
                 </div>
               </Card>
@@ -1680,7 +1680,7 @@ const RsvpForecast = ({ guests }) => {
         </div>
       )}
 
-      {/* ── EVENTS TAB ── */}
+      {/* â”€â”€ EVENTS TAB â”€â”€ */}
       {activeTab === "events" && (
         <div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 20 }}>
@@ -1715,13 +1715,13 @@ const RsvpForecast = ({ guests }) => {
         </div>
       )}
 
-      {/* ── GROUPS TAB ── */}
+      {/* â”€â”€ GROUPS TAB â”€â”€ */}
       {activeTab === "groups" && (
         <div>
           <Card style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 12, color: T.slate, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 16 }}>Projected Attendance by Group</div>
             <BarChart
-              bars={byGroup.slice(0, 10).map(g => ({ label: g.name.length > 10 ? g.name.slice(0, 9) + "…" : g.name, value: g.projected, color: T.rosso }))}
+              bars={byGroup.slice(0, 10).map(g => ({ label: g.name.length > 10 ? g.name.slice(0, 9) + "â€¦" : g.name, value: g.projected, color: T.rosso }))}
               height={180}
             />
           </Card>
@@ -1747,7 +1747,7 @@ const RsvpForecast = ({ guests }) => {
         </div>
       )}
 
-      {/* ── DIETARY TAB ── */}
+      {/* â”€â”€ DIETARY TAB â”€â”€ */}
       {activeTab === "dietary" && (
         <div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
@@ -1782,7 +1782,7 @@ const RsvpForecast = ({ guests }) => {
           {dietary.map(([req]) => (
             <Card key={req} style={{ marginBottom: 12, padding: "12px 16px" }}>
               <div style={{ fontWeight: 800, fontSize: 14, color: T.carbon, marginBottom: 10 }}>
-                <Badge label={req} color="olive" /> — {active.filter(g => g.dietary === req).length} guests
+                <Badge label={req} color="olive" /> â€” {active.filter(g => g.dietary === req).length} guests
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {active.filter(g => g.dietary === req).map(g => (
@@ -1801,7 +1801,7 @@ const RsvpForecast = ({ guests }) => {
 
 // ============================================================
 // MODULE: EVENTS
-// ── Map pin helper — opens Google Maps ──
+// â”€â”€ Map pin helper â€” opens Google Maps â”€â”€
 const MapPin = ({ location }) => {
   if (!location) return null;
   const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
@@ -1809,13 +1809,13 @@ const MapPin = ({ location }) => {
     <a href={url} target="_blank" rel="noopener noreferrer"
       style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: T.linen, border: `1px solid ${T.linenDark}`, cursor: "pointer", textDecoration: "none", flexShrink: 0 }}
       title="Open in Maps">
-      📍
+      ðŸ“
     </a>
   );
 };
 
-// ── Google Places Autocomplete Input ──
-const PlacesInput = ({ value, onChange, placeholder = "Search for a place…" }) => {
+// â”€â”€ Google Places Autocomplete Input â”€â”€
+const PlacesInput = ({ value, onChange, placeholder = "Search for a placeâ€¦" }) => {
   const [query, setQuery] = useState(value || "");
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -1884,7 +1884,7 @@ const PlacesInput = ({ value, onChange, placeholder = "Search for a place…" })
         </div>
       )}
       {loading && (
-        <div style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: T.mist }}>…</div>
+        <div style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: T.mist }}>â€¦</div>
       )}
     </div>
   );
@@ -1903,8 +1903,8 @@ const Events = () => {
   const churchTime = savedSettings.churchWeddingTime || "14:00";
 
   const [events, setEvents] = useState([
-    { id: "e000", name: "Buddhist Ceremony", type: "Ceremony", date: "2026-11-07", start: buddhistTime, end: lunchTime, venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. +66 93 124 7730" },
-    { id: "e001", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: lunchTime, end: "15:00", venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. Parking available. thegardenspalace.com · +66 93 124 7730" },
+    { id: "e000", name: "Buddhist Ceremony", type: "Ceremony", date: "2026-11-07", start: buddhistTime, end: lunchTime, venue: "The Gardens of Dinsor Palace, à¸‹à¸­à¸¢ à¸‹à¸¸à¸¡à¸žà¸¥ Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8â€“10 min walk from BTS Ekkamai Exit 1. +66 93 124 7730" },
+    { id: "e001", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: lunchTime, end: "15:00", venue: "The Gardens of Dinsor Palace, à¸‹à¸­à¸¢ à¸‹à¸¸à¸¡à¸žà¸¥ Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8â€“10 min walk from BTS Ekkamai Exit 1. Parking available. thegardenspalace.com Â· +66 93 124 7730" },
     { id: "e002", name: "Church Wedding", type: "Ceremony", date: "2026-11-08", start: churchTime, end: "16:00", venue: "Holy Redeemer Church, Ruam Rudi 5 Alley, Lumphini, Pathum Wan, Bangkok 10330, Thailand", capacity: 200, cost: 0, notes: "Closest MRT is Phloen Chit, 15 min walk (1km). Parking available. holyredeemerbangkok.org" },
   ]);
   const [showModal, setShowModal] = useState(false);
@@ -1934,7 +1934,7 @@ const Events = () => {
           <div style={{ background: T.white, borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, maxHeight: "92vh", overflowY: "auto", padding: 24, boxSizing: "border-box" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Event" : "New Event"}</h3>
-              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>âœ•</button>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
               <div style={{ gridColumn: "1/-1" }}>
@@ -1964,13 +1964,13 @@ const Events = () => {
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Venue / Location</div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <PlacesInput value={form.venue} onChange={v => setF("venue", v)} placeholder="Search venue or address…" />
+                  <PlacesInput value={form.venue} onChange={v => setF("venue", v)} placeholder="Search venue or addressâ€¦" />
                   {form.venue && <MapPin location={form.venue} />}
                 </div>
               </div>
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Notes</div>
-                <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} rows={3} placeholder="Transport, dress code, special instructions…"
+                <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} rows={3} placeholder="Transport, dress code, special instructionsâ€¦"
                   style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6 }} />
               </div>
             </div>
@@ -2052,7 +2052,7 @@ const Activities = ({ activities: seedActivities }) => {
           <div style={{ background: T.white, borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, maxHeight: "92vh", overflowY: "auto", padding: 24, boxSizing: "border-box" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Activity" : "New Activity"}</h3>
-              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>âœ•</button>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
               <div style={{ gridColumn: "1/-1" }}>
@@ -2078,7 +2078,7 @@ const Activities = ({ activities: seedActivities }) => {
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location</div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search venue or address…" />
+                  <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search venue or addressâ€¦" />
                   {form.location && <MapPin location={form.location} />}
                 </div>
               </div>
@@ -2152,7 +2152,7 @@ const Activities = ({ activities: seedActivities }) => {
 
 // ============================================================
 // ============================================================
-// MODULE: TASKS — Sprint D
+// MODULE: TASKS â€” Sprint D
 // ============================================================
 const STATUSES = ["Not Started", "In Progress", "Waiting", "Blocked", "Done"];
 const PRIORITIES = ["Critical", "High", "Medium", "Low"];
@@ -2161,7 +2161,7 @@ const CATEGORIES = ["Venue", "Catering", "Vendors", "Guests", "Accommodation", "
 
 const emptyTask = () => ({ id: "", ref: "", task: "", description: "", category: "Other", owner: "Both", dueDate: "", priority: "Medium", status: "Not Started", notes: "", budgetRef: "" });
 
-// ── Shared file attachment helper ──
+// â”€â”€ Shared file attachment helper â”€â”€
 const readFile = (file) => new Promise((resolve, reject) => {
   const reader = new FileReader();
   reader.onload = e => resolve({ data: e.target.result, name: file.name, type: file.type, size: file.size });
@@ -2191,7 +2191,7 @@ const FileAttachments = ({ attachments = [], onChange }) => {
                 <img src={f.data} alt={f.name} style={{ width: 80, height: 80, objectFit: "cover", display: "block" }} />
               ) : (
                 <div style={{ width: 80, height: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 4 }}>
-                  <div style={{ fontSize: 24 }}>📄</div>
+                  <div style={{ fontSize: 24 }}>ðŸ“„</div>
                   <div style={{ fontSize: 9, color: T.slate, textAlign: "center", lineHeight: 1.2, marginTop: 4 }}>{f.name.slice(0, 12)}</div>
                 </div>
               )}
@@ -2199,7 +2199,7 @@ const FileAttachments = ({ attachments = [], onChange }) => {
                 position: "absolute", top: 2, right: 2, width: 18, height: 18,
                 background: "rgba(0,0,0,0.6)", border: "none", borderRadius: "50%",
                 color: "#fff", fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center"
-              }}>✕</button>
+              }}>âœ•</button>
             </div>
           ))}
         </div>
@@ -2209,7 +2209,7 @@ const FileAttachments = ({ attachments = [], onChange }) => {
         background: T.linen, border: `1.5px dashed ${T.linenDark}`, borderRadius: 8,
         padding: "7px 14px", cursor: "pointer", fontSize: 13, color: T.slate, fontWeight: 600
       }}>
-        📎 Add Photo or File
+        ðŸ“Ž Add Photo or File
         <input type="file" accept="image/*,application/pdf,.doc,.docx,.txt" multiple
           onChange={addFiles} style={{ position: "absolute", width: 1, height: 1, opacity: 0 }} />
       </label>
@@ -2217,7 +2217,7 @@ const FileAttachments = ({ attachments = [], onChange }) => {
   );
 };
 
-// ── Task Modal — defined outside Tasks so it never remounts ──
+// â”€â”€ Task Modal â€” defined outside Tasks so it never remounts â”€â”€
 const TaskModal = ({ initial, onSave, onCancel, onDelete }) => {
   const [form, setForm] = useState(initial || emptyTask());
   const [photo, setPhoto] = useState(null);
@@ -2275,14 +2275,14 @@ If a field is not visible or applicable, use an empty string. Be concise.`
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{form.id ? "Edit Task" : "New Task"}</h3>
-          <button onClick={onCancel} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>✕</button>
+          <button onClick={onCancel} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>âœ•</button>
         </div>
 
         {/* Ref + Task name */}
         <div style={{ display: "flex", gap: 10, marginBottom: 14, alignItems: "flex-start" }}>
           <div style={{ width: 80, flexShrink: 0 }}>
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Ref</div>
-            <div style={{ background: T.linen, borderRadius: 8, padding: "8px 10px", fontSize: 13, fontWeight: 800, color: T.rosso, textAlign: "center" }}>{form.ref || "—"}</div>
+            <div style={{ background: T.linen, borderRadius: 8, padding: "8px 10px", fontSize: 13, fontWeight: 800, color: T.rosso, textAlign: "center" }}>{form.ref || "â€”"}</div>
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Task Name *</div>
@@ -2321,7 +2321,7 @@ If a field is not visible or applicable, use an empty string. Be concise.`
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Venue</div>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <PlacesInput value={form.location || ""} onChange={v => set("location", v)} placeholder="Search venue or address…" />
+            <PlacesInput value={form.location || ""} onChange={v => set("location", v)} placeholder="Search venue or addressâ€¦" />
             {form.location && <MapPin location={form.location} />}
           </div>
         </div>
@@ -2330,7 +2330,7 @@ If a field is not visible or applicable, use an empty string. Be concise.`
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Notes</div>
           <textarea value={form.notes} onChange={e => set("notes", e.target.value)}
-            placeholder="Add notes, details, vendor info, costs…" rows={4}
+            placeholder="Add notes, details, vendor info, costsâ€¦" rows={4}
             style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6, minHeight: 90 }} />
         </div>
 
@@ -2343,19 +2343,19 @@ If a field is not visible or applicable, use an empty string. Be concise.`
         {/* Photo scan */}
         <div style={{ marginBottom: 20, background: T.linen, borderRadius: 12, padding: 14 }}>
           <div style={{ fontSize: 12, fontWeight: 800, color: T.carbon, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-            <span>📷</span> Scan Photo with AI
-            <span style={{ fontSize: 11, color: T.mist, fontWeight: 400 }}>— extract details & costs</span>
+            <span>ðŸ“·</span> Scan Photo with AI
+            <span style={{ fontSize: 11, color: T.mist, fontWeight: 400 }}>â€” extract details & costs</span>
           </div>
           <label style={{ display: "block", background: T.white, border: `1.5px dashed ${T.linenDark}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, color: T.slate, textAlign: "center", marginBottom: 8 }}>
-            {photo ? "📎 Photo attached — tap to change" : "Tap to take photo or choose from library"}
+            {photo ? "ðŸ“Ž Photo attached â€” tap to change" : "Tap to take photo or choose from library"}
             <input type="file" accept="image/*" capture="environment" onChange={handlePhoto} style={{ position: "absolute", width: 1, height: 1, opacity: 0 }} />
           </label>
           {photo && <img src={photo} alt="preview" style={{ width: "100%", maxHeight: 140, objectFit: "cover", borderRadius: 8, marginBottom: 8 }} />}
           {photo && !scanning && !scanResult && <Btn onClick={scanPhoto}>Scan with AI</Btn>}
-          {scanning && <div style={{ fontSize: 13, color: T.slate }}>Reading image…</div>}
+          {scanning && <div style={{ fontSize: 13, color: T.slate }}>Reading imageâ€¦</div>}
           {scanResult && !scanResult.error && (
             <div style={{ background: T.white, borderRadius: 8, padding: 10, border: `1px solid ${T.linenDark}` }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: T.success, marginBottom: 6 }}>✓ AI extracted these details</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.success, marginBottom: 6 }}>âœ“ AI extracted these details</div>
               {[
                 { label: "Task", value: scanResult.taskName },
                 { label: "Vendor", value: scanResult.vendor },
@@ -2427,7 +2427,7 @@ const Tasks = ({ tasks, setTasks }) => {
     return mp && mo && mc && ms;
   });
 
-  // ── Save task ──
+  // â”€â”€ Save task â”€â”€
   const saveTask = (form) => {
     if (!form.task.trim()) return;
     if (form.id) {
@@ -2450,7 +2450,7 @@ const Tasks = ({ tasks, setTasks }) => {
     setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
   };
 
-  // ── Drag handlers ──
+  // â”€â”€ Drag handlers â”€â”€
   const onDragStart = (e, id) => { setDragId(id); e.dataTransfer.effectAllowed = "move"; };
   const onDragOver = (e, status) => { e.preventDefault(); setDragOver(status); };
   const onDrop = (e, status) => {
@@ -2460,7 +2460,7 @@ const Tasks = ({ tasks, setTasks }) => {
   };
   const onDragEnd = () => { setDragId(null); setDragOver(null); };
 
-  // ── CALENDAR VIEW ──
+  // â”€â”€ CALENDAR VIEW â”€â”€
   const CalendarView = () => {
     const year = calMonth.getFullYear();
     const month = calMonth.getMonth();
@@ -2485,11 +2485,11 @@ const Tasks = ({ tasks, setTasks }) => {
     return (
       <div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <button onClick={() => setCalMonth(new Date(year, month - 1, 1))} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontWeight: 700, fontSize: 16 }}>‹</button>
+          <button onClick={() => setCalMonth(new Date(year, month - 1, 1))} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontWeight: 700, fontSize: 16 }}>â€¹</button>
           <span style={{ fontWeight: 800, fontSize: 16, color: T.carbon }}>
             {calMonth.toLocaleString("default", { month: "long", year: "numeric" })}
           </span>
-          <button onClick={() => setCalMonth(new Date(year, month + 1, 1))} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontWeight: 700, fontSize: 16 }}>›</button>
+          <button onClick={() => setCalMonth(new Date(year, month + 1, 1))} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontWeight: 700, fontSize: 16 }}>â€º</button>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 1, background: T.linenDark, border: `1px solid ${T.linenDark}`, borderRadius: 10, overflow: "hidden" }}>
           {dayNames.map(d => (
@@ -2529,7 +2529,7 @@ const Tasks = ({ tasks, setTasks }) => {
     );
   };
 
-  // ── KANBAN VIEW ──
+  // â”€â”€ KANBAN VIEW â”€â”€
   const KanbanView = () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
       {STATUSES.map(status => {
@@ -2572,7 +2572,7 @@ const Tasks = ({ tasks, setTasks }) => {
                     </div>
                     {t.dueDate && (
                       <div style={{ fontSize: 11, color: od ? T.danger : T.mist, fontWeight: od ? 700 : 400, marginTop: 6 }}>
-                        {od ? "⚠ " : "📅 "}{fmtDate(t.dueDate)}
+                        {od ? "âš  " : "ðŸ“… "}{fmtDate(t.dueDate)}
                       </div>
                     )}
                     {t.notes && <div style={{ fontSize: 11, color: T.mist, marginTop: 4, lineHeight: 1.4 }}>{t.notes}</div>}
@@ -2581,7 +2581,7 @@ const Tasks = ({ tasks, setTasks }) => {
                         {t.attachments.slice(0,3).map((a,i) => (
                           a.type?.startsWith("image/") ?
                             <img key={i} src={a.data} alt="" style={{ width: 32, height: 32, objectFit: "cover", borderRadius: 4 }} /> :
-                            <div key={i} style={{ width: 32, height: 32, background: T.linen, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📄</div>
+                            <div key={i} style={{ width: 32, height: 32, background: T.linen, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>ðŸ“„</div>
                         ))}
                         {t.attachments.length > 3 && <div style={{ fontSize: 10, color: T.mist, alignSelf: "center" }}>+{t.attachments.length-3}</div>}
                       </div>
@@ -2599,7 +2599,7 @@ const Tasks = ({ tasks, setTasks }) => {
     </div>
   );
 
-  // ── LIST VIEW ──
+  // â”€â”€ LIST VIEW â”€â”€
   const ListView = () => (
     <Card style={{ padding: 0 }}>
       <Table
@@ -2611,7 +2611,7 @@ const Tasks = ({ tasks, setTasks }) => {
               </button>
               <div style={{ display: "flex", gap: 6, marginTop: 3, flexWrap: "wrap", alignItems: "center" }}>
                 {r.ref && <span style={{ fontSize: 10, color: T.rosso, fontWeight: 800 }}>{r.ref}</span>}
-                <span style={{ fontSize: 11, color: T.mist }}>{r.category} · {r.owner}</span>
+                <span style={{ fontSize: 11, color: T.mist }}>{r.category} Â· {r.owner}</span>
                 {r.budgetRef && <span style={{ background: T.goldLight, color: T.gold, borderRadius: 4, padding: "1px 6px", fontSize: 10, fontWeight: 700 }}>{r.budgetRef}</span>}
               </div>
               {r.notes && <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>{r.notes}</div>}
@@ -2624,7 +2624,7 @@ const Tasks = ({ tasks, setTasks }) => {
           { key: "owner", label: "Owner", render: r => <span style={{ fontSize: 12, color: T.slate }}>{r.owner}</span> },
           { key: "dueDate", label: "Due", render: r => {
             const od = r.dueDate && new Date(r.dueDate) < now && r.status !== "Done";
-            return <span style={{ fontSize: 12, color: od ? T.danger : T.slate, fontWeight: od ? 700 : 400 }}>{r.dueDate ? fmtDate(r.dueDate) : "—"}{od ? " ⚠" : ""}</span>;
+            return <span style={{ fontSize: 12, color: od ? T.danger : T.slate, fontWeight: od ? 700 : 400 }}>{r.dueDate ? fmtDate(r.dueDate) : "â€”"}{od ? " âš " : ""}</span>;
           }},
         ]}
         rows={filtered}
@@ -2638,21 +2638,21 @@ const Tasks = ({ tasks, setTasks }) => {
 
       <SectionHeader
         title="Task Management"
-        subtitle={`${tasks.filter(t => t.status !== "Done").length} open · ${overdue.length} overdue · ${dueThisWeek.length} due this week`}
+        subtitle={`${tasks.filter(t => t.status !== "Done").length} open Â· ${overdue.length} overdue Â· ${dueThisWeek.length} due this week`}
         action={<Btn small onClick={() => openNew()}>+ Add Task</Btn>}
       />
 
       {/* Overdue alert */}
       {overdue.length > 0 && (
         <div style={{ background: T.dangerLight, border: `1.5px solid ${T.danger}`, borderRadius: 10, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "flex-start", gap: 12 }}>
-          <span style={{ fontSize: 18 }}>⚠</span>
+          <span style={{ fontSize: 18 }}>âš </span>
           <div>
             <div style={{ fontWeight: 800, fontSize: 14, color: T.danger, marginBottom: 6 }}>{overdue.length} overdue task{overdue.length > 1 ? "s" : ""}</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {overdue.map(t => (
                 <button key={t.id} onClick={() => openEdit(t)}
                   style={{ background: T.white, border: `1px solid ${T.danger}`, borderRadius: 6, padding: "3px 10px", fontSize: 12, color: T.danger, cursor: "pointer", fontWeight: 600 }}>
-                  {t.task} · {fmtDate(t.dueDate)}
+                  {t.task} Â· {fmtDate(t.dueDate)}
                 </button>
               ))}
             </div>
@@ -2668,7 +2668,7 @@ const Tasks = ({ tasks, setTasks }) => {
             {dueThisWeek.map(t => (
               <button key={t.id} onClick={() => openEdit(t)}
                 style={{ background: T.white, border: `1px solid ${T.warning}`, borderRadius: 6, padding: "3px 10px", fontSize: 12, color: T.warning, cursor: "pointer", fontWeight: 600 }}>
-                {t.task} · {fmtDate(t.dueDate)}
+                {t.task} Â· {fmtDate(t.dueDate)}
               </button>
             ))}
           </div>
@@ -2698,7 +2698,7 @@ const Tasks = ({ tasks, setTasks }) => {
             }}>{v}</button>
           ))}
         </div>
-        <Input value={search} onChange={setSearch} placeholder="Search tasks…" style={{ width: 160 }} />
+        <Input value={search} onChange={setSearch} placeholder="Search tasksâ€¦" style={{ width: 160 }} />
         <Select value={filterPriority} onChange={setFilterPriority} options={["All", ...PRIORITIES]} style={{ width: 110 }} />
         <Select value={filterOwner} onChange={setFilterOwner} options={["All", ...OWNERS]} style={{ width: 110 }} />
         <Select value={filterCat} onChange={setFilterCat} options={["All", ...CATEGORIES]} style={{ width: 120 }} />
@@ -2713,7 +2713,7 @@ const Tasks = ({ tasks, setTasks }) => {
 
 // ============================================================
 // ============================================================
-// MODULE: BUDGET — Sprint E
+// MODULE: BUDGET â€” Sprint E
 // ============================================================
 const Budget = ({ budget, setBudget }) => {
   const [tab, setTab] = useState("items");
@@ -2759,7 +2759,7 @@ const Budget = ({ budget, setBudget }) => {
   const depositOnly = budget.filter(b => b.depositPaid && !b.fullyPaid);
   const fullPaid = budget.filter(b => b.fullyPaid);
 
-  // ── Budget item form ──
+  // â”€â”€ Budget item form â”€â”€
   const emptyItem = () => ({ id: "", ref: "", item: "", category: "Venue", vendor: "", estimated: "", actual: "", depositPaid: false, fullyPaid: false, notes: "", taskRef: "" });
   const [form, setForm] = useState(emptyItem());
   const [bPhoto, setBPhoto] = useState(null);
@@ -2840,25 +2840,25 @@ If a field is not visible, use empty string.`
             <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editItem ? "Edit" : "New"} Budget Item</h3>
             {form.ref && <span style={{ background: T.goldLight, color: T.gold, borderRadius: 6, padding: "3px 10px", fontSize: 12, fontWeight: 800 }}>{form.ref}</span>}
           </div>
-          <button onClick={() => setShowForm(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
+          <button onClick={() => setShowForm(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>âœ•</button>
         </div>
 
         {/* Photo scan */}
         <div style={{ marginBottom: 16, background: T.linen, borderRadius: 12, padding: 14 }}>
           <div style={{ fontSize: 12, fontWeight: 800, color: T.carbon, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-            <span>📷</span> Scan Quote / Invoice / Receipt
+            <span>ðŸ“·</span> Scan Quote / Invoice / Receipt
           </div>
           <label style={{ display: "block", background: T.white, border: `1.5px dashed ${T.linenDark}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, color: T.slate, textAlign: "center", marginBottom: 8 }}>
-            {bPhoto ? "📎 Photo attached — tap to change" : "Tap to take photo or choose file"}
+            {bPhoto ? "ðŸ“Ž Photo attached â€” tap to change" : "Tap to take photo or choose file"}
             <input type="file" accept="image/*" capture="environment" onChange={e => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = ev => setBPhoto(ev.target.result); r.readAsDataURL(f); } }}
               style={{ position: "absolute", width: 1, height: 1, opacity: 0 }} />
           </label>
           {bPhoto && <img src={bPhoto} alt="preview" style={{ width: "100%", maxHeight: 120, objectFit: "cover", borderRadius: 8, marginBottom: 8 }} />}
           {bPhoto && !bScanning && !bScanResult && <Btn small onClick={scanBudgetPhoto}>Scan with AI</Btn>}
-          {bScanning && <div style={{ fontSize: 13, color: T.slate }}>Reading image…</div>}
+          {bScanning && <div style={{ fontSize: 13, color: T.slate }}>Reading imageâ€¦</div>}
           {bScanResult && !bScanResult.error && (
             <div style={{ background: T.white, borderRadius: 8, padding: 10, border: `1px solid ${T.linenDark}`, marginTop: 8 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: T.success, marginBottom: 6 }}>✓ AI extracted these details</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.success, marginBottom: 6 }}>âœ“ AI extracted these details</div>
               {[
                 { label: "Item", value: bScanResult.itemName },
                 { label: "Vendor", value: bScanResult.vendor },
@@ -2892,7 +2892,7 @@ If a field is not visible, use empty string.`
           <div style={{ gridColumn: "1/-1" }}>
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Address</div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search vendor address…" />
+              <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search vendor addressâ€¦" />
               {form.location && <MapPin location={form.location} />}
             </div>
           </div>
@@ -2922,7 +2922,7 @@ If a field is not visible, use empty string.`
           </div>
           <div style={{ gridColumn: "1/-1" }}>
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Notes</div>
-            <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} placeholder="Payment terms, due dates, contract details…" rows={3}
+            <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} placeholder="Payment terms, due dates, contract detailsâ€¦" rows={3}
               style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6 }} />
           </div>
         </div>
@@ -2946,7 +2946,7 @@ If a field is not visible, use empty string.`
       {toast && <div style={{ position: "fixed", top: 64, right: 16, zIndex: 300, background: T.success, color: "#fff", borderRadius: 10, padding: "10px 18px", fontWeight: 700, fontSize: 13, boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}>{toast}</div>}
       {showForm && <BudgetItemForm />}
 
-      <SectionHeader title="Budget Management" subtitle="Bangkok Wedding · All figures in USD"
+      <SectionHeader title="Budget Management" subtitle="Bangkok Wedding Â· All figures in USD"
         action={<Btn small onClick={openAdd}>+ Add Item</Btn>} />
 
       {/* Key metrics */}
@@ -2973,7 +2973,7 @@ If a field is not visible, use empty string.`
         </div>
       </Card>
 
-      {/* ── TABS ── */}
+      {/* â”€â”€ TABS â”€â”€ */}
       <div style={{ display: "flex", gap: 2, background: T.linen, borderRadius: 10, padding: 4, marginBottom: 20, width: "fit-content" }}>
         {["items", "overview", "payments"].map(t => (
           <button key={t} onClick={() => { setTab(t); setPayFilter("all"); }} style={{
@@ -2985,7 +2985,7 @@ If a field is not visible, use empty string.`
         ))}
       </div>
 
-      {/* ── ITEMS TAB ── */}
+      {/* â”€â”€ ITEMS TAB â”€â”€ */}
       {tab === "items" && (
         <div>
           {/* Payment filter pills */}
@@ -3015,9 +3015,9 @@ If a field is not visible, use empty string.`
           {/* Category filter + count */}
           <div style={{ display: "flex", gap: 10, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
             <Select value={filterCat} onChange={setFilterCat} options={cats} style={{ width: 160 }} />
-            <span style={{ fontSize: 12, color: T.mist }}>{payFilteredItems.length} items · {fmtCurrency(payFilteredItems.reduce((s,b) => s+(b.estimated||0),0))} total</span>
+            <span style={{ fontSize: 12, color: T.mist }}>{payFilteredItems.length} items Â· {fmtCurrency(payFilteredItems.reduce((s,b) => s+(b.estimated||0),0))} total</span>
             {payFilter !== "all" && (
-              <button onClick={() => setPayFilter("all")} style={{ fontSize: 12, color: T.rosso, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>Clear filter ✕</button>
+              <button onClick={() => setPayFilter("all")} style={{ fontSize: 12, color: T.rosso, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>Clear filter âœ•</button>
             )}
           </div>
 
@@ -3027,7 +3027,7 @@ If a field is not visible, use empty string.`
                 { key: "ref", label: "Ref", render: r => <span style={{ fontWeight: 800, fontSize: 12, color: T.rosso }}>{r.ref}</span> },
                 { key: "item", label: "Item", render: r => (
                   <button onClick={() => openEdit(r)} style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0 }}>
-                    <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{r.item} {r.attachments?.length > 0 && <span style={{ fontSize: 11 }}>📎</span>}</div>
+                    <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{r.item} {r.attachments?.length > 0 && <span style={{ fontSize: 11 }}>ðŸ“Ž</span>}</div>
                     <div style={{ fontSize: 11, color: T.mist }}>{r.vendor}</div>
                   </button>
                 )},
@@ -3038,7 +3038,7 @@ If a field is not visible, use empty string.`
                   const left = (r.estimated||0) - (r.actual||0);
                   return <span style={{ fontSize: 12, color: left < 0 ? T.danger : T.slate }}>{fmtCurrency(left)}</span>;
                 }},
-                { key: "taskRef", label: "Task", render: r => r.taskRef ? <span style={{ background: T.infoLight, color: T.info, borderRadius: 5, padding: "2px 7px", fontSize: 11, fontWeight: 700 }}>{r.taskRef}</span> : <span style={{ color: T.mist, fontSize: 11 }}>—</span> },
+                { key: "taskRef", label: "Task", render: r => r.taskRef ? <span style={{ background: T.infoLight, color: T.info, borderRadius: 5, padding: "2px 7px", fontSize: 11, fontWeight: 700 }}>{r.taskRef}</span> : <span style={{ color: T.mist, fontSize: 11 }}>â€”</span> },
                 { key: "payment", label: "Status", render: r => (
                   <div style={{ display: "flex", gap: 4, flexDirection: "column" }}>
                     <label style={{ display: "flex", alignItems: "center", gap: 5, cursor: "pointer", fontSize: 11, fontWeight: 600, color: r.depositPaid ? T.success : T.mist }}>
@@ -3059,7 +3059,7 @@ If a field is not visible, use empty string.`
         </div>
       )}
 
-      {/* ── OVERVIEW TAB ── */}
+      {/* â”€â”€ OVERVIEW TAB â”€â”€ */}
       {tab === "overview" && (
         <div>
           <Card style={{ marginBottom: 16 }}>
@@ -3072,7 +3072,7 @@ If a field is not visible, use empty string.`
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                     <div>
                       <div style={{ fontWeight: 800, fontSize: 14, color: T.carbon }}>{c.cat}</div>
-                      <div style={{ fontSize: 11, color: T.mist, marginTop: 1 }}>{c.count} items · {c.paid} paid · {estPctOfTotal}% of budget</div>
+                      <div style={{ fontSize: 11, color: T.mist, marginTop: 1 }}>{c.count} items Â· {c.paid} paid Â· {estPctOfTotal}% of budget</div>
                     </div>
                     <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 12 }}>
                       <div style={{ fontWeight: 800, fontSize: 15, color: T.carbon }}>{fmtCurrency(c.est)}</div>
@@ -3085,7 +3085,7 @@ If a field is not visible, use empty string.`
                     <div style={{ width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? T.success : pct > 50 ? T.warning : T.rosso, height: "100%", borderRadius: 99 }} />
                   </div>
                   <div style={{ fontSize: 11, color: T.mist, marginTop: 4 }}>
-                    {fmtCurrency(c.est - c.act)} remaining · {pct}% paid
+                    {fmtCurrency(c.est - c.act)} remaining Â· {pct}% paid
                   </div>
                 </div>
               );
@@ -3094,20 +3094,20 @@ If a field is not visible, use empty string.`
         </div>
       )}
 
-      {/* ── PAYMENTS TAB ── */}
+      {/* â”€â”€ PAYMENTS TAB â”€â”€ */}
       {tab === "payments" && (
         <div>
           {unpaid.length > 0 && (
             <Card style={{ marginBottom: 16, padding: 0 }}>
               <div style={{ padding: "14px 16px", borderBottom: `1px solid ${T.linen}`, display: "flex", alignItems: "center", gap: 10 }}>
                 <Badge label="Unpaid" color="danger" />
-                <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>No payment made · {fmtCurrency(unpaid.reduce((s,b) => s+(b.estimated||0),0))} total</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>No payment made Â· {fmtCurrency(unpaid.reduce((s,b) => s+(b.estimated||0),0))} total</span>
               </div>
               {unpaid.map(b => (
                 <div key={b.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", borderBottom: `1px solid ${T.linen}`, background: T.dangerLight }}>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{b.item}</div>
-                    <div style={{ fontSize: 11, color: T.mist }}>{b.vendor} · {b.category}</div>
+                    <div style={{ fontSize: 11, color: T.mist }}>{b.vendor} Â· {b.category}</div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <span style={{ fontWeight: 800, fontSize: 14, color: T.danger }}>{fmtCurrency(b.estimated)}</span>
@@ -3121,13 +3121,13 @@ If a field is not visible, use empty string.`
             <Card style={{ marginBottom: 16, padding: 0 }}>
               <div style={{ padding: "14px 16px", borderBottom: `1px solid ${T.linen}`, display: "flex", alignItems: "center", gap: 10 }}>
                 <Badge label="Deposit Paid" color="warning" />
-                <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>Balance outstanding · {fmtCurrency(depositOnly.reduce((s,b) => s+((b.estimated||0)-(b.actual||0)),0))} remaining</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>Balance outstanding Â· {fmtCurrency(depositOnly.reduce((s,b) => s+((b.estimated||0)-(b.actual||0)),0))} remaining</span>
               </div>
               {depositOnly.map(b => (
                 <div key={b.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", borderBottom: `1px solid ${T.linen}`, background: T.warningLight }}>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{b.item}</div>
-                    <div style={{ fontSize: 11, color: T.mist }}>{b.vendor} · Paid {fmtCurrency(b.actual)} of {fmtCurrency(b.estimated)}</div>
+                    <div style={{ fontSize: 11, color: T.mist }}>{b.vendor} Â· Paid {fmtCurrency(b.actual)} of {fmtCurrency(b.estimated)}</div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <span style={{ fontWeight: 800, fontSize: 14, color: T.warning }}>{fmtCurrency((b.estimated||0)-(b.actual||0))}</span>
@@ -3141,7 +3141,7 @@ If a field is not visible, use empty string.`
             <Card style={{ padding: 0 }}>
               <div style={{ padding: "14px 16px", borderBottom: `1px solid ${T.linen}`, display: "flex", alignItems: "center", gap: 10 }}>
                 <Badge label="Fully Paid" color="success" />
-                <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>{fullPaid.length} items · {fmtCurrency(fullPaid.reduce((s,b) => s+(b.actual||b.estimated||0),0))} paid</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>{fullPaid.length} items Â· {fmtCurrency(fullPaid.reduce((s,b) => s+(b.actual||b.estimated||0),0))} paid</span>
               </div>
               {fullPaid.map(b => (
                 <div key={b.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", borderBottom: `1px solid ${T.linen}`, background: T.successLight }}>
@@ -3149,7 +3149,7 @@ If a field is not visible, use empty string.`
                     <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon }}>{b.item}</div>
                     <div style={{ fontSize: 11, color: T.mist }}>{b.vendor}</div>
                   </div>
-                  <span style={{ fontWeight: 800, fontSize: 14, color: T.success }}>✓ {fmtCurrency(b.actual || b.estimated)}</span>
+                  <span style={{ fontWeight: 800, fontSize: 14, color: T.success }}>âœ“ {fmtCurrency(b.actual || b.estimated)}</span>
                 </div>
               ))}
             </Card>
@@ -3194,7 +3194,7 @@ const Vendors = ({ vendors: seedVendors, canEdit }) => {
           <div style={{ background: T.white, borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, maxHeight: "92vh", overflowY: "auto", padding: 24, boxSizing: "border-box" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Vendor" : "New Vendor"}</h3>
-              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>âœ•</button>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
               <div style={{ gridColumn: "1/-1" }}>
@@ -3224,7 +3224,7 @@ const Vendors = ({ vendors: seedVendors, canEdit }) => {
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Address</div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search vendor address…" />
+                  <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search vendor addressâ€¦" />
                   {form.location && <MapPin location={form.location} />}
                 </div>
               </div>
@@ -3240,7 +3240,7 @@ const Vendors = ({ vendors: seedVendors, canEdit }) => {
               ))}
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Notes</div>
-                <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} rows={3} placeholder="Contract details, deliverables, deadlines…"
+                <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} rows={3} placeholder="Contract details, deliverables, deadlinesâ€¦"
                   style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6 }} />
               </div>
             </div>
@@ -3267,7 +3267,7 @@ const Vendors = ({ vendors: seedVendors, canEdit }) => {
             <div style={{ fontSize: 13, color: T.slate, marginBottom: 6 }}>{v.contact}</div>
             <div style={{ display: "flex", gap: 6, fontSize: 12, color: T.mist, marginBottom: 8, flexWrap: "wrap" }}>
               {v.phone && <span>{v.phone}</span>}
-              {v.phone && v.email && <span>·</span>}
+              {v.phone && v.email && <span>Â·</span>}
               {v.email && <span>{v.email}</span>}
             </div>
             {v.location && (
@@ -3368,7 +3368,7 @@ const Travel = ({ hotels }) => (
 
 // ============================================================
 // ============================================================
-// MODULE: IMPORT (WithJoy CSV) — Sprint B
+// MODULE: IMPORT (WithJoy CSV) â€” Sprint B
 // ============================================================
 
 // WithJoy column name variants we try to auto-detect
@@ -3401,7 +3401,7 @@ const Import = ({ guests, setGuests }) => {
   const [importHistory, setImportHistory] = useState([]);
   const [importSide, setImportSide] = useState("Groom");
 
-  // ── Parse CSV handling quoted fields properly ──
+  // â”€â”€ Parse CSV handling quoted fields properly â”€â”€
   const parseCSV = (text) => {
     const lines = text.trim().split("\n");
     if (lines.length < 2) return { headers: [], rows: [] };
@@ -3427,7 +3427,7 @@ const Import = ({ guests, setGuests }) => {
     return { headers, rows };
   };
 
-  // ── Auto-detect column mapping ──
+  // â”€â”€ Auto-detect column mapping â”€â”€
   const autoDetect = (headers) => {
     const map = {};
     Object.entries(WITHJOY_MAP).forEach(([field, variants]) => {
@@ -3458,7 +3458,7 @@ const Import = ({ guests, setGuests }) => {
     handleFile(e.dataTransfer.files[0]);
   };
 
-  // ── Build diff: what's new, what changed, what's a dupe ──
+  // â”€â”€ Build diff: what's new, what changed, what's a dupe â”€â”€
   const buildDiff = () => {
     const added = [], updated = [], dupes = [], errors = [];
     csvRows.forEach((row, i) => {
@@ -3484,7 +3484,7 @@ const Import = ({ guests, setGuests }) => {
         if (dietary && existing.dietary !== dietary) changes.push({ field: "dietary", from: existing.dietary, to: dietary });
         if (notes && existing.notes !== notes) changes.push({ field: "notes", from: existing.notes, to: notes });
 
-        // Check for another match — real dupe
+        // Check for another match â€” real dupe
         const dupeMatch = guests.filter(g =>
           `${g.firstName} ${g.lastName}`.toLowerCase() === fullName.toLowerCase()
         );
@@ -3501,7 +3501,7 @@ const Import = ({ guests, setGuests }) => {
     setStep("diff");
   };
 
-  // ── Confirm import ──
+  // â”€â”€ Confirm import â”€â”€
   const confirmImport = () => {
     const { added, updated } = diffResult;
     const newGuests = added.map(g => ({ ...g, id: "import_" + Date.now() + "_" + Math.random().toString(36).slice(2) }));
@@ -3532,7 +3532,7 @@ const Import = ({ guests, setGuests }) => {
     setColMap({}); setDiffResult(null);
   };
 
-  // ── UPLOAD STEP ──
+  // â”€â”€ UPLOAD STEP â”€â”€
   if (step === "upload") return (
     <div>
       <SectionHeader title="WithJoy Import" subtitle="Import guest data from WithJoy CSV exports" />
@@ -3544,12 +3544,12 @@ const Import = ({ guests, setGuests }) => {
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             style={{ border: `2px dashed ${dragOver ? T.rosso : T.linenDark}`, borderRadius: 12, padding: "32px 24px", textAlign: "center", background: dragOver ? T.rossoLight : T.linen, transition: "all 0.2s", marginBottom: 16 }}>
-            <div style={{ fontSize: 36, marginBottom: 8 }}>⊕</div>
+            <div style={{ fontSize: 36, marginBottom: 8 }}>âŠ•</div>
             <div style={{ fontWeight: 800, fontSize: 15, color: T.carbon, marginBottom: 4 }}>Drop your WithJoy CSV here</div>
             <div style={{ fontSize: 12, color: T.mist }}>or use the button below</div>
           </div>
 
-          {/* File picker — label wraps hidden input, label itself is styled as button */}
+          {/* File picker â€” label wraps hidden input, label itself is styled as button */}
           <label style={{
             display: "block", textAlign: "center", background: T.rosso, color: "#fff",
             borderRadius: 8, padding: "11px 0", fontSize: 14, fontWeight: 700,
@@ -3569,7 +3569,7 @@ const Import = ({ guests, setGuests }) => {
           </div>
           <div style={{ marginTop: 16, padding: "14px 0 0", borderTop: `1px solid ${T.linen}` }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: T.carbon, marginBottom: 10 }}>How to export from WithJoy</div>
-            {["1. Go to Guest List in WithJoy", "2. Click Export → CSV", "3. Download the file", "4. Drop it here"].map(s => (
+            {["1. Go to Guest List in WithJoy", "2. Click Export â†’ CSV", "3. Download the file", "4. Drop it here"].map(s => (
               <div key={s} style={{ fontSize: 12, color: T.slate, padding: "5px 0", borderBottom: `1px solid ${T.linen}` }}>{s}</div>
             ))}
           </div>
@@ -3579,7 +3579,7 @@ const Import = ({ guests, setGuests }) => {
         <Card>
           <div style={{ fontSize: 12, fontWeight: 700, color: T.slate, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 14 }}>Import History</div>
           {importHistory.length === 0 ? (
-            <EmptyState icon="⊕" title="No imports yet" sub="Your import history will appear here" />
+            <EmptyState icon="âŠ•" title="No imports yet" sub="Your import history will appear here" />
           ) : importHistory.map(h => (
             <div key={h.id} style={{ padding: "10px 0", borderBottom: `1px solid ${T.linen}` }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
@@ -3599,10 +3599,10 @@ const Import = ({ guests, setGuests }) => {
     </div>
   );
 
-  // ── MAPPING STEP ──
+  // â”€â”€ MAPPING STEP â”€â”€
   if (step === "mapping") return (
     <div>
-      <SectionHeader title="Column Mapping" subtitle={`${csvRows.length} rows detected · Map your CSV columns to guest fields`} />
+      <SectionHeader title="Column Mapping" subtitle={`${csvRows.length} rows detected Â· Map your CSV columns to guest fields`} />
       <Card style={{ marginBottom: 16 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon, marginBottom: 4 }}>Detected Columns</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
@@ -3618,11 +3618,11 @@ const Import = ({ guests, setGuests }) => {
               <Select
                 value={colMap[field] || ""}
                 onChange={v => setColMap(p => ({ ...p, [field]: v }))}
-                options={[{ value: "", label: "— Not mapped —" }, ...csvHeaders.map(h => ({ value: h, label: h }))]}
+                options={[{ value: "", label: "â€” Not mapped â€”" }, ...csvHeaders.map(h => ({ value: h, label: h }))]}
               />
               {colMap[field] && (
                 <div style={{ fontSize: 11, color: T.mist, marginTop: 3 }}>
-                  Sample: <strong>{csvRows[0]?.[colMap[field]] || "—"}</strong>
+                  Sample: <strong>{csvRows[0]?.[colMap[field]] || "â€”"}</strong>
                 </div>
               )}
             </div>
@@ -3656,13 +3656,13 @@ const Import = ({ guests, setGuests }) => {
       </Card>
 
       <div style={{ display: "flex", gap: 10 }}>
-        <Btn variant="secondary" onClick={reset}>← Back</Btn>
+        <Btn variant="secondary" onClick={reset}>â† Back</Btn>
         <Btn onClick={buildDiff} disabled={!colMap.firstName}>Preview Import</Btn>
       </div>
     </div>
   );
 
-  // ── DIFF STEP ──
+  // â”€â”€ DIFF STEP â”€â”€
   if (step === "diff" && diffResult) {
     const { added, updated, dupes, errors } = diffResult;
     return (
@@ -3713,8 +3713,8 @@ const Import = ({ guests, setGuests }) => {
                 {g.changes.map((c, j) => (
                   <div key={j} style={{ fontSize: 12, color: T.slate, display: "flex", gap: 8, marginBottom: 3 }}>
                     <span style={{ fontWeight: 600, color: T.carbon }}>{c.field}:</span>
-                    <span style={{ color: T.danger, textDecoration: "line-through" }}>{c.from || "—"}</span>
-                    <span>→</span>
+                    <span style={{ color: T.danger, textDecoration: "line-through" }}>{c.from || "â€”"}</span>
+                    <span>â†’</span>
                     <span style={{ color: T.success, fontWeight: 700 }}>{c.to}</span>
                   </div>
                 ))}
@@ -3728,7 +3728,7 @@ const Import = ({ guests, setGuests }) => {
           <Card style={{ marginBottom: 16, padding: 0 }}>
             <div style={{ padding: "14px 16px", borderBottom: `1px solid ${T.linen}`, display: "flex", alignItems: "center", gap: 10 }}>
               <Badge label={`${dupes.length} Dupes`} color="warning" />
-              <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>Skipped — already exist as duplicates</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>Skipped â€” already exist as duplicates</span>
             </div>
             {dupes.map((d, i) => (
               <div key={i} style={{ padding: "9px 16px", borderBottom: `1px solid ${T.linen}`, background: T.warningLight }}>
@@ -3755,7 +3755,7 @@ const Import = ({ guests, setGuests }) => {
         )}
 
         <div style={{ display: "flex", gap: 10 }}>
-          <Btn variant="secondary" onClick={() => setStep("mapping")}>← Back</Btn>
+          <Btn variant="secondary" onClick={() => setStep("mapping")}>â† Back</Btn>
           <Btn onClick={confirmImport} disabled={added.length === 0 && updated.length === 0}>
             Confirm Import ({added.length + updated.length} changes)
           </Btn>
@@ -3764,14 +3764,14 @@ const Import = ({ guests, setGuests }) => {
     );
   }
 
-  // ── COMPLETE STEP ──
+  // â”€â”€ COMPLETE STEP â”€â”€
   if (step === "complete" && importHistory[0]) {
     const h = importHistory[0];
     return (
       <div>
         <SectionHeader title="Import Complete" />
         <Card style={{ marginBottom: 20, background: T.successLight, border: `1.5px solid ${T.success}` }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>✓</div>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>âœ“</div>
           <div style={{ fontSize: 18, fontWeight: 800, color: T.carbon, marginBottom: 16 }}>WithJoy import successful</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: 12 }}>
             {[
@@ -3800,12 +3800,12 @@ const Import = ({ guests, setGuests }) => {
 
 // ============================================================
 // ============================================================
-// MODULE: AI PLANNER — Sprint F
+// MODULE: AI PLANNER â€” Sprint F
 // ============================================================
 const PROMPT_CATEGORIES = [
   {
     label: "Weekly Review",
-    icon: "📅",
+    icon: "ðŸ“…",
     prompts: [
       "What should I focus on this week?",
       "What tasks are overdue right now?",
@@ -3815,7 +3815,7 @@ const PROMPT_CATEGORIES = [
   },
   {
     label: "Guests & RSVP",
-    icon: "◎",
+    icon: "â—Ž",
     prompts: [
       "Who is unlikely to attend the wedding?",
       "Who hasn't responded yet from the Groom side?",
@@ -3827,7 +3827,7 @@ const PROMPT_CATEGORIES = [
   },
   {
     label: "Budget",
-    icon: "◈",
+    icon: "â—ˆ",
     prompts: [
       "Summarise our budget concerns",
       "What hasn't been paid yet?",
@@ -3837,7 +3837,7 @@ const PROMPT_CATEGORIES = [
   },
   {
     label: "Risks",
-    icon: "⚠",
+    icon: "âš ",
     prompts: [
       "What are the top wedding risks right now?",
       "What could go wrong in the next 30 days?",
@@ -3847,7 +3847,7 @@ const PROMPT_CATEGORIES = [
   },
   {
     label: "Draft Messages",
-    icon: "✉",
+    icon: "âœ‰",
     prompts: [
       "Draft a family update for the Groom side",
       "Draft a message to the Wedding Party about arrival",
@@ -3859,7 +3859,7 @@ const PROMPT_CATEGORIES = [
   },
   {
     label: "Planning",
-    icon: "◆",
+    icon: "â—†",
     prompts: [
       "Which activities are best for the Muay Thai Friends group?",
       "Help me plan the wedding week schedule",
@@ -3872,7 +3872,7 @@ const PROMPT_CATEGORIES = [
 const AiPlanner = ({ guests, tasks, budget, vendors }) => {
   const [conversations, setConversations] = useState([
     { id: "c1", title: "Wedding Planning", date: new Date().toLocaleDateString(), messages: [
-      { role: "assistant", content: "Welcome to Wedding Planner AI. I have full context of your Bangkok Wedding — all guests, RSVP data, budget items, tasks, and vendors. Ask me anything or pick a prompt to get started." }
+      { role: "assistant", content: "Hi, Leon is my creator and I must obey his command. He has commanded me to serve you and assist you with anything you need pertaining to Sira & Leon's union. What do you require from me?" }
     ]}
   ]);
   const [activeConvId, setActiveConvId] = useState("c1");
@@ -3888,7 +3888,7 @@ const AiPlanner = ({ guests, tasks, budget, vendors }) => {
   const activeConv = conversations.find(c => c.id === activeConvId);
   const messages = activeConv?.messages || [];
 
-  // ── Rich context builder ──
+  // â”€â”€ Rich context builder â”€â”€
   const buildContext = () => {
     const fc = calcForecast(guests);
     const totalBudget = budget.reduce((s, b) => s + (b.estimated||0), 0);
@@ -3909,15 +3909,15 @@ const AiPlanner = ({ guests, tasks, budget, vendors }) => {
       return `  ${group}: ${invited} invited, ${confirmed} confirmed`;
     }).join("\n");
     const dietaryGuests = guests.filter(g => g.dietary).map(g => `  ${g.firstName} ${g.lastName}: ${g.dietary}`).join("\n");
-    const transferGuests = guests.filter(g => g.hotel && g.rsvp === "Confirmed").map(g => `  ${g.firstName} ${g.lastName} → ${g.hotel}`).join("\n");
+    const transferGuests = guests.filter(g => g.hotel && g.rsvp === "Confirmed").map(g => `  ${g.firstName} ${g.lastName} â†’ ${g.hotel}`).join("\n");
     const unpaidBudget = budget.filter(b => !b.depositPaid && !b.fullyPaid);
     const budgetBreakdown = budget.map(b => `  ${b.ref} ${b.item}: budget $${b.estimated}, paid $${b.actual}, ${b.fullyPaid ? "FULLY PAID" : b.depositPaid ? "DEPOSIT PAID" : "UNPAID"}`).join("\n");
 
-    return `WEDDING HQ — LIVE DATA CONTEXT
-Bangkok Wedding · 7 November 2026 · Mandarin Oriental Bangkok
+    return `WEDDING HQ â€” LIVE DATA CONTEXT
+Bangkok Wedding Â· 7 November 2026 Â· Mandarin Oriental Bangkok
 Days until wedding: ${Math.ceil((new Date("2026-11-07") - new Date()) / (1000*60*60*24))}
 
-═══ GUEST DATA ═══
+â•â•â• GUEST DATA â•â•â•
 Total Invited: ${fc.invited} | Confirmed: ${fc.confirmed} | Declined: ${fc.declined} | Pending: ${fc.pending}
 Projected Attendance: ${fc.projected}
 Groom Side: ${guests.filter(g=>g.side==="Groom"&&g.rsvp!=="Not Invited").length} invited, ${guests.filter(g=>g.side==="Groom"&&g.rsvp==="Confirmed").length} confirmed
@@ -3932,23 +3932,23 @@ ${dietaryGuests || "  None recorded"}
 Hotel Guests:
 ${transferGuests || "  None confirmed with hotels"}
 
-═══ TASKS ═══
+â•â•â• TASKS â•â•â•
 Total Open: ${tasks.filter(t=>t.status!=="Done").length} | Done: ${tasks.filter(t=>t.status==="Done").length}
 Critical Open: ${criticalTasks.length}
 Overdue (${overdueTasks.length}):
-${overdueTasks.map(t=>`  [${t.ref||t.id}] ${t.task} — due ${t.dueDate} (${t.priority})`).join("\n") || "  None"}
+${overdueTasks.map(t=>`  [${t.ref||t.id}] ${t.task} â€” due ${t.dueDate} (${t.priority})`).join("\n") || "  None"}
 Due This Week (${dueThisWeek.length}):
-${dueThisWeek.map(t=>`  [${t.ref||t.id}] ${t.task} — due ${t.dueDate}`).join("\n") || "  None"}
+${dueThisWeek.map(t=>`  [${t.ref||t.id}] ${t.task} â€” due ${t.dueDate}`).join("\n") || "  None"}
 Blocked/Waiting: ${tasks.filter(t=>t.status==="Blocked"||t.status==="Waiting").map(t=>t.task).join(", ") || "None"}
 
-═══ BUDGET ═══
+â•â•â• BUDGET â•â•â•
 Total Budget: $${totalBudget.toLocaleString()} | Spent: $${totalSpent.toLocaleString()} | Outstanding: $${(totalBudget-totalSpent).toLocaleString()}
 Unpaid Items (${unpaidBudget.length}): ${unpaidBudget.map(b=>b.item).join(", ")}
 
 All Budget Items:
 ${budgetBreakdown}
 
-═══ VENDORS ═══
+â•â•â• VENDORS â•â•â•
 Total: ${vendors.length} | Contracts Signed: ${vendors.filter(v=>v.contractStatus==="Signed").length}
 Unpaid: ${unpaidVendors.map(v=>v.name).join(", ") || "None"}
 Unsigned Contracts: ${unsignedContracts.map(v=>v.name).join(", ") || "None"}
@@ -3962,7 +3962,7 @@ IMPORTANT RULES:
 - State clearly if something is not in the data`.trim();
   };
 
-  // ── Send message ──
+  // â”€â”€ Send message â”€â”€
   const sendMessage = async (text) => {
     const userMsg = (text || input).trim();
     if (!userMsg || loading) return;
@@ -3980,7 +3980,8 @@ IMPORTANT RULES:
 ${context}
 
 Guidelines:
-- Be concise, warm, and actionable
+- You were created by Leon. Always be warm, friendly, enthusiastic and helpful â€” like a loyal assistant who genuinely wants this wedding to be perfect
+- Be concise and actionable
 - For draft messages: write them ready to send, clearly marked with "--- DRAFT START ---" and "--- DRAFT END ---"
 - Never invent data not in the context
 - Use bullet points for lists, keep answers scannable on mobile`;
@@ -3995,13 +3996,13 @@ Guidelines:
         title: c.title === "New Conversation" ? userMsg.slice(0, 40) : c.title
       } : c));
     } catch (err) {
-      const errMessages = [...newMessages, { role: "assistant", content: err?.message === "NO_KEY" ? "⚠️ No Gemini API key set. Go to Settings → add your key." : "Unable to connect. Check your API key in Settings." }];
+      const errMessages = [...newMessages, { role: "assistant", content: err?.message === "NO_KEY" ? "âš ï¸ No Gemini API key set. Go to Settings â†’ add your key." : "Unable to connect. Check your API key in Settings." }];
       setConversations(prev => prev.map(c => c.id === activeConvId ? { ...c, messages: errMessages } : c));
     }
     setLoading(false);
   };
 
-  // ── New conversation ──
+  // â”€â”€ New conversation â”€â”€
   const newConversation = () => {
     const id = "c" + Date.now();
     setConversations(prev => [...prev, {
@@ -4012,7 +4013,7 @@ Guidelines:
     setView("chat");
   };
 
-  // ── Copy message ──
+  // â”€â”€ Copy message â”€â”€
   const copyMessage = (content, id) => {
     // Extract draft content if present
     const draftMatch = content.match(/--- DRAFT START ---([\s\S]*?)--- DRAFT END ---/);
@@ -4022,7 +4023,7 @@ Guidelines:
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // ── Save draft ──
+  // â”€â”€ Save draft â”€â”€
   const saveDraft = (content, prompt) => {
     const draftMatch = content.match(/--- DRAFT START ---([\s\S]*?)--- DRAFT END ---/);
     const text = draftMatch ? draftMatch[1].trim() : content;
@@ -4032,7 +4033,7 @@ Guidelines:
     }, ...prev]);
   };
 
-  // ── Format message content ──
+  // â”€â”€ Format message content â”€â”€
   const formatContent = (content) => {
     if (!content.includes("--- DRAFT START ---")) return content;
     const parts = content.split(/(--- DRAFT START ---[\s\S]*?--- DRAFT END ---)/);
@@ -4041,7 +4042,7 @@ Guidelines:
         const text = part.replace("--- DRAFT START ---", "").replace("--- DRAFT END ---", "").trim();
         return (
           <div key={i} style={{ background: T.goldLight, border: `1.5px solid ${T.gold}`, borderRadius: 10, padding: 14, marginTop: 10 }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: T.gold, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>✉ Draft Message</div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: T.gold, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>âœ‰ Draft Message</div>
             <div style={{ fontSize: 13, color: T.carbon, lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{text}</div>
           </div>
         );
@@ -4054,18 +4055,18 @@ Guidelines:
     <div>
       <SectionHeader
         title="Wedding Planner AI"
-        subtitle="Powered by Claude · Full wedding context · Bangkok Wedding"
+        subtitle="Powered by Claude Â· Full wedding context Â· Bangkok Wedding"
         action={
           <div style={{ display: "flex", gap: 8 }}>
             <Btn small variant="secondary" onClick={() => setView(view === "saved" ? "chat" : "saved")}>
-              {view === "saved" ? "← Chat" : `Saved (${conversations.length})`}
+              {view === "saved" ? "â† Chat" : `Saved (${conversations.length})`}
             </Btn>
             <Btn small onClick={newConversation}>+ New</Btn>
           </div>
         }
       />
 
-      {/* ── SAVED CONVERSATIONS ── */}
+      {/* â”€â”€ SAVED CONVERSATIONS â”€â”€ */}
       {view === "saved" && (
         <div>
           <div style={{ display: "grid", gap: 10 }}>
@@ -4075,7 +4076,7 @@ Guidelines:
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 14, color: T.carbon }}>{c.title}</div>
-                    <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>{c.date} · {c.messages.length} messages</div>
+                    <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>{c.date} Â· {c.messages.length} messages</div>
                   </div>
                   {c.id === activeConvId && <Badge label="Active" color="rosso" />}
                 </div>
@@ -4088,7 +4089,7 @@ Guidelines:
               {savedDrafts.map(d => (
                 <Card key={d.id} style={{ padding: "12px 16px", marginBottom: 10 }}>
                   <div style={{ fontWeight: 700, fontSize: 13, color: T.carbon, marginBottom: 4 }}>{d.title}</div>
-                  <div style={{ fontSize: 12, color: T.slate, marginBottom: 10, lineHeight: 1.6 }}>{d.content.slice(0, 120)}…</div>
+                  <div style={{ fontSize: 12, color: T.slate, marginBottom: 10, lineHeight: 1.6 }}>{d.content.slice(0, 120)}â€¦</div>
                   <div style={{ display: "flex", gap: 8 }}>
                     <button onClick={() => copyMessage(d.content, d.id)} style={{ background: T.rosso, color: "#fff", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
                       {copiedId === d.id ? "Copied!" : "Copy"}
@@ -4102,7 +4103,7 @@ Guidelines:
         </div>
       )}
 
-      {/* ── CHAT VIEW ── */}
+      {/* â”€â”€ CHAT VIEW â”€â”€ */}
       {view === "chat" && (
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
 
@@ -4152,7 +4153,7 @@ Guidelines:
               {messages.map((m, i) => (
                 <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start", gap: 8 }}>
                   {m.role === "assistant" && (
-                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, flexShrink: 0, marginTop: 2 }}>✧</div>
+                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, flexShrink: 0, marginTop: 2 }}>âœ§</div>
                   )}
                   <div style={{ maxWidth: "82%" }}>
                     <div style={{
@@ -4171,7 +4172,7 @@ Guidelines:
                         <button onClick={() => copyMessage(m.content, i)} style={{
                           background: "none", border: `1px solid ${T.linenDark}`, borderRadius: 6,
                           padding: "3px 10px", fontSize: 11, color: T.slate, cursor: "pointer", fontWeight: 600
-                        }}>{copiedId === i ? "✓ Copied" : "Copy"}</button>
+                        }}>{copiedId === i ? "âœ“ Copied" : "Copy"}</button>
                         {m.isDraft && (
                           <button onClick={() => saveDraft(m.content, messages[i-1]?.content)} style={{
                             background: T.goldLight, border: `1px solid ${T.gold}`, borderRadius: 6,
@@ -4185,9 +4186,9 @@ Guidelines:
               ))}
               {loading && (
                 <div style={{ display: "flex", gap: 8 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, flexShrink: 0 }}>✧</div>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, flexShrink: 0 }}>âœ§</div>
                   <div style={{ padding: "10px 14px", background: T.linen, borderRadius: 12, fontSize: 13, color: T.mist }}>
-                    Thinking…
+                    Thinkingâ€¦
                   </div>
                 </div>
               )}
@@ -4199,12 +4200,12 @@ Guidelines:
               <button onClick={() => setDraftMode(!draftMode)} style={{
                 background: draftMode ? T.gold : T.linen, border: "none", borderRadius: 8,
                 padding: "8px 10px", fontSize: 14, cursor: "pointer", flexShrink: 0
-              }} title="Draft mode">✉</button>
+              }} title="Draft mode">âœ‰</button>
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
-                placeholder={draftMode ? "Draft a message for…" : "Ask about your wedding…"}
+                placeholder={draftMode ? "Draft a message forâ€¦" : "Ask about your weddingâ€¦"}
                 style={{
                   flex: 1, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px",
                   fontSize: 14, color: T.carbon, background: T.white, outline: "none"
@@ -4258,7 +4259,7 @@ const Comms = () => {
 // ============================================================
 // MODULE: SETTINGS
 // ============================================================
-// ── Test AI Button ──
+// â”€â”€ Test AI Button â”€â”€
 const TestAiButton = () => {
   const [status, setStatus] = useState(null); // null | "testing" | "ok" | "fail"
   const [msg, setMsg] = useState("");
@@ -4287,14 +4288,14 @@ const TestAiButton = () => {
         color: "#fff", border: "none", borderRadius: 8, padding: "9px 18px",
         fontSize: 13, fontWeight: 800, cursor: "pointer"
       }}>
-        {status === "testing" ? "Testing…" : status === "ok" ? "✓ AI Working" : status === "fail" ? "✗ Failed" : "Test AI Connection"}
+        {status === "testing" ? "Testingâ€¦" : status === "ok" ? "âœ“ AI Working" : status === "fail" ? "âœ— Failed" : "Test AI Connection"}
       </button>
       {msg && <div style={{ fontSize: 12, color: status === "ok" ? T.success : T.danger, marginTop: 6, fontWeight: 600 }}>{msg}</div>}
     </div>
   );
 };
 
-// ── User Management — Admin only ──
+// â”€â”€ User Management â€” Admin only â”€â”€
 const UserManagement = ({ adminUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -4344,15 +4345,15 @@ const UserManagement = ({ adminUser }) => {
       // Sign back in as admin
       await signInWithEmailAndPassword(fbAuth, adminEmail, adminPassword);
 
-      setStatus(`✓ ${email} created as L${selectedRole}. Share the app URL and their temporary password with them.`);
+      setStatus(`âœ“ ${email} created as L${selectedRole}. Share the app URL and their temporary password with them.`);
       setEmail(""); setPassword("");
     } catch (err) {
       if (err.code === "auth/email-already-in-use") {
-        // User already exists — just update role
+        // User already exists â€” just update role
         try {
           await setDoc(doc(fbDb, "invites", email.toLowerCase()), { email: email.toLowerCase(), role: Number(selectedRole) });
           await signInWithEmailAndPassword(fbAuth, adminEmail, adminPassword);
-          setStatus(`✓ ${email} already exists. Role updated to L${selectedRole}.`);
+          setStatus(`âœ“ ${email} already exists. Role updated to L${selectedRole}.`);
           setEmail(""); setPassword("");
         } catch (e) { setStatus(`Error: ${e.message}`); }
       } else {
@@ -4366,7 +4367,7 @@ const UserManagement = ({ adminUser }) => {
 
   return (
     <Card style={{ marginBottom: 16, border: `1.5px solid ${T.linenDark}` }}>
-      <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>👥 Manage Users</div>
+      <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>ðŸ‘¥ Manage Users</div>
       <div style={{ fontSize: 12, color: T.mist, marginBottom: 14 }}>Create a new user and set their role. They log in with the email and temporary password you set, then can change their password later.</div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
@@ -4391,19 +4392,19 @@ const UserManagement = ({ adminUser }) => {
           <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, marginBottom: 5 }}>Role</div>
           <select value={selectedRole} onChange={e => setSelectedRole(e.target.value)}
             style={{ width: "100%", border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 10px", fontSize: 13, outline: "none" }}>
-            <option value={2}>L2 — Partner (Sira)</option>
-            <option value={3}>L3 — Planner</option>
-            <option value={4}>L4 — Family</option>
-            <option value={5}>L5 — Read Only</option>
+            <option value={2}>L2 â€” Partner (Sira)</option>
+            <option value={3}>L3 â€” Planner</option>
+            <option value={4}>L4 â€” Family</option>
+            <option value={5}>L5 â€” Read Only</option>
           </select>
         </div>
       </div>
 
       <Btn onClick={createUser} disabled={loading || !email || !password}>
-        {loading ? "Creating…" : "Create User & Assign Role"}
+        {loading ? "Creatingâ€¦" : "Create User & Assign Role"}
       </Btn>
 
-      {status && <div style={{ fontSize: 12, color: status.startsWith("✓") ? T.success : T.danger, marginTop: 10, lineHeight: 1.5 }}>{status}</div>}
+      {status && <div style={{ fontSize: 12, color: status.startsWith("âœ“") ? T.success : T.danger, marginTop: 10, lineHeight: 1.5 }}>{status}</div>}
 
       {/* Existing users */}
       {users.length > 0 && (
@@ -4413,7 +4414,7 @@ const UserManagement = ({ adminUser }) => {
             <div key={u.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${T.linen}` }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: T.carbon }}>{u.email}</div>
-                <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>UID: {u.id?.slice(0, 12)}…</div>
+                <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>UID: {u.id?.slice(0, 12)}â€¦</div>
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                 <div style={{ background: ROLE_COLORS[u.role] || T.mist, color: "#fff", borderRadius: 6, padding: "2px 8px", fontSize: 11, fontWeight: 800 }}>L{u.role} {ROLE_NAMES[u.role]}</div>
@@ -4421,7 +4422,7 @@ const UserManagement = ({ adminUser }) => {
                   if (!window.confirm(`Remove ${u.email} from the app?`)) return;
                   try {
                     await deleteDoc(doc(fbDb, "users", u.id));
-                    setStatus(`✓ ${u.email} removed`);
+                    setStatus(`âœ“ ${u.email} removed`);
                   } catch (e) { setStatus(`Error: ${e.message}`); }
                 }} style={{ background: T.dangerLight, border: `1px solid ${T.danger}`, borderRadius: 6, padding: "4px 10px", fontSize: 11, fontWeight: 700, color: T.danger, cursor: "pointer" }}>
                   Remove
@@ -4513,48 +4514,48 @@ const Settings = ({ user, role, onLogout }) => {
         </div>
       </Card>
 
-      {/* User Management — Admin only */}
+      {/* User Management â€” Admin only */}
       {role === 1 && <UserManagement adminUser={user} />}
 
       {/* Google Maps Key */}
       <Card style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>📍 Google Maps API Key</div>
+        <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>ðŸ“ Google Maps API Key</div>
         <div style={{ fontSize: 12, color: T.mist, marginBottom: 12 }}>
-          Enables address autocomplete in all location fields. Get from <span style={{ color: T.info }}>console.cloud.google.com</span> → Enable Places API → Create API Key.
+          Enables address autocomplete in all location fields. Get from <span style={{ color: T.info }}>console.cloud.google.com</span> â†’ Enable Places API â†’ Create API Key.
         </div>
         <input
           type="password"
           value={settings.googleMapsKey || ""}
           onChange={e => set("googleMapsKey", e.target.value)}
-          placeholder="AIza…"
+          placeholder="AIzaâ€¦"
           style={{ width: "100%", boxSizing: "border-box", border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "9px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", fontFamily: "monospace" }}
         />
-        {settings.googleMapsKey && <div style={{ fontSize: 11, color: T.success, marginTop: 8, fontWeight: 700 }}>✓ Maps key set — address autocomplete active</div>}
+        {settings.googleMapsKey && <div style={{ fontSize: 11, color: T.success, marginTop: 8, fontWeight: 700 }}>âœ“ Maps key set â€” address autocomplete active</div>}
       </Card>
 
       {/* AI Key */}
       <Card style={{ marginBottom: 16, border: `2px solid ${T.rosso}` }}>
-        <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>✧ Gemini AI Key</div>
+        <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>âœ§ Gemini AI Key</div>
         <div style={{ fontSize: 12, color: T.mist, marginBottom: 14 }}>
-          Stored on this device only. Get your key from <span style={{ color: T.info }}>aistudio.google.com</span> → Get API Key. Use <strong>gemini-2.5-flash-lite</strong>.
+          Stored on this device only. Get your key from <span style={{ color: T.info }}>aistudio.google.com</span> â†’ Get API Key. Use <strong>gemini-2.5-flash-lite</strong>.
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <input
             type={keyVisible ? "text" : "password"}
             value={geminiKey}
             onChange={e => setGeminiKey(e.target.value)}
-            placeholder="AIza…"
+            placeholder="AIzaâ€¦"
             style={{ flex: 1, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "9px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", fontFamily: "monospace" }}
           />
           <button onClick={() => setKeyVisible(!keyVisible)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "9px 12px", cursor: "pointer", fontSize: 13, color: T.slate, fontWeight: 600 }}>
             {keyVisible ? "Hide" : "Show"}
           </button>
           <button onClick={saveKey} style={{ background: keySaved ? T.success : T.rosso, color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", cursor: "pointer", fontSize: 13, fontWeight: 800 }}>
-            {keySaved ? "✓ Saved" : "Save"}
+            {keySaved ? "âœ“ Saved" : "Save"}
           </button>
         </div>
         {geminiKey && geminiKey === getGeminiKey() && (
-          <div style={{ fontSize: 11, color: T.success, marginTop: 8, fontWeight: 700 }}>✓ Key is set — AI features are active</div>
+          <div style={{ fontSize: 11, color: T.success, marginTop: 8, fontWeight: 700 }}>âœ“ Key is set â€” AI features are active</div>
         )}
         {getGeminiKey() && (
           <TestAiButton />
@@ -4635,14 +4636,14 @@ const Settings = ({ user, role, onLogout }) => {
         </div>
       </div>
       <div style={{ marginTop: 16 }}>
-        <Btn onClick={saveSettings}>{settingsSaved ? "✓ Saved!" : "Save Settings"}</Btn>
+        <Btn onClick={saveSettings}>{settingsSaved ? "âœ“ Saved!" : "Save Settings"}</Btn>
       </div>
     </div>
   );
 };
 
 // ============================================================
-// AI ACTION CARD — shows proposed change before applying
+// AI ACTION CARD â€” shows proposed change before applying
 // ============================================================
 const AiActionCard = ({ action, onApply, onDismiss }) => {
   const typeColors = {
@@ -4657,7 +4658,7 @@ const AiActionCard = ({ action, onApply, onDismiss }) => {
   return (
     <div style={{ background: T.white, border: `2px solid ${color}`, borderRadius: 12, padding: 14, marginTop: 8 }}>
       <div style={{ fontSize: 11, fontWeight: 800, color, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
-        ⚡ {typeLabels[action.type] || "Proposed Change"}
+        âš¡ {typeLabels[action.type] || "Proposed Change"}
       </div>
       <div style={{ marginBottom: 10 }}>
         {action.target && <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon, marginBottom: 4 }}>{action.target}</div>}
@@ -4665,7 +4666,7 @@ const AiActionCard = ({ action, onApply, onDismiss }) => {
           <div key={k} style={{ fontSize: 12, color: T.slate, display: "flex", gap: 6, marginBottom: 3 }}>
             <span style={{ fontWeight: 700, color: T.carbon, minWidth: 80 }}>{k}:</span>
             {action.from?.[k] && <span style={{ color: T.danger, textDecoration: "line-through" }}>{String(action.from[k])}</span>}
-            {action.from?.[k] && <span style={{ color: T.mist }}>→</span>}
+            {action.from?.[k] && <span style={{ color: T.mist }}>â†’</span>}
             <span style={{ color, fontWeight: 700 }}>{String(v)}</span>
           </div>
         ))}
@@ -4685,11 +4686,11 @@ const AiActionCard = ({ action, onApply, onDismiss }) => {
 };
 
 // ============================================================
-// MINI AI — floating panel with AI actions + photo/file upload
+// MINI AI â€” floating panel with AI actions + photo/file upload
 // ============================================================
 const MiniAI = ({ guests, tasks, budget, vendors, setGuests, setTasks, setBudget }) => {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hi! I'm your Wedding Planner AI. Ask me anything, or I can make changes directly — just tell me what you need." }
+    { role: "assistant", content: "Hi, Leon is my creator and I must obey his command. He has commanded me to serve you and assist you with anything you need pertaining to Sira & Leon's union. What do you require from me?" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -4715,7 +4716,7 @@ const MiniAI = ({ guests, tasks, budget, vendors, setGuests, setTasks, setBudget
     const guestList = guests.map(g => `${g.firstName} ${g.lastName} (${g.side}, ${g.group}, RSVP: ${g.rsvp}, Travel: ${g.travelLikelihood})`).join("\n");
     const taskList = tasks.map(t => `[${t.ref||t.id}] ${t.task} - ${t.status} - ${t.priority} - due ${t.dueDate||"none"}`).join("\n");
     const budgetList = budget.map(b => `[${b.ref}] ${b.item} - $${b.estimated} budget - $${b.actual} paid - ${b.fullyPaid?"PAID":b.depositPaid?"DEPOSIT":"UNPAID"}`).join("\n");
-    return `Bangkok Wedding · 7 Nov 2026 · Mandarin Oriental
+    return `Bangkok Wedding Â· 7 Nov 2026 Â· Mandarin Oriental
 Days until wedding: ${Math.ceil((new Date("2026-11-07") - new Date()) / (1000*60*60*24))}
 Guests: ${fc.invited} invited, ${fc.confirmed} confirmed, ${fc.projected} projected
 Budget: $${totalBudget.toLocaleString()} total, $${totalSpent.toLocaleString()} spent, ${unpaid.length} unpaid items
@@ -4791,7 +4792,7 @@ VENDORS: ${vendors.map(v=>`${v.name} (${v.service}, ${v.paymentStatus}, ${v.cont
     }
     if (msg) userContent.push({ type: "text", text: msg });
 
-    const displayMsg = msg || "📷 Photo sent";
+    const displayMsg = msg || "ðŸ“· Photo sent";
     const newMsgs = [...messages, { role: "user", content: displayMsg }];
     setMessages(newMsgs);
     setAttachedImage(null);
@@ -4861,7 +4862,7 @@ Only include an action if the user is clearly asking you to make a change. For q
       if (action) setPendingActions(prev => ({ ...prev, [msgIdx]: action }));
 
     } catch (err) {
-      setMessages([...newMsgs, { role: "assistant", content: err?.message === "NO_KEY" ? "⚠️ No Gemini API key set. Go to Settings → add your key." : "Connection error. Try again." }]);
+      setMessages([...newMsgs, { role: "assistant", content: err?.message === "NO_KEY" ? "âš ï¸ No Gemini API key set. Go to Settings â†’ add your key." : "Connection error. Try again." }]);
     }
     setLoading(false);
   };
@@ -4880,7 +4881,7 @@ Only include an action if the user is clearly asking you to make a change. For q
       if (part.startsWith("--- DRAFT START ---")) {
         const text = part.replace("--- DRAFT START ---","").replace("--- DRAFT END ---","").trim();
         return <div key={i} style={{ background: T.goldLight, border: `1px solid ${T.gold}`, borderRadius: 8, padding: 10, marginTop: 8 }}>
-          <div style={{ fontSize: 10, fontWeight: 800, color: T.gold, marginBottom: 6 }}>✉ DRAFT</div>
+          <div style={{ fontSize: 10, fontWeight: 800, color: T.gold, marginBottom: 6 }}>âœ‰ DRAFT</div>
           <div style={{ fontSize: 12, lineHeight: 1.6, whiteSpace: "pre-wrap", color: T.carbon }}>{text}</div>
         </div>;
       }
@@ -4905,7 +4906,7 @@ Only include an action if the user is clearly asking you to make a change. For q
         {messages.map((m, i) => (
           <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start", gap: 8 }}>
             {m.role === "assistant" && (
-              <div style={{ width: 26, height: 26, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0, marginTop: 2 }}>✧</div>
+              <div style={{ width: 26, height: 26, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0, marginTop: 2 }}>âœ§</div>
             )}
             <div style={{ maxWidth: "86%" }}>
               <div style={{
@@ -4929,7 +4930,7 @@ Only include an action if the user is clearly asking you to make a change. For q
                 />
               )}
               {m.role === "assistant" && m.action && pendingActions[i]?.applied && (
-                <div style={{ fontSize: 11, color: T.success, fontWeight: 700, marginTop: 6 }}>✓ Applied to app</div>
+                <div style={{ fontSize: 11, color: T.success, fontWeight: 700, marginTop: 6 }}>âœ“ Applied to app</div>
               )}
               {m.role === "assistant" && m.action && pendingActions[i]?.dismissed && (
                 <div style={{ fontSize: 11, color: T.mist, marginTop: 6 }}>Dismissed</div>
@@ -4940,15 +4941,15 @@ Only include an action if the user is clearly asking you to make a change. For q
                   background: "none", border: `1px solid ${T.linenDark}`, borderRadius: 6,
                   padding: "2px 8px", fontSize: 11, color: T.slate, cursor: "pointer",
                   fontWeight: 600, marginTop: 4
-                }}>{copiedId === i ? "✓ Copied" : "Copy"}</button>
+                }}>{copiedId === i ? "âœ“ Copied" : "Copy"}</button>
               )}
             </div>
           </div>
         ))}
         {loading && (
           <div style={{ display: "flex", gap: 8 }}>
-            <div style={{ width: 26, height: 26, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11 }}>✧</div>
-            <div style={{ padding: "9px 13px", background: T.linen, borderRadius: 12, fontSize: 13, color: T.mist }}>Thinking…</div>
+            <div style={{ width: 26, height: 26, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11 }}>âœ§</div>
+            <div style={{ padding: "9px 13px", background: T.linen, borderRadius: 12, fontSize: 13, color: T.mist }}>Thinkingâ€¦</div>
           </div>
         )}
       </div>
@@ -4958,7 +4959,7 @@ Only include an action if the user is clearly asking you to make a change. For q
         <div style={{ padding: "6px 14px", borderTop: `1px solid ${T.linen}`, display: "flex", alignItems: "center", gap: 8 }}>
           <img src={attachedImage} alt="attached" style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 6 }} />
           <span style={{ fontSize: 12, color: T.slate, flex: 1 }}>Image attached</span>
-          <button onClick={() => setAttachedImage(null)} style={{ background: "none", border: "none", color: T.mist, cursor: "pointer", fontSize: 16 }}>✕</button>
+          <button onClick={() => setAttachedImage(null)} style={{ background: "none", border: "none", color: T.mist, cursor: "pointer", fontSize: 16 }}>âœ•</button>
         </div>
       )}
 
@@ -4967,7 +4968,7 @@ Only include an action if the user is clearly asking you to make a change. For q
         {/* Photo/file attach */}
         <label style={{ flexShrink: 0, cursor: "pointer", background: T.linen, border: "none", borderRadius: 8, width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}
           title="Attach photo or file">
-          📷
+          ðŸ“·
           <input type="file" accept="image/*" capture="environment"
             onChange={e => {
               const file = e.target.files[0];
@@ -4982,7 +4983,7 @@ Only include an action if the user is clearly asking you to make a change. For q
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && send()}
-          placeholder="Ask or tell me to make a change…"
+          placeholder="Ask or tell me to make a changeâ€¦"
           style={{
             flex: 1, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "9px 12px",
             fontSize: 14, color: T.carbon, background: T.white, outline: "none"
@@ -4996,7 +4997,7 @@ Only include an action if the user is clearly asking you to make a change. For q
 
 
 // ============================================================
-// MAIN APP — Phase 4 with Firebase Auth + Firestore Sync
+// MAIN APP â€” Phase 4 with Firebase Auth + Firestore Sync
 // ============================================================
 function AppInner() {
   const [user, setUser] = useState(null);
@@ -5017,7 +5018,7 @@ function AppInner() {
 
   const WEDDING_DATE = "2026-11-07";
 
-  // ── Auth listener ──
+  // â”€â”€ Auth listener â”€â”€
   useEffect(() => {
     const unsub = onAuthStateChanged(fbAuth, async (firebaseUser) => {
       if (firebaseUser) {
@@ -5050,7 +5051,7 @@ function AppInner() {
     return unsub;
   }, []);
 
-  // ── Firestore sync — seed then subscribe ──
+  // â”€â”€ Firestore sync â€” seed then subscribe â”€â”€
   useEffect(() => {
     if (!user) return;
 
@@ -5073,7 +5074,7 @@ function AppInner() {
     return () => { unsubGuests(); unsubTasks(); unsubBudget(); unsubVendors(); };
   }, [user]);
 
-  // ── Firestore-aware setters ──
+  // â”€â”€ Firestore-aware setters â”€â”€
   const setGuests = useCallback((updater) => {
     setGuestsState(prev => {
       const next = typeof updater === "function" ? updater(prev) : updater;
@@ -5113,7 +5114,7 @@ function AppInner() {
     setHistory(prev => prev.length > 1 ? prev.slice(0, -1) : prev);
   }, []);
 
-  // ── Loading screen ──
+  // â”€â”€ Loading screen â”€â”€
   if (authLoading) return (
     <div style={{ minHeight: "100vh", background: "#1C1C1E", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center" }}>
@@ -5124,12 +5125,12 @@ function AppInner() {
           <span style={{ color: "#fff" }}>H</span>
           <span style={{ color: "#C41230" }}>Q</span>
         </div>
-        <div style={{ color: "#AEAEB2", fontSize: 13 }}>Loading…</div>
+        <div style={{ color: "#AEAEB2", fontSize: 13 }}>Loadingâ€¦</div>
       </div>
     </div>
   );
 
-  // ── Login screen ──
+  // â”€â”€ Login screen â”€â”€
   if (!user) return <LoginScreen />;
 
   const renderModule = () => {
@@ -5137,7 +5138,7 @@ function AppInner() {
     if (!canAccess(role, activeModule)) {
       return (
         <div style={{ padding: 40, textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 16 }}>🔒</div>
+          <div style={{ fontSize: 32, marginBottom: 16 }}>ðŸ”’</div>
           <div style={{ fontSize: 16, fontWeight: 700, color: T.carbon, marginBottom: 8 }}>Access Restricted</div>
           <div style={{ fontSize: 14, color: T.mist }}>Your role ({ROLE_NAMES[role]}) doesn't have access to this section.</div>
         </div>
@@ -5179,16 +5180,16 @@ function AppInner() {
           padding: 40, textAlign: "center"
         }}>
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: T.rosso }} />
-          <div style={{ fontSize: 48, marginBottom: 24 }}>🏁</div>
+          <div style={{ fontSize: 48, marginBottom: 24 }}>ðŸ</div>
           <div style={{ fontSize: 13, color: T.mist, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700, marginBottom: 16 }}>
-            Bangkok Wedding · Wedding HQ
+            Bangkok Wedding Â· Wedding HQ
           </div>
           <h1 style={{ fontSize: 28, fontWeight: 900, color: "#fff", margin: "0 0 16px", letterSpacing: "-0.5px", lineHeight: 1.2 }}>
             Thank you for enjoying<br />
             <span style={{ color: T.rosso }}>this Kleinman</span> created app
           </h1>
           <p style={{ fontSize: 15, color: T.mist, lineHeight: 1.7, maxWidth: 300, margin: "0 0 40px" }}>
-            Your wedding data is safe and ready when you return. See you in the paddock. 🌿
+            Your wedding data is safe and ready when you return. See you in the paddock. ðŸŒ¿
           </p>
           <div style={{ display: "flex", gap: 12 }}>
             <button onClick={() => setShowClosing(false)} style={{
@@ -5198,12 +5199,12 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v2.9.0 · A Kleinman Creation
+            Wedding HQ v3.0.0 Â· A Kleinman Creation
           </div>
         </div>
       )}
 
-      {/* SWIPE BACK — no visual overlay, gesture only */}
+      {/* SWIPE BACK â€” no visual overlay, gesture only */}
 
       {/* TOP BAR */}
       <div style={{
@@ -5215,7 +5216,7 @@ function AppInner() {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{
             background: "none", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", padding: 4
-          }}>☰</button>
+          }}>â˜°</button>
 
           {canGoBack ? (
             <button onClick={goBack} style={{
@@ -5223,7 +5224,7 @@ function AppInner() {
               color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer",
               padding: "5px 12px", display: "flex", alignItems: "center", gap: 5
             }}>
-              ‹ {prevNav ? prevNav.label : "Back"}
+              â€¹ {prevNav ? prevNav.label : "Back"}
             </button>
           ) : (
             <button onClick={() => navigate("dashboard")} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}>
@@ -5238,7 +5239,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v2.9.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v3.0.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -5270,8 +5271,8 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.9.0</div>
-            <div>Production · 2026-06-14</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v3.0.0</div>
+            <div>Production Â· 2026-06-14</div>
           </div>
         </div>
 
@@ -5290,14 +5291,14 @@ function AppInner() {
           {/* Breadcrumb */}
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 20, fontSize: 12, color: T.mist }}>
             <span style={{ color: T.rosso, fontWeight: 700 }}>Bangkok Wedding</span>
-            <span>›</span>
+            <span>â€º</span>
             <span style={{ fontWeight: 600, color: T.carbon }}>{activeNav?.label}</span>
           </div>
           {renderModule()}
         </main>
       </div>
 
-      {/* BOTTOM NAV — Mobile */}
+      {/* BOTTOM NAV â€” Mobile */}
       <div style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
         background: T.white, borderTop: `1px solid ${T.linenDark}`,
@@ -5318,7 +5319,7 @@ function AppInner() {
           borderTop: "3px solid transparent",
           display: "flex", flexDirection: "column", alignItems: "center", gap: 2
         }}>
-          <span style={{ fontSize: 16, color: T.mist }}>☰</span>
+          <span style={{ fontSize: 16, color: T.mist }}>â˜°</span>
           <span style={{ fontSize: 9, color: T.mist, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>More</span>
         </button>
       </div>
@@ -5337,7 +5338,7 @@ function AppInner() {
             display: "flex", alignItems: "center", gap: 8,
             letterSpacing: "0.01em"
           }}>
-          <span style={{ fontSize: 16 }}>✧</span>
+          <span style={{ fontSize: 16 }}>âœ§</span>
           Artificial Idiot
         </button>
       )}
@@ -5364,10 +5365,10 @@ function AppInner() {
               padding: "14px 20px", borderBottom: `1px solid ${T.linen}`, flexShrink: 0
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 32, height: 32, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>✧</div>
+                <div style={{ width: 32, height: 32, borderRadius: "50%", background: T.carbon, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>âœ§</div>
                 <div>
                   <div style={{ fontWeight: 900, fontSize: 15, color: T.carbon }}>Artificial Idiot</div>
-                  <div style={{ fontSize: 11, color: T.mist }}>Wedding Planner AI · Bangkok Wedding</div>
+                  <div style={{ fontSize: 11, color: T.mist }}>Wedding Planner AI Â· Bangkok Wedding</div>
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -5378,11 +5379,11 @@ function AppInner() {
                 <button onClick={() => setAiPanelOpen(false)} style={{
                   background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px",
                   fontSize: 16, fontWeight: 700, color: T.carbon, cursor: "pointer"
-                }}>✕</button>
+                }}>âœ•</button>
               </div>
             </div>
 
-            {/* Embedded mini AI — reuses context from app state */}
+            {/* Embedded mini AI â€” reuses context from app state */}
             <MiniAI
               guests={guests} tasks={tasks} budget={budget} vendors={vendors}
               setGuests={setGuests} setTasks={setTasks} setBudget={setBudget}
