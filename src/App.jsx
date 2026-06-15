@@ -483,7 +483,7 @@ const NAV_ITEMS = [
 // ============================================================
 // MODULE: DASHBOARD
 // ============================================================
-const Dashboard = ({ guests, tasks, budget, weddingDate }) => {
+const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
   const days = daysUntil(weddingDate);
   const groomGuests = guests.filter(g => g.side === "Groom" && g.rsvp !== "Not Invited");
   const brideGuests = guests.filter(g => g.side === "Bride" && g.rsvp !== "Not Invited");
@@ -4684,7 +4684,7 @@ function AppInner() {
       );
     }
     switch (activeModule) {
-      case "dashboard": return <Dashboard guests={guests} tasks={tasks} budget={budget} weddingDate={WEDDING_DATE} />;
+      case "dashboard": return <Dashboard guests={guests} tasks={tasks} budget={budget} weddingDate={WEDDING_DATE} navigate={navigate} />;
       case "guests": return <Guests guests={guests} setGuests={setGuests} canEdit={canEdit(role, "guests")} />;
       case "groups": return <Groups guests={guests} setGuests={setGuests} canEdit={canEdit(role, "groups")} />;
       case "rsvp": return <RsvpForecast guests={guests} />;
@@ -4699,7 +4699,7 @@ function AppInner() {
       case "ai": return <AiPlanner guests={guests} tasks={tasks} budget={budget} vendors={vendors} />;
       case "comms": return <Comms />;
       case "settings": return <Settings user={user} role={role} onLogout={() => signOut(fbAuth)} />;
-      default: return <Dashboard guests={guests} tasks={tasks} budget={budget} weddingDate={WEDDING_DATE} />;
+      default: return <Dashboard guests={guests} tasks={tasks} budget={budget} weddingDate={WEDDING_DATE} navigate={navigate} />;
     }
   };
 
@@ -4738,7 +4738,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v2.1.0 · A Kleinman Creation
+            Wedding HQ v2.2.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4778,7 +4778,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v2.1.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v2.2.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4810,7 +4810,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.1.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.2.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
