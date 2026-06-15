@@ -1,4 +1,139 @@
-import { useState, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect, createContext, useContext } from "react";
+
+// ============================================================
+// FIREBASE — Phase 4 Auth + Firestore
+// ============================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const fbAuth = getAuth(firebaseApp);
+const fbDb = getFirestore(firebaseApp);
+
+// ── Role system ──
+const ROLES = { ADMIN: 1, PARTNER: 2, PLANNER: 3, FAMILY: 4, READONLY: 5 };
+const ROLE_NAMES = { 1: "Admin", 2: "Partner", 3: "Planner", 4: "Family", 5: "Read Only" };
+const ROLE_COLORS = { 1: "#C41230", 2: "#B8871E", 3: "#5C6B3E", 4: "#1D5FA6", 5: "#6C6C70" };
+
+const MODULE_ACCESS = {
+  dashboard: [1,2,3,4,5], groups: [1,2,3,4], guests: [1,2,3,4],
+  rsvp: [1,2,3], events: [1,2,3,4,5], activities: [1,2,3,4,5],
+  tasks: [1,2,3], budget: [1,2], vendors: [1,2,3],
+  timeline: [1,2,3,4,5], travel: [1,2,3], import: [1,2,3],
+  ai: [1,2,3], comms: [1,2,3], settings: [1],
+};
+
+const EDIT_ACCESS = {
+  guests: [1,2,3], groups: [1,2,3], tasks: [1,2,3],
+  budget: [1,2], vendors: [1,2], travel: [1,2,3], import: [1,2,3],
+};
+
+const canAccess = (role, module) => MODULE_ACCESS[module]?.includes(role) ?? false;
+const canEdit = (role, module) => EDIT_ACCESS[module]?.includes(role) ?? false;
+
+// ── Auth Context ──
+const AuthContext = createContext(null);
+const useAuth = () => useContext(AuthContext);
+
+// ── Firestore helpers ──
+const saveToFirestore = async (collectionName, id, data) => {
+  try {
+    // Strip non-serializable data (functions, undefined)
+    const clean = JSON.parse(JSON.stringify(data));
+    await setDoc(doc(fbDb, collectionName, id), clean, { merge: true });
+  } catch (e) { console.warn("Firestore save error:", e); }
+};
+
+const subscribeCollection = (collectionName, callback) => {
+  return onSnapshot(collection(fbDb, collectionName), snap => {
+    const data = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    callback(data);
+  }, err => console.warn("Firestore subscribe error:", err));
+};
+
+const seedCollection = async (collectionName, items) => {
+  try {
+    const snap = await getDoc(doc(fbDb, "_meta", collectionName));
+    if (snap.exists()) return; // Already seeded
+    const batch = writeBatch(fbDb);
+    items.forEach(item => {
+      batch.set(doc(fbDb, collectionName, item.id), item);
+    });
+    await batch.commit();
+    await setDoc(doc(fbDb, "_meta", collectionName), { seeded: true });
+  } catch (e) { console.warn("Seed error:", e); }
+};
+
+// ── Login Screen ──
+const LoginScreen = ({ onLogin }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) return;
+    setError(""); setLoading(true);
+    try {
+      await signInWithEmailAndPassword(fbAuth, email, password);
+    } catch (err) {
+      setError(err.code === "auth/invalid-credential" ? "Invalid email or password" : "Login failed. Try again.");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#1C1C1E", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ width: "100%", maxWidth: 380 }}>
+        {/* Logo */}
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: "0.02em", marginBottom: 8 }}>
+            <span style={{ color: "#C41230" }}>SIRA</span>
+            <span style={{ color: "#fff" }}>LEON</span>
+            <span style={{ color: "#2D6DB5" }}>WEDDING</span>
+            <span style={{ color: "#fff" }}>H</span>
+            <span style={{ color: "#C41230" }}>Q</span>
+          </div>
+          <div style={{ fontSize: 13, color: "#AEAEB2" }}>Bangkok Wedding · 18 September 2026</div>
+        </div>
+
+        <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 16, padding: 28, border: "1px solid rgba(255,255,255,0.08)" }}>
+          <h2 style={{ color: "#fff", fontSize: 20, fontWeight: 800, margin: "0 0 24px", textAlign: "center" }}>Sign In</h2>
+          {error && <div style={{ background: "rgba(196,18,48,0.15)", border: "1px solid rgba(196,18,48,0.4)", borderRadius: 8, padding: "10px 14px", marginBottom: 16, fontSize: 13, color: "#ff6b6b" }}>{error}</div>}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 11, color: "#AEAEB2", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>Email</div>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+              placeholder="your@email.com" autoComplete="email"
+              onKeyDown={e => e.key === "Enter" && handleLogin()}
+              style={{ width: "100%", boxSizing: "border-box", background: "rgba(255,255,255,0.07)", border: "1.5px solid rgba(255,255,255,0.12)", borderRadius: 10, padding: "12px 14px", fontSize: 15, color: "#fff", outline: "none", fontFamily: "inherit" }} />
+          </div>
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ fontSize: 11, color: "#AEAEB2", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>Password</div>
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+              placeholder="••••••••" autoComplete="current-password"
+              onKeyDown={e => e.key === "Enter" && handleLogin()}
+              style={{ width: "100%", boxSizing: "border-box", background: "rgba(255,255,255,0.07)", border: "1.5px solid rgba(255,255,255,0.12)", borderRadius: 10, padding: "12px 14px", fontSize: 15, color: "#fff", outline: "none", fontFamily: "inherit" }} />
+          </div>
+          <button onClick={handleLogin} disabled={loading || !email || !password}
+            style={{ width: "100%", background: loading ? "rgba(196,18,48,0.5)" : "#C41230", color: "#fff", border: "none", borderRadius: 10, padding: "14px", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer" }}>
+            {loading ? "Signing in…" : "Sign In"}
+          </button>
+        </div>
+        <div style={{ textAlign: "center", marginTop: 20, fontSize: 12, color: "#AEAEB2" }}>Contact Leon for access</div>
+      </div>
+    </div>
+  );
+};
 
 // ============================================================
 // DESIGN TOKENS — Tuscan Morning × Ferrari Paddock
@@ -3885,7 +4020,72 @@ const TestAiButton = () => {
   );
 };
 
-const Settings = () => {
+// ── User Management — Admin only ──
+const UserManagement = () => {
+  const [email, setEmail] = useState("");
+  const [selectedRole, setSelectedRole] = useState(3);
+  const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const assignRole = async () => {
+    if (!email) return;
+    setLoading(true); setStatus("");
+    try {
+      // Save role by email — user must have logged in at least once
+      // We store by email as a lookup key
+      await setDoc(doc(fbDb, "invites", email.toLowerCase()), {
+        email: email.toLowerCase(),
+        role: Number(selectedRole),
+        assignedAt: new Date().toISOString()
+      });
+      setStatus(`✓ Role L${selectedRole} set for ${email}. They'll get access on next login.`);
+      setEmail("");
+    } catch (err) {
+      setStatus(`Error: ${err.message}`);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <Card style={{ marginBottom: 16, border: `1.5px solid ${T.linenDark}` }}>
+      <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>👥 Manage User Access</div>
+      <div style={{ fontSize: 12, color: T.mist, marginBottom: 14 }}>First add the user in Firebase Console → Authentication → Add user. Then assign their role here.</div>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="user@email.com"
+          style={{ flex: 2, minWidth: 160, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px", fontSize: 13, outline: "none" }} />
+        <select value={selectedRole} onChange={e => setSelectedRole(e.target.value)}
+          style={{ flex: 1, minWidth: 120, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 10px", fontSize: 13 }}>
+          <option value={2}>L2 — Partner (Sira)</option>
+          <option value={3}>L3 — Planner</option>
+          <option value={4}>L4 — Family</option>
+          <option value={5}>L5 — Read Only</option>
+        </select>
+        <button onClick={assignRole} disabled={loading || !email}
+          style={{ background: T.rosso, color: "#fff", border: "none", borderRadius: 8, padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+          {loading ? "…" : "Assign"}
+        </button>
+      </div>
+      {status && <div style={{ fontSize: 12, color: status.startsWith("✓") ? T.success : T.danger, marginTop: 4 }}>{status}</div>}
+      <div style={{ marginTop: 14, fontSize: 11, color: T.mist }}>
+        {[
+          { l: 1, name: "Admin (You)", desc: "Everything + Settings" },
+          { l: 2, name: "Partner (Sira)", desc: "Everything except Settings. Full budget." },
+          { l: 3, name: "Planner", desc: "Guests, Tasks, Vendors, AI. No budget." },
+          { l: 4, name: "Family", desc: "Guests (view), Events, Timeline." },
+          { l: 5, name: "Read Only", desc: "Events, Timeline only." },
+        ].map(r => (
+          <div key={r.l} style={{ display: "flex", gap: 8, marginBottom: 5, alignItems: "flex-start" }}>
+            <span style={{ background: ROLE_COLORS[r.l], color: "#fff", borderRadius: 4, padding: "1px 6px", fontSize: 10, fontWeight: 800, flexShrink: 0 }}>L{r.l}</span>
+            <span style={{ fontWeight: 600, color: T.carbon, minWidth: 110 }}>{r.name}</span>
+            <span style={{ color: T.mist }}>{r.desc}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+};
+
+const Settings = ({ user, role, onLogout }) => {
   const [settings, setSettings] = useState({
     weddingName: "Bangkok Wedding",
     groomName: "Leon",
@@ -3915,7 +4115,26 @@ const Settings = () => {
     <div>
       <SectionHeader title="Settings" subtitle="Platform configuration and preferences" />
 
-      {/* AI Key — top and prominent */}
+      {/* Account */}
+      <Card style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 12 }}>Account</div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon }}>{user?.email}</div>
+            <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>
+              <span style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 4, padding: "1px 6px", fontSize: 10, fontWeight: 800 }}>L{role} {ROLE_NAMES[role]}</span>
+            </div>
+          </div>
+          <button onClick={onLogout} style={{ background: T.linen, border: `1px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 16px", fontSize: 13, fontWeight: 700, color: T.carbon, cursor: "pointer" }}>
+            Sign Out
+          </button>
+        </div>
+      </Card>
+
+      {/* User Management — Admin only */}
+      {role === 1 && <UserManagement />}
+
+      {/* AI Key */}
       <Card style={{ marginBottom: 16, border: `2px solid ${T.rosso}` }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>✧ Gemini AI Key</div>
         <div style={{ fontSize: 12, color: T.mist, marginBottom: 14 }}>
@@ -4366,22 +4585,108 @@ Only include an action if the user is clearly asking you to make a change. For q
 
 
 // ============================================================
-// MAIN APP
+// MAIN APP — Phase 4 with Firebase Auth + Firestore Sync
 // ============================================================
 export default function App() {
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [history, setHistory] = useState(["dashboard"]);
   const [aiPanelOpen, setAiPanelOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [guests, setGuests] = useState(SEED_GUESTS);
-  const [tasks, setTasks] = useState(SEED_TASKS);
-  const [budget, setBudget] = useState(SEED_BUDGET);
-  const [vendors] = useState(SEED_VENDORS);
+  const [guests, setGuestsState] = useState(SEED_GUESTS);
+  const [tasks, setTasksState] = useState(SEED_TASKS);
+  const [budget, setBudgetState] = useState(SEED_BUDGET);
+  const [vendors, setVendors] = useState(SEED_VENDORS);
   const [activities] = useState(SEED_ACTIVITIES);
   const [timeline] = useState(SEED_TIMELINE);
   const [hotels] = useState(SEED_HOTELS);
   const [showClosing, setShowClosing] = useState(false);
+  const [dbReady, setDbReady] = useState(false);
 
   const WEDDING_DATE = "2026-09-18";
+
+  // ── Auth listener ──
+  useEffect(() => {
+    const unsub = onAuthStateChanged(fbAuth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        try {
+          // Check users collection first
+          const snap = await getDoc(doc(fbDb, "users", firebaseUser.uid));
+          if (snap.exists()) {
+            setRole(snap.data().role);
+          } else {
+            // Check invites by email
+            const inviteSnap = await getDoc(doc(fbDb, "invites", firebaseUser.email.toLowerCase()));
+            // First user ever registered gets Admin
+            const assignedRole = inviteSnap.exists() ? inviteSnap.data().role : ROLES.READONLY;
+            // Save to users collection for next time
+            await setDoc(doc(fbDb, "users", firebaseUser.uid), {
+              email: firebaseUser.email,
+              role: assignedRole,
+              uid: firebaseUser.uid
+            });
+            setRole(assignedRole);
+          }
+        } catch { setRole(ROLES.READONLY); }
+      } else {
+        setUser(null);
+        setRole(null);
+      }
+      setAuthLoading(false);
+    });
+    return unsub;
+  }, []);
+
+  // ── Firestore sync — seed then subscribe ──
+  useEffect(() => {
+    if (!user) return;
+
+    const setup = async () => {
+      // Seed data if first time
+      await seedCollection("guests", SEED_GUESTS);
+      await seedCollection("tasks", SEED_TASKS);
+      await seedCollection("budget", SEED_BUDGET);
+      await seedCollection("vendors", SEED_VENDORS);
+      setDbReady(true);
+    };
+    setup();
+
+    // Subscribe to live updates
+    const unsubGuests = subscribeCollection("guests", data => { if (data.length > 0) setGuestsState(data); });
+    const unsubTasks = subscribeCollection("tasks", data => { if (data.length > 0) setTasksState(data); });
+    const unsubBudget = subscribeCollection("budget", data => { if (data.length > 0) setBudgetState(data); });
+    const unsubVendors = subscribeCollection("vendors", data => { if (data.length > 0) setVendors(data); });
+
+    return () => { unsubGuests(); unsubTasks(); unsubBudget(); unsubVendors(); };
+  }, [user]);
+
+  // ── Firestore-aware setters ──
+  const setGuests = useCallback((updater) => {
+    setGuestsState(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      next.forEach(g => saveToFirestore("guests", g.id, g));
+      return next;
+    });
+  }, []);
+
+  const setTasks = useCallback((updater) => {
+    setTasksState(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      next.forEach(t => saveToFirestore("tasks", t.id, t));
+      return next;
+    });
+  }, []);
+
+  const setBudget = useCallback((updater) => {
+    setBudgetState(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      next.forEach(b => saveToFirestore("budget", b.id, b));
+      return next;
+    });
+  }, []);
+
   const activeModule = history[history.length - 1];
   const canGoBack = history.length > 1;
 
@@ -4397,23 +4702,52 @@ export default function App() {
     setHistory(prev => prev.length > 1 ? prev.slice(0, -1) : prev);
   }, []);
 
+  // ── Loading screen ──
+  if (authLoading) return (
+    <div style={{ minHeight: "100vh", background: "#1C1C1E", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ textAlign: "center" }}>
+        <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 16 }}>
+          <span style={{ color: "#C41230" }}>SIRA</span>
+          <span style={{ color: "#fff" }}>LEON</span>
+          <span style={{ color: "#2D6DB5" }}>WEDDING</span>
+          <span style={{ color: "#fff" }}>H</span>
+          <span style={{ color: "#C41230" }}>Q</span>
+        </div>
+        <div style={{ color: "#AEAEB2", fontSize: 13 }}>Loading…</div>
+      </div>
+    </div>
+  );
+
+  // ── Login screen ──
+  if (!user) return <LoginScreen />;
+
   const renderModule = () => {
+    // Role-based access control
+    if (!canAccess(role, activeModule)) {
+      return (
+        <div style={{ padding: 40, textAlign: "center" }}>
+          <div style={{ fontSize: 32, marginBottom: 16 }}>🔒</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: T.carbon, marginBottom: 8 }}>Access Restricted</div>
+          <div style={{ fontSize: 14, color: T.mist }}>Your role ({ROLE_NAMES[role]}) doesn't have access to this section.</div>
+        </div>
+      );
+    }
     switch (activeModule) {
       case "dashboard": return <Dashboard guests={guests} tasks={tasks} budget={budget} weddingDate={WEDDING_DATE} />;
-      case "guests": return <Guests guests={guests} setGuests={setGuests} />;
-      case "groups": return <Groups guests={guests} setGuests={setGuests} />;
+      case "guests": return <Guests guests={guests} setGuests={setGuests} canEdit={canEdit(role, "guests")} />;
+      case "groups": return <Groups guests={guests} setGuests={setGuests} canEdit={canEdit(role, "groups")} />;
       case "rsvp": return <RsvpForecast guests={guests} />;
       case "events": return <Events />;
       case "activities": return <Activities activities={activities} />;
-      case "tasks": return <Tasks tasks={tasks} setTasks={setTasks} />;
-      case "budget": return <Budget budget={budget} setBudget={setBudget} />;
-      case "vendors": return <Vendors vendors={vendors} />;
+      case "tasks": return <Tasks tasks={tasks} setTasks={setTasks} canEdit={canEdit(role, "tasks")} />;
+      case "budget": return <Budget budget={budget} setBudget={setBudget} canEdit={canEdit(role, "budget")} />;
+      case "vendors": return <Vendors vendors={vendors} canEdit={canEdit(role, "vendors")} />;
       case "timeline": return <Timeline timeline={timeline} />;
       case "travel": return <Travel hotels={hotels} />;
       case "import": return <Import guests={guests} setGuests={setGuests} />;
       case "ai": return <AiPlanner guests={guests} tasks={tasks} budget={budget} vendors={vendors} />;
       case "comms": return <Comms />;
-      case "settings": return <Settings />;
+      case "settings": return <Settings user={user} role={role} onLogout={() => signOut(fbAuth)} />;
       default: return <Dashboard guests={guests} tasks={tasks} budget={budget} weddingDate={WEDDING_DATE} />;
     }
   };
@@ -4453,7 +4787,7 @@ export default function App() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v1.1.0 · A Kleinman Creation
+            Wedding HQ v1.3.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4482,18 +4816,19 @@ export default function App() {
             </button>
           ) : (
             <button onClick={() => navigate("dashboard")} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}>
-              <span style={{ color: T.rosso, fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>LEON</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>SIRA</span><span style={{ color: "#2D6DB5", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>WEDDING</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>H</span><span style={{ color: "#C41230", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>Q</span>
+              <span style={{ color: T.rosso, fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>SIRA</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>LEON</span><span style={{ color: "#2D6DB5", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>WEDDING</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>H</span><span style={{ color: "#C41230", fontWeight: 900, fontSize: 15, letterSpacing: "0.02em" }}>Q</span>
             </button>
           )}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {canGoBack && (
             <button onClick={() => navigate("dashboard")} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}>
-              <span style={{ color: T.rosso, fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>LEON</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>SIRA</span><span style={{ color: "#2D6DB5", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>WEDDING</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>H</span><span style={{ color: "#C41230", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>Q</span>
+              <span style={{ color: T.rosso, fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>SIRA</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>LEON</span><span style={{ color: "#2D6DB5", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>WEDDING</span><span style={{ color: "#fff", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>H</span><span style={{ color: "#C41230", fontWeight: 900, fontSize: 13, letterSpacing: "0.02em" }}>Q</span>
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v1.1.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v1.3.0</span>
+          {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
 
@@ -4524,7 +4859,7 @@ export default function App() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>LEONSIRAWEDDINGHQ v1.1.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.3.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
