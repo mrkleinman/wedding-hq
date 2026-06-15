@@ -512,9 +512,9 @@ const Dashboard = ({ guests, tasks, budget, weddingDate }) => {
           </div>
           <div style={{ display: "flex", gap: 20, marginTop: 16, flexWrap: "wrap" }}>
             {[
-              { label: "Thai Ceremony", time: "10:00" },
-              { label: "Lunch Reception", time: "13:30" },
-              { label: "Venue", time: "Mandarin Oriental" },
+              { label: "Lunch Reception", time: "11:30" },
+              { label: "Church Wedding", time: "14:00" },
+              { label: "Venue", time: "Gardens of Dinsor Palace" },
             ].map(item => (
               <div key={item.label} style={{ background: "rgba(255,255,255,0.07)", borderRadius: 8, padding: "6px 14px" }}>
                 <div style={{ fontSize: 10, color: T.mist, letterSpacing: "0.08em", textTransform: "uppercase" }}>{item.label}</div>
@@ -1791,8 +1791,8 @@ const RsvpForecast = ({ guests }) => {
 // ============================================================
 const Events = () => {
   const events = [
-    { id: "e001", name: "Thai Ceremony", type: "Ceremony", date: "2026-11-07", start: "10:00", end: "12:00", venue: "Mandarin Oriental Ballroom", capacity: 300, cost: 15000, notes: "Traditional Thai ceremony" },
-    { id: "e002", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: "13:30", end: "16:00", venue: "Mandarin Oriental Ballroom", capacity: 300, cost: 35000, notes: "Seated luncheon reception" },
+    { id: "e001", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: "11:30", end: "15:00", venue: "The Gardens of Dinsor Palace, Watthana, Bangkok", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. Parking available. thegardenspalace.com · +66 93 124 7730" },
+    { id: "e002", name: "Church Wedding", type: "Ceremony", date: "2026-11-08", start: "14:00", end: "16:00", venue: "Holy Redeemer Church, Lumphini, Pathum Wan, Bangkok", capacity: 200, cost: 0, notes: "Closest MRT is Phloen Chit, 15 min walk (1km). Parking available. holyredeemerbangkok.org" },
     { id: "e003", name: "Welcome Dinner", type: "Social", date: "2026-09-17", start: "18:00", end: "22:00", venue: "TBC Rooftop", capacity: 80, cost: 8000, notes: "International guests welcome dinner" },
   ];
   const typeColor = { Ceremony: "rosso", Reception: "gold", Social: "olive", Sport: "info" };
@@ -4662,7 +4662,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v1.7.0 · A Kleinman Creation
+            Wedding HQ v1.8.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4702,7 +4702,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v1.7.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v1.8.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4734,7 +4734,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.7.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.8.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
