@@ -10,7 +10,7 @@ import { useState, useCallback, useMemo, useRef } from "react";
 // ============================================================
 const getGeminiKey = () => localStorage.getItem("gemini_api_key") || "";
 
-const GEMINI_MODEL = "gemini-2.5-flash-lite-preview-06-17";
+const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_URL = (key) => `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`;
 
 // Convert Anthropic-style messages to Gemini format
