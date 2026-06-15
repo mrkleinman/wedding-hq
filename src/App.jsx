@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo, useRef, useEffect, createContext, useContext } from "react";
 import React from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, writeBatch } from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, writeBatch, deleteDoc } from "firebase/firestore";
 
 // ── Error Boundary ──
 class ErrorBoundary extends React.Component {
@@ -1814,6 +1814,82 @@ const MapPin = ({ location }) => {
   );
 };
 
+// ── Google Places Autocomplete Input ──
+const PlacesInput = ({ value, onChange, placeholder = "Search for a place…" }) => {
+  const [query, setQuery] = useState(value || "");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const debounceRef = useRef(null);
+
+  const getApiKey = () => {
+    const s = JSON.parse(localStorage.getItem("wedding_settings") || "{}");
+    return s.googleMapsKey || "";
+  };
+
+  const search = async (text) => {
+    const key = getApiKey();
+    if (!key || text.length < 3) { setSuggestions([]); return; }
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(text)}&key=${key}&language=en&components=country:th`,
+        { mode: "cors" }
+      );
+      const data = await res.json();
+      setSuggestions(data.predictions || []);
+    } catch {
+      // Fallback: show typed value as only option
+      setSuggestions([]);
+    }
+    setLoading(false);
+  };
+
+  const handleChange = (e) => {
+    const v = e.target.value;
+    setQuery(v);
+    onChange(v);
+    setShowDropdown(true);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => search(v), 400);
+  };
+
+  const select = (prediction) => {
+    const text = prediction.description;
+    setQuery(text);
+    onChange(text);
+    setSuggestions([]);
+    setShowDropdown(false);
+  };
+
+  return (
+    <div style={{ position: "relative", flex: 1 }}>
+      <input
+        value={query}
+        onChange={handleChange}
+        onFocus={() => setShowDropdown(true)}
+        onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+        placeholder={placeholder}
+        style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box" }}
+      />
+      {showDropdown && suggestions.length > 0 && (
+        <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: T.white, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, boxShadow: "0 4px 16px rgba(0,0,0,0.12)", zIndex: 1000, marginTop: 4, overflow: "hidden" }}>
+          {suggestions.map((p, i) => (
+            <button key={p.place_id || i} onMouseDown={() => select(p)}
+              style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 14px", background: "none", border: "none", borderBottom: i < suggestions.length - 1 ? `1px solid ${T.linen}` : "none", cursor: "pointer", fontSize: 13, color: T.carbon, lineHeight: 1.4 }}>
+              <div style={{ fontWeight: 600 }}>{p.structured_formatting?.main_text || p.description}</div>
+              {p.structured_formatting?.secondary_text && <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>{p.structured_formatting.secondary_text}</div>}
+            </button>
+          ))}
+        </div>
+      )}
+      {loading && (
+        <div style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: T.mist }}>…</div>
+      )}
+    </div>
+  );
+};
+
 
 // ============================================================
 // MODULE: EVENTS
@@ -1888,7 +1964,7 @@ const Events = () => {
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Venue / Location</div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <Input value={form.venue} onChange={v => setF("venue", v)} placeholder="Full venue address" />
+                  <PlacesInput value={form.venue} onChange={v => setF("venue", v)} placeholder="Search venue or address…" />
                   {form.venue && <MapPin location={form.venue} />}
                 </div>
               </div>
@@ -2002,7 +2078,7 @@ const Activities = ({ activities: seedActivities }) => {
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location</div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <Input value={form.location || ""} onChange={v => setF("location", v)} placeholder="Venue or address" />
+                  <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search venue or address…" />
                   {form.location && <MapPin location={form.location} />}
                 </div>
               </div>
@@ -2245,7 +2321,7 @@ If a field is not visible or applicable, use an empty string. Be concise.`
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Venue</div>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <Input value={form.location || ""} onChange={v => set("location", v)} placeholder="e.g. Gardens of Dinsor Palace, Bangkok" />
+            <PlacesInput value={form.location || ""} onChange={v => set("location", v)} placeholder="Search venue or address…" />
             {form.location && <MapPin location={form.location} />}
           </div>
         </div>
@@ -2816,7 +2892,7 @@ If a field is not visible, use empty string.`
           <div style={{ gridColumn: "1/-1" }}>
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Address</div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <Input value={form.location || ""} onChange={v => setF("location", v)} placeholder="Vendor address or venue" />
+              <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search vendor address…" />
               {form.location && <MapPin location={form.location} />}
             </div>
           </div>
@@ -3148,7 +3224,7 @@ const Vendors = ({ vendors: seedVendors, canEdit }) => {
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Address</div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <Input value={form.location || ""} onChange={v => setF("location", v)} placeholder="Vendor address" />
+                  <PlacesInput value={form.location || ""} onChange={v => setF("location", v)} placeholder="Search vendor address…" />
                   {form.location && <MapPin location={form.location} />}
                 </div>
               </div>
@@ -4219,55 +4295,147 @@ const TestAiButton = () => {
 };
 
 // ── User Management — Admin only ──
-const UserManagement = () => {
+const UserManagement = ({ adminUser }) => {
   const [email, setEmail] = useState("");
-  const [selectedRole, setSelectedRole] = useState(3);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(2);
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
 
-  const assignRole = async () => {
-    if (!email) return;
+  // Load existing users from Firestore
+  useEffect(() => {
+    const unsub = onSnapshot(collection(fbDb, "users"), snap => {
+      setUsers(snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => u.id !== adminUser?.uid));
+    });
+    return unsub;
+  }, []);
+
+  const createUser = async () => {
+    if (!email || !password) return;
+    if (password.length < 6) { setStatus("Password must be at least 6 characters."); return; }
     setLoading(true); setStatus("");
+
+    // Store current admin credentials
+    const adminEmail = adminUser.email;
+    const adminPassword = window.prompt("Enter YOUR password to confirm creating this user:");
+    if (!adminPassword) { setLoading(false); return; }
+
     try {
-      // Save role by email — user must have logged in at least once
-      // We store by email as a lookup key
-      await setDoc(doc(fbDb, "invites", email.toLowerCase()), {
+      // Sign in as admin first to confirm credentials work
+      await signInWithEmailAndPassword(fbAuth, adminEmail, adminPassword);
+
+      // Create new user account
+      const { user: newUser } = await createUserWithEmailAndPassword(fbAuth, email, password);
+
+      // Save role in Firestore
+      await setDoc(doc(fbDb, "users", newUser.uid), {
         email: email.toLowerCase(),
         role: Number(selectedRole),
-        assignedAt: new Date().toISOString()
+        uid: newUser.uid,
+        createdAt: new Date().toISOString()
       });
-      setStatus(`✓ Role L${selectedRole} set for ${email}. They'll get access on next login.`);
-      setEmail("");
+      await setDoc(doc(fbDb, "invites", email.toLowerCase()), {
+        email: email.toLowerCase(),
+        role: Number(selectedRole)
+      });
+
+      // Sign back in as admin
+      await signInWithEmailAndPassword(fbAuth, adminEmail, adminPassword);
+
+      setStatus(`✓ ${email} created as L${selectedRole}. Share the app URL and their temporary password with them.`);
+      setEmail(""); setPassword("");
     } catch (err) {
-      setStatus(`Error: ${err.message}`);
+      if (err.code === "auth/email-already-in-use") {
+        // User already exists — just update role
+        try {
+          await setDoc(doc(fbDb, "invites", email.toLowerCase()), { email: email.toLowerCase(), role: Number(selectedRole) });
+          await signInWithEmailAndPassword(fbAuth, adminEmail, adminPassword);
+          setStatus(`✓ ${email} already exists. Role updated to L${selectedRole}.`);
+          setEmail(""); setPassword("");
+        } catch (e) { setStatus(`Error: ${e.message}`); }
+      } else {
+        setStatus(`Error: ${err.message}`);
+        // Try to get back to admin
+        try { await signInWithEmailAndPassword(fbAuth, adminEmail, adminPassword); } catch {}
+      }
     }
     setLoading(false);
   };
 
   return (
     <Card style={{ marginBottom: 16, border: `1.5px solid ${T.linenDark}` }}>
-      <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>👥 Manage User Access</div>
-      <div style={{ fontSize: 12, color: T.mist, marginBottom: 14 }}>First add the user in Firebase Console → Authentication → Add user. Then assign their role here.</div>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
-        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="user@email.com"
-          style={{ flex: 2, minWidth: 160, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px", fontSize: 13, outline: "none" }} />
-        <select value={selectedRole} onChange={e => setSelectedRole(e.target.value)}
-          style={{ flex: 1, minWidth: 120, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 10px", fontSize: 13 }}>
-          <option value={2}>L2 — Partner (Sira)</option>
-          <option value={3}>L3 — Planner</option>
-          <option value={4}>L4 — Family</option>
-          <option value={5}>L5 — Read Only</option>
-        </select>
-        <button onClick={assignRole} disabled={loading || !email}
-          style={{ background: T.rosso, color: "#fff", border: "none", borderRadius: 8, padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-          {loading ? "…" : "Assign"}
-        </button>
+      <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>👥 Manage Users</div>
+      <div style={{ fontSize: 12, color: T.mist, marginBottom: 14 }}>Create a new user and set their role. They log in with the email and temporary password you set, then can change their password later.</div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+        <div style={{ gridColumn: "1/-1" }}>
+          <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, marginBottom: 5 }}>Email</div>
+          <input value={email} onChange={e => setEmail(e.target.value)} placeholder="sira@email.com" type="email"
+            style={{ width: "100%", boxSizing: "border-box", border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px", fontSize: 13, outline: "none" }} />
+        </div>
+        <div>
+          <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, marginBottom: 5 }}>Temporary Password</div>
+          <div style={{ display: "flex", gap: 6 }}>
+            <input value={password} onChange={e => setPassword(e.target.value)} placeholder="Min 6 chars"
+              type={showPassword ? "text" : "password"}
+              style={{ flex: 1, border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px", fontSize: 13, outline: "none" }} />
+            <button onClick={() => setShowPassword(!showPassword)}
+              style={{ background: T.linen, border: "none", borderRadius: 8, padding: "8px 10px", fontSize: 12, cursor: "pointer", color: T.slate }}>
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
+        </div>
+        <div>
+          <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, marginBottom: 5 }}>Role</div>
+          <select value={selectedRole} onChange={e => setSelectedRole(e.target.value)}
+            style={{ width: "100%", border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 10px", fontSize: 13, outline: "none" }}>
+            <option value={2}>L2 — Partner (Sira)</option>
+            <option value={3}>L3 — Planner</option>
+            <option value={4}>L4 — Family</option>
+            <option value={5}>L5 — Read Only</option>
+          </select>
+        </div>
       </div>
-      {status && <div style={{ fontSize: 12, color: status.startsWith("✓") ? T.success : T.danger, marginTop: 4 }}>{status}</div>}
+
+      <Btn onClick={createUser} disabled={loading || !email || !password}>
+        {loading ? "Creating…" : "Create User & Assign Role"}
+      </Btn>
+
+      {status && <div style={{ fontSize: 12, color: status.startsWith("✓") ? T.success : T.danger, marginTop: 10, lineHeight: 1.5 }}>{status}</div>}
+
+      {/* Existing users */}
+      {users.length > 0 && (
+        <div style={{ marginTop: 16, borderTop: `1px solid ${T.linen}`, paddingTop: 14 }}>
+          <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>All Users</div>
+          {users.map(u => (
+            <div key={u.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${T.linen}` }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: T.carbon }}>{u.email}</div>
+                <div style={{ fontSize: 11, color: T.mist, marginTop: 2 }}>UID: {u.id?.slice(0, 12)}…</div>
+              </div>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <div style={{ background: ROLE_COLORS[u.role] || T.mist, color: "#fff", borderRadius: 6, padding: "2px 8px", fontSize: 11, fontWeight: 800 }}>L{u.role} {ROLE_NAMES[u.role]}</div>
+                <button onClick={async () => {
+                  if (!window.confirm(`Remove ${u.email} from the app?`)) return;
+                  try {
+                    await deleteDoc(doc(fbDb, "users", u.id));
+                    setStatus(`✓ ${u.email} removed`);
+                  } catch (e) { setStatus(`Error: ${e.message}`); }
+                }} style={{ background: T.dangerLight, border: `1px solid ${T.danger}`, borderRadius: 6, padding: "4px 10px", fontSize: 11, fontWeight: 700, color: T.danger, cursor: "pointer" }}>
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Role legend */}
       <div style={{ marginTop: 14, fontSize: 11, color: T.mist }}>
         {[
-          { l: 1, name: "Admin (You)", desc: "Everything + Settings" },
-          { l: 2, name: "Partner (Sira)", desc: "Everything except Settings. Full budget." },
+          { l: 2, name: "Partner (Sira)", desc: "Everything except Settings." },
           { l: 3, name: "Planner", desc: "Guests, Tasks, Vendors, AI. No budget." },
           { l: 4, name: "Family", desc: "Guests (view), Events, Timeline." },
           { l: 5, name: "Read Only", desc: "Events, Timeline only." },
@@ -4346,7 +4514,23 @@ const Settings = ({ user, role, onLogout }) => {
       </Card>
 
       {/* User Management — Admin only */}
-      {role === 1 && <UserManagement />}
+      {role === 1 && <UserManagement adminUser={user} />}
+
+      {/* Google Maps Key */}
+      <Card style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>📍 Google Maps API Key</div>
+        <div style={{ fontSize: 12, color: T.mist, marginBottom: 12 }}>
+          Enables address autocomplete in all location fields. Get from <span style={{ color: T.info }}>console.cloud.google.com</span> → Enable Places API → Create API Key.
+        </div>
+        <input
+          type="password"
+          value={settings.googleMapsKey || ""}
+          onChange={e => set("googleMapsKey", e.target.value)}
+          placeholder="AIza…"
+          style={{ width: "100%", boxSizing: "border-box", border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "9px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", fontFamily: "monospace" }}
+        />
+        {settings.googleMapsKey && <div style={{ fontSize: 11, color: T.success, marginTop: 8, fontWeight: 700 }}>✓ Maps key set — address autocomplete active</div>}
+      </Card>
 
       {/* AI Key */}
       <Card style={{ marginBottom: 16, border: `2px solid ${T.rosso}` }}>
@@ -5014,7 +5198,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v2.6.0 · A Kleinman Creation
+            Wedding HQ v2.9.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -5054,7 +5238,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v2.6.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v2.9.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -5086,7 +5270,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.6.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.9.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
