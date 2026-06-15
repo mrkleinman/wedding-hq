@@ -44,7 +44,7 @@ const MODULE_ACCESS = {
   rsvp: [1,2,3], events: [1,2,3,4,5], activities: [1,2,3,4,5],
   tasks: [1,2,3], budget: [1,2], vendors: [1,2,3],
   timeline: [1,2,3,4,5], travel: [1,2,3], import: [1,2,3],
-  ai: [1,2,3], comms: [1,2,3], settings: [1],
+  ai: [1,2,3], comms: [1,2,3], settings: [1,2,3,4,5],
 };
 
 const EDIT_ACCESS = {
@@ -4529,7 +4529,8 @@ const Settings = ({ user, role, onLogout }) => {
       {/* User Management — Admin only */}
       {role === 1 && <UserManagement adminUser={user} />}
 
-      {/* Google Maps Key */}
+      {/* Everything below is Admin only */}
+      {role === 1 && (<>
       <Card style={{ marginBottom: 16 }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>📍 Google Maps API Key</div>
         <div style={{ fontSize: 12, color: T.mist, marginBottom: 12 }}>
@@ -4650,6 +4651,7 @@ const Settings = ({ user, role, onLogout }) => {
       <div style={{ marginTop: 16 }}>
         <Btn onClick={saveSettings}>{settingsSaved ? "✓ Saved!" : "Save Settings"}</Btn>
       </div>
+      </>)}
     </div>
   );
 };
@@ -5211,7 +5213,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v3.3.0 · A Kleinman Creation
+            Wedding HQ v3.4.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -5251,7 +5253,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v3.3.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v3.4.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -5283,8 +5285,11 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v3.3.0</div>
-            <div>Production · 2026-06-14</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v3.4.0</div>
+            <div style={{ marginBottom: 10 }}>Production · 2026-06-14</div>
+            <button onClick={() => signOut(fbAuth)} style={{ background: T.linen, border: `1px solid ${T.linenDark}`, borderRadius: 8, padding: "7px 14px", fontSize: 12, fontWeight: 700, color: T.carbon, cursor: "pointer", width: "100%" }}>
+              Sign Out
+            </button>
           </div>
         </div>
 
