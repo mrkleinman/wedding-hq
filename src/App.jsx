@@ -266,7 +266,8 @@ const SEED_ACTIVITIES = [
 ];
 
 const SEED_TIMELINE = [
-  { id: "tl001", date: "2026-11-07", time: "11:30", title: "Lunch Reception", location: "The Gardens of Dinsor Palace, Soi Sukhumvit, Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Reception", notes: "8–10 min walk from BTS Ekkamai Exit 1. thegardenspalace.com · +66 93 124 7730" },
+  { id: "tl000", date: "2026-11-07", time: "09:00", title: "Buddhist Ceremony", location: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Ceremony", notes: "Time can be updated in Settings" },
+  { id: "tl001", date: "2026-11-07", time: "11:30", title: "Lunch Reception", location: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok", owner: "Both", type: "Reception", notes: "8–10 min walk from BTS Ekkamai Exit 1. thegardenspalace.com · +66 93 124 7730" },
   { id: "tl002", date: "2026-11-08", time: "14:00", title: "Church Wedding", location: "Holy Redeemer Church, Ruam Rudi 5 Alley, Lumphini, Pathum Wan, Bangkok", owner: "Both", type: "Ceremony", notes: "Closest MRT is Phloen Chit, 15 min walk. holyredeemerbangkok.org" },
 ];
 
@@ -505,23 +506,28 @@ const Dashboard = ({ guests, tasks, budget, weddingDate }) => {
         <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(196,18,48,0.12)" }} />
         <div style={{ position: "absolute", bottom: -20, right: 60, width: 80, height: 80, borderRadius: "50%", background: "rgba(184,135,30,0.15)" }} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontSize: 11, color: T.mist, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>Bangkok Wedding · 7 November 2026</div>
+          <div style={{ fontSize: 11, color: T.mist, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>Bangkok Wedding · 7–8 November 2026</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
             <span style={{ fontSize: 64, fontWeight: 900, color: "#fff", letterSpacing: "-3px", lineHeight: 1 }}>{days}</span>
             <span style={{ fontSize: 20, color: T.mist, fontWeight: 600 }}>days to go</span>
           </div>
-          <div style={{ display: "flex", gap: 20, marginTop: 16, flexWrap: "wrap" }}>
-            {[
-              { label: "Lunch Reception", time: "11:30" },
-              { label: "Church Wedding", time: "14:00" },
-              { label: "Venue", time: "Gardens of Dinsor Palace" },
-            ].map(item => (
-              <div key={item.label} style={{ background: "rgba(255,255,255,0.07)", borderRadius: 8, padding: "6px 14px" }}>
-                <div style={{ fontSize: 10, color: T.mist, letterSpacing: "0.08em", textTransform: "uppercase" }}>{item.label}</div>
-                <div style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>{item.time}</div>
+          {(() => {
+            const s = JSON.parse(localStorage.getItem("wedding_settings") || "{}");
+            return (
+              <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
+                {[
+                  { label: "Sat 7 Nov · Buddhist Ceremony", time: s.buddhistCeremonyTime || "09:00" },
+                  { label: "Sat 7 Nov · Lunch Reception", time: s.lunchReceptionTime || "11:30" },
+                  { label: "Sun 8 Nov · Church Wedding", time: s.churchWeddingTime || "14:00" },
+                ].map(item => (
+                  <div key={item.label} style={{ background: "rgba(255,255,255,0.07)", borderRadius: 8, padding: "8px 14px" }}>
+                    <div style={{ fontSize: 10, color: T.mist, letterSpacing: "0.06em", textTransform: "uppercase" }}>{item.label}</div>
+                    <div style={{ fontSize: 14, color: "#fff", fontWeight: 800 }}>{item.time}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </div>
       </div>
 
@@ -1788,12 +1794,30 @@ const RsvpForecast = ({ guests }) => {
 
 // ============================================================
 // MODULE: EVENTS
+// ── Map pin helper — opens Google Maps ──
+const MapPin = ({ location }) => {
+  if (!location) return null;
+  const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer"
+      style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: T.linen, border: `1px solid ${T.linenDark}`, cursor: "pointer", textDecoration: "none", flexShrink: 0 }}
+      title="Open in Maps">
+      📍
+    </a>
+  );
+};
+
 // ============================================================
 const Events = () => {
+  const savedSettings = JSON.parse(localStorage.getItem("wedding_settings") || "{}");
+  const buddhistTime = savedSettings.buddhistCeremonyTime || "09:00";
+  const lunchTime = savedSettings.lunchReceptionTime || "11:30";
+  const churchTime = savedSettings.churchWeddingTime || "14:00";
+
   const events = [
-    { id: "e001", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: "11:30", end: "15:00", venue: "The Gardens of Dinsor Palace, Watthana, Bangkok", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. Parking available. thegardenspalace.com · +66 93 124 7730" },
-    { id: "e002", name: "Church Wedding", type: "Ceremony", date: "2026-11-08", start: "14:00", end: "16:00", venue: "Holy Redeemer Church, Lumphini, Pathum Wan, Bangkok", capacity: 200, cost: 0, notes: "Closest MRT is Phloen Chit, 15 min walk (1km). Parking available. holyredeemerbangkok.org" },
-    { id: "e003", name: "Welcome Dinner", type: "Social", date: "2026-09-17", start: "18:00", end: "22:00", venue: "TBC Rooftop", capacity: 80, cost: 8000, notes: "International guests welcome dinner" },
+    { id: "e000", name: "Buddhist Ceremony", type: "Ceremony", date: "2026-11-07", start: buddhistTime, end: lunchTime, venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "Ceremony time can be updated in Settings. 8–10 min walk from BTS Ekkamai Exit 1. +66 93 124 7730" },
+    { id: "e001", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: lunchTime, end: "15:00", venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. Parking available. thegardenspalace.com · +66 93 124 7730" },
+    { id: "e002", name: "Church Wedding", type: "Ceremony", date: "2026-11-08", start: churchTime, end: "16:00", venue: "Holy Redeemer Church, Ruam Rudi 5 Alley, Lumphini, Pathum Wan, Bangkok 10330, Thailand", capacity: 200, cost: 0, notes: "Closest MRT is Phloen Chit, 15 min walk (1km). Parking available. holyredeemerbangkok.org" },
   ];
   const typeColor = { Ceremony: "rosso", Reception: "gold", Social: "olive", Sport: "info" };
   return (
@@ -1807,7 +1831,10 @@ const Events = () => {
               <span style={{ fontSize: 12, color: T.mist }}>{fmtDate(ev.date)}</span>
             </div>
             <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: T.carbon }}>{ev.name}</h3>
-            <div style={{ fontSize: 13, color: T.slate, marginBottom: 12 }}>{ev.venue}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <span style={{ fontSize: 13, color: T.slate, flex: 1 }}>{ev.venue}</span>
+              <MapPin location={ev.venue} />
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
               {[
                 { label: "Start", value: ev.start },
@@ -2030,6 +2057,15 @@ If a field is not visible or applicable, use an empty string. Be concise.`
           <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Linked Budget Ref</div>
           <Input value={form.budgetRef || ""} onChange={v => set("budgetRef", v)} placeholder="e.g. B-005" />
           {form.budgetRef && <div style={{ fontSize: 11, color: T.mist, marginTop: 3 }}>Linked to budget item {form.budgetRef}</div>}
+        </div>
+
+        {/* Location */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Venue</div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <Input value={form.location || ""} onChange={v => set("location", v)} placeholder="e.g. Gardens of Dinsor Palace, Bangkok" />
+            {form.location && <MapPin location={form.location} />}
+          </div>
         </div>
 
         {/* Notes */}
@@ -2595,6 +2631,13 @@ If a field is not visible, use empty string.`
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Vendor</div>
             <Input value={form.vendor} onChange={v => setF("vendor", v)} placeholder="Vendor name" />
           </div>
+          <div style={{ gridColumn: "1/-1" }}>
+            <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Address</div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <Input value={form.location || ""} onChange={v => setF("location", v)} placeholder="Vendor address or venue" />
+              {form.location && <MapPin location={form.location} />}
+            </div>
+          </div>
           <div>
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Budget ($)</div>
             <Input value={form.estimated} onChange={v => setF("estimated", v)} placeholder="0" />
@@ -2927,7 +2970,10 @@ const Timeline = ({ timeline }) => {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                     <div>
                       <div style={{ fontWeight: 800, fontSize: 15, color: T.carbon }}>{item.title}</div>
-                      <div style={{ fontSize: 12, color: T.slate, marginTop: 2 }}>{item.location}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2 }}>
+                        <span style={{ fontSize: 12, color: T.slate, flex: 1 }}>{item.location}</span>
+                        {item.location && item.location !== "TBC" && <MapPin location={item.location} />}
+                      </div>
                       {item.notes && <div style={{ fontSize: 12, color: T.mist, marginTop: 4 }}>{item.notes}</div>}
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
@@ -3961,29 +4007,45 @@ const UserManagement = () => {
 };
 
 const Settings = ({ user, role, onLogout }) => {
-  const [settings, setSettings] = useState({
-    weddingName: "Bangkok Wedding",
-    groomName: "Leon",
-    brideName: "Sira",
-    weddingDate: "2026-11-07",
-    city: "Bangkok, Thailand",
-    venue: "Mandarin Oriental Bangkok",
-    groomAllocation: 150,
-    brideAllocation: 150,
-    probCertain: 95,
-    probLikely: 75,
-    probMaybe: 45,
-    probUnlikely: 15,
+  const [settings, setSettings] = useState(() => {
+    const saved = JSON.parse(localStorage.getItem("wedding_settings") || "{}");
+    return {
+      weddingName: "Bangkok Wedding",
+      groomName: "Leon",
+      brideName: "Sira",
+      weddingDate: "2026-11-07",
+      churchDate: "2026-11-08",
+      city: "Bangkok, Thailand",
+      venue: "The Gardens of Dinsor Palace",
+      buddhistCeremonyTime: "09:00",
+      lunchReceptionTime: "11:30",
+      churchWeddingTime: "14:00",
+      groomAllocation: 150,
+      brideAllocation: 150,
+      probCertain: 95,
+      probLikely: 75,
+      probMaybe: 45,
+      probUnlikely: 15,
+      ...saved,
+    };
   });
   const [geminiKey, setGeminiKey] = useState(getGeminiKey());
   const [keyVisible, setKeyVisible] = useState(false);
   const [keySaved, setKeySaved] = useState(false);
+  const [settingsSaved, setSettingsSaved] = useState(false);
   const set = (k, v) => setSettings(s => ({ ...s, [k]: v }));
 
   const saveKey = () => {
     localStorage.setItem("gemini_api_key", geminiKey.trim());
     setKeySaved(true);
     setTimeout(() => setKeySaved(false), 2000);
+  };
+
+  const saveSettings = () => {
+    localStorage.setItem("wedding_settings", JSON.stringify(settings));
+    saveToFirestore("settings", "main", settings);
+    setSettingsSaved(true);
+    setTimeout(() => setSettingsSaved(false), 2000);
   };
 
   return (
@@ -4057,7 +4119,18 @@ const Settings = ({ user, role, onLogout }) => {
         </Card>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <Card>
-            <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon, marginBottom: 16, borderBottom: `1px solid ${T.linen}`, paddingBottom: 10 }}>Guest Allocation</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon, marginBottom: 16, borderBottom: `1px solid ${T.linen}`, paddingBottom: 10 }}>Event Times</div>
+            {[
+              { label: "Buddhist Ceremony (Sat 7 Nov)", key: "buddhistCeremonyTime", placeholder: "e.g. 09:00" },
+              { label: "Lunch Reception (Sat 7 Nov)", key: "lunchReceptionTime", placeholder: "e.g. 11:30" },
+              { label: "Church Wedding (Sun 8 Nov)", key: "churchWeddingTime", placeholder: "e.g. 14:00" },
+            ].map(f => (
+              <div key={f.key} style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 12, color: T.slate, fontWeight: 700, marginBottom: 5 }}>{f.label}</div>
+                <Input value={settings[f.key]} onChange={v => set(f.key, v)} placeholder={f.placeholder} />
+              </div>
+            ))}
+          </Card>
             {[
               { label: "Groom Allocation", key: "groomAllocation" },
               { label: "Bride Allocation", key: "brideAllocation" },
@@ -4099,7 +4172,7 @@ const Settings = ({ user, role, onLogout }) => {
         </div>
       </div>
       <div style={{ marginTop: 16 }}>
-        <Btn>Save Settings</Btn>
+        <Btn onClick={saveSettings}>{settingsSaved ? "✓ Saved!" : "Save Settings"}</Btn>
       </div>
     </div>
   );
@@ -4662,7 +4735,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v1.8.0 · A Kleinman Creation
+            Wedding HQ v2.0.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4702,7 +4775,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v1.8.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v2.0.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4734,7 +4807,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v1.8.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.0.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
