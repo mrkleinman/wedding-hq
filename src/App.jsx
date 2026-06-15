@@ -4131,6 +4131,8 @@ const Settings = ({ user, role, onLogout }) => {
               </div>
             ))}
           </Card>
+          <Card>
+            <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon, marginBottom: 16, borderBottom: `1px solid ${T.linen}`, paddingBottom: 10 }}>Guest Allocation</div>
             {[
               { label: "Groom Allocation", key: "groomAllocation" },
               { label: "Bride Allocation", key: "brideAllocation" },
