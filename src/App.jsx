@@ -351,28 +351,40 @@ const statusBadge = (s) => {
   return <Badge label={s} color={map[s] || "mist"} />;
 };
 
+
+// ── Responsive hook ──
+const useIsMobile = () => {
+  const [w, setW] = useState(window.innerWidth);
+  useEffect(() => {
+    const h = () => setW(window.innerWidth);
+    window.addEventListener("resize", h);
+    return () => window.removeEventListener("resize", h);
+  }, []);
+  return w < 600;
+};
+
 const Card = ({ children, style = {}, className = "" }) => (
   <div style={{
     background: T.white, borderRadius: 12, border: `1px solid ${T.linenDark}`,
-    boxShadow: `0 1px 4px rgba(28,28,30,0.06)`, padding: 20, ...style
+    boxShadow: `0 1px 4px rgba(28,28,30,0.06)`, padding: 16, ...style
   }} className={className}>{children}</div>
 );
 
 const StatCard = ({ label, value, sub, color = T.carbon, accent = false }) => (
-  <Card style={{ padding: "16px 20px" }}>
-    <div style={{ fontSize: 12, color: T.slate, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6 }}>{label}</div>
-    <div style={{ fontSize: 28, fontWeight: 800, color: accent ? T.rosso : T.carbon, letterSpacing: "-0.5px", lineHeight: 1.1 }}>{value}</div>
-    {sub && <div style={{ fontSize: 12, color: T.mist, marginTop: 4 }}>{sub}</div>}
+  <Card style={{ padding: "12px 14px" }}>
+    <div style={{ fontSize: 11, color: T.slate, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 4 }}>{label}</div>
+    <div style={{ fontSize: 24, fontWeight: 800, color: accent ? T.rosso : T.carbon, letterSpacing: "-0.5px", lineHeight: 1.1 }}>{value}</div>
+    {sub && <div style={{ fontSize: 11, color: T.mist, marginTop: 3 }}>{sub}</div>}
   </Card>
 );
 
 const SectionHeader = ({ title, subtitle, action }) => (
-  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20, gap: 12 }}>
-    <div>
-      <h2 style={{ fontSize: 20, fontWeight: 800, color: T.carbon, margin: 0, letterSpacing: "-0.3px" }}>{title}</h2>
-      {subtitle && <p style={{ fontSize: 13, color: T.slate, margin: "4px 0 0", lineHeight: 1.5 }}>{subtitle}</p>}
+  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, gap: 10, flexWrap: "wrap" }}>
+    <div style={{ minWidth: 0, flex: 1 }}>
+      <h2 style={{ fontSize: 18, fontWeight: 800, color: T.carbon, margin: 0, letterSpacing: "-0.3px" }}>{title}</h2>
+      {subtitle && <p style={{ fontSize: 12, color: T.slate, margin: "3px 0 0", lineHeight: 1.4 }}>{subtitle}</p>}
     </div>
-    {action}
+    {action && <div style={{ flexShrink: 0 }}>{action}</div>}
   </div>
 );
 
@@ -595,7 +607,7 @@ const Dashboard = ({ guests, tasks, budget, weddingDate, navigate }) => {
       </div>
 
       {/* Budget + Tasks Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12, marginBottom: 20 }}>
         <Card>
           <div style={{ fontSize: 12, color: T.slate, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 14 }}>Budget Summary</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -787,7 +799,7 @@ const Guests = ({ guests, setGuests }) => {
           <Btn small onClick={() => { setEditForm({ ...g }); setView("edit"); }}>Edit</Btn>
           <Btn variant="secondary" small onClick={() => deleteGuest(g.id)}>Delete</Btn>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginBottom: 20 }}>
           {[
             { label: "Side", value: <Badge label={g.side} color={g.side === "Groom" ? "rosso" : "gold"} /> },
             { label: "Group", value: g.group },
@@ -834,7 +846,7 @@ const Guests = ({ guests, setGuests }) => {
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, flex: 1 }}>Edit — {editForm.firstName} {editForm.lastName}</h2>
           <Btn small onClick={saveEdit}>Save Changes</Btn>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
           <Card>
             <div style={{ fontSize: 12, fontWeight: 700, color: T.carbon, marginBottom: 14, borderBottom: `1px solid ${T.linen}`, paddingBottom: 8 }}>Identity</div>
             <EditField label="First Name" field="firstName" />
@@ -876,7 +888,7 @@ const Guests = ({ guests, setGuests }) => {
           <Btn variant="secondary" small onClick={() => setView("list")}>← Cancel</Btn>
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>Add New Guest</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
           <Card>
             <div style={{ fontSize: 12, fontWeight: 700, color: T.carbon, marginBottom: 14, borderBottom: `1px solid ${T.linen}`, paddingBottom: 8 }}>Identity</div>
             {[
@@ -1076,11 +1088,11 @@ const Guests = ({ guests, setGuests }) => {
         }
       />
       <Card style={{ marginBottom: 16, padding: "14px 16px" }}>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <Input value={search} onChange={setSearch} placeholder="Search name, group, relationship…" style={{ flex: 2, minWidth: 160 }} />
-          <Select value={filterSide} onChange={setFilterSide} options={sides} style={{ flex: 1, minWidth: 90 }} />
-          <Select value={filterRsvp} onChange={setFilterRsvp} options={rsvpOptions} style={{ flex: 1, minWidth: 110 }} />
-          <Select value={filterGroup} onChange={setFilterGroup} options={groups} style={{ flex: 1, minWidth: 130 }} />
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <Input value={search} onChange={setSearch} placeholder="Search guests…" style={{ flex: "1 1 120px", minWidth: 0 }} />
+          <Select value={filterSide} onChange={setFilterSide} options={sides} style={{ flex: "1 1 80px", minWidth: 0 }} />
+          <Select value={filterRsvp} onChange={setFilterRsvp} options={rsvpOptions} style={{ flex: "1 1 80px", minWidth: 0 }} />
+          <Select value={filterGroup} onChange={setFilterGroup} options={groups} style={{ flex: "1 1 100px", minWidth: 0 }} />
         </div>
       </Card>
       <Card style={{ padding: 0 }}>
@@ -1211,7 +1223,7 @@ const Groups = ({ guests, setGuests }) => {
             <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 14 }}>
               New Guest → {addingGuest}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10, marginBottom: 10 }}>
               <div>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, marginBottom: 4 }}>First Name *</div>
                 <Input value={newGuest.firstName} onChange={v => setNewGuest(p => ({ ...p, firstName: v }))} placeholder="First name" />
@@ -1249,7 +1261,7 @@ const Groups = ({ guests, setGuests }) => {
           </div>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
           {/* Current members */}
           <Card>
             <div style={{ fontSize: 12, fontWeight: 700, color: T.slate, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 12 }}>
@@ -1587,7 +1599,7 @@ const RsvpForecast = ({ guests }) => {
       {/* ── OVERVIEW TAB ── */}
       {activeTab === "overview" && (
         <div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12, marginBottom: 20 }}>
             {/* RSVP Funnel */}
             <Card>
               <div style={{ fontSize: 12, color: T.slate, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 16 }}>RSVP Funnel</div>
@@ -1612,7 +1624,7 @@ const RsvpForecast = ({ guests }) => {
           </div>
 
           {/* By side */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12, marginBottom: 20 }}>
             {bySide.map(s => (
               <Card key={s.side}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
@@ -1639,7 +1651,7 @@ const RsvpForecast = ({ guests }) => {
           <Card style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 12, color: T.slate, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 16 }}>Travel Likelihood Breakdown</div>
             <BarChart bars={byLikelihood.map(b => ({ label: `${b.label}\n${b.prob}%`, value: b.count, color: b.color }))} height={140} />
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, marginTop: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 10, marginTop: 16 }}>
               {byLikelihood.map(b => (
                 <div key={b.label} style={{ background: T.linen, borderRadius: 8, padding: "10px 12px", textAlign: "center" }}>
                   <div style={{ fontSize: 18, fontWeight: 800, color: b.color }}>{b.count}</div>
@@ -1750,7 +1762,7 @@ const RsvpForecast = ({ guests }) => {
       {/* ── DIETARY TAB ── */}
       {activeTab === "dietary" && (
         <div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12, marginBottom: 20 }}>
             <Card>
               <div style={{ fontSize: 12, color: T.slate, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 16 }}>Dietary Requirements</div>
               <BarChart
@@ -1936,7 +1948,7 @@ const Events = () => {
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Event" : "New Event"}</h3>
               <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginBottom: 16 }}>
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Event Name *</div>
                 <Input value={form.name} onChange={v => setF("name", v)} placeholder="e.g. Welcome Dinner" />
@@ -2054,7 +2066,7 @@ const Activities = ({ activities: seedActivities }) => {
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Activity" : "New Activity"}</h3>
               <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginBottom: 16 }}>
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Activity Name *</div>
                 <Input value={form.name} onChange={v => setF("name", v)} placeholder="e.g. Golf Day" />
@@ -2291,7 +2303,7 @@ If a field is not visible or applicable, use an empty string. Be concise.`
         </div>
 
         {/* Grid fields */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginBottom: 14 }}>
           {[
             { label: "Priority", key: "priority", options: PRIORITIES },
             { label: "Status", key: "status", options: STATUSES },
@@ -2876,7 +2888,7 @@ If a field is not visible, use empty string.`
           {bScanResult?.error && <div style={{ fontSize: 12, color: T.danger, marginTop: 6 }}>{bScanResult.error}</div>}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginBottom: 16 }}>
           <div style={{ gridColumn: "1/-1" }}>
             <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Item Name *</div>
             <Input value={form.item} onChange={v => setF("item", v)} placeholder="e.g. Wedding Photography" />
@@ -3196,7 +3208,7 @@ const Vendors = ({ vendors: seedVendors, canEdit }) => {
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Vendor" : "New Vendor"}</h3>
               <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginBottom: 16 }}>
               <div style={{ gridColumn: "1/-1" }}>
                 <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Vendor Name *</div>
                 <Input value={form.name} onChange={v => setF("name", v)} placeholder="e.g. Studio Siam" />
@@ -3536,7 +3548,7 @@ const Import = ({ guests, setGuests }) => {
   if (step === "upload") return (
     <div>
       <SectionHeader title="WithJoy Import" subtitle="Import guest data from WithJoy CSV exports" />
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
         <Card>
           {/* Drop zone */}
           <div
@@ -3608,7 +3620,7 @@ const Import = ({ guests, setGuests }) => {
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
           {csvHeaders.map(h => <Badge key={h} label={h} color="mist" />)}
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
           {Object.entries(WITHJOY_MAP).map(([field, _]) => (
             <div key={field}>
               <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 5 }}>
@@ -4370,7 +4382,7 @@ const UserManagement = ({ adminUser }) => {
       <div style={{ fontSize: 13, fontWeight: 800, color: T.carbon, marginBottom: 4 }}>👥 Manage Users</div>
       <div style={{ fontSize: 12, color: T.mist, marginBottom: 14 }}>Create a new user and set their role. They log in with the email and temporary password you set, then can change their password later.</div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10, marginBottom: 10 }}>
         <div style={{ gridColumn: "1/-1" }}>
           <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, marginBottom: 5 }}>Email</div>
           <input value={email} onChange={e => setEmail(e.target.value)} placeholder="sira@email.com" type="email"
@@ -4562,7 +4574,7 @@ const Settings = ({ user, role, onLogout }) => {
         )}
       </Card>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
         <Card>
           <div style={{ fontSize: 13, fontWeight: 700, color: T.carbon, marginBottom: 16, borderBottom: `1px solid ${T.linen}`, paddingBottom: 10 }}>Wedding Details</div>
           {[
@@ -5169,7 +5181,7 @@ function AppInner() {
 
   return (
     <div
-      style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: T.cream, minHeight: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}
+      style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: T.cream, minHeight: "100vh", display: "flex", flexDirection: "column", overflow: "hidden", maxWidth: "100vw" }}
     >
       {/* CLOSING SCREEN */}
       {showClosing && (
@@ -5199,7 +5211,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v3.1.0 · A Kleinman Creation
+            Wedding HQ v3.3.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -5239,7 +5251,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v3.1.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v3.3.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -5271,7 +5283,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v3.1.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v3.3.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
@@ -5285,8 +5297,8 @@ function AppInner() {
 
         {/* MAIN CONTENT */}
         <main style={{
-          flex: 1, padding: "24px 20px", maxWidth: 1100, margin: "0 auto",
-          width: "100%", boxSizing: "border-box"
+          flex: 1, padding: "16px", maxWidth: "100%", margin: "0 auto",
+          width: "100%", boxSizing: "border-box", overflowX: "hidden"
         }}>
           {/* Breadcrumb */}
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 20, fontSize: 12, color: T.mist }}>
