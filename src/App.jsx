@@ -667,7 +667,7 @@ const Guests = ({ guests, setGuests }) => {
   const [bulkSelected, setBulkSelected] = useState([]);
   const [bulkField, setBulkField] = useState("rsvp");
   const [bulkValue, setBulkValue] = useState("");
-  const [newGuestForm, setNewGuestForm] = useState({ firstName: "", lastName: "", side: "Groom", category: "Friends", group: "Unassigned", relationship: "", travelLikelihood: "Likely", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", dietary: "", hotel: "", notes: "" });
+  const [newGuestForm, setNewGuestForm] = useState({ firstName: "", lastName: "", email: "", phone: "", side: "Groom", category: "Friends", group: "Unassigned", relationship: "", travelLikelihood: "Likely", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", dietary: "", hotel: "", notes: "" });
   const [toast, setToast] = useState(null);
   const [historyLog, setHistoryLog] = useState([]);
 
@@ -730,7 +730,7 @@ const Guests = ({ guests, setGuests }) => {
     setGuests(prev => [...prev, { ...newGuestForm, id }]);
     logChange(`${newGuestForm.firstName} ${newGuestForm.lastName}`, "created", "—", "New guest");
     showToast(`${newGuestForm.firstName} ${newGuestForm.lastName} added`);
-    setNewGuestForm({ firstName: "", lastName: "", side: "Groom", category: "Friends", group: "Unassigned", relationship: "", travelLikelihood: "Likely", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", dietary: "", hotel: "", notes: "" });
+    setNewGuestForm({ firstName: "", lastName: "", email: "", phone: "", side: "Groom", category: "Friends", group: "Unassigned", relationship: "", travelLikelihood: "Likely", rsvp: "Invited", ceremonyRsvp: "Invited", lunchRsvp: "Invited", dietary: "", hotel: "", notes: "" });
     setView("list");
   };
 
@@ -793,6 +793,8 @@ const Guests = ({ guests, setGuests }) => {
             { label: "Group", value: g.group },
             { label: "Category", value: g.category },
             { label: "Relationship", value: g.relationship },
+            { label: "Email", value: g.email ? <a href={`mailto:${g.email}`} style={{ color: T.info }}>{g.email}</a> : <span style={{ color: T.mist }}>—</span> },
+            { label: "Phone", value: g.phone ? <a href={`tel:${g.phone}`} style={{ color: T.info }}>{g.phone}</a> : <span style={{ color: T.mist }}>—</span> },
             { label: "RSVP", value: rsvpBadge(g.rsvp) },
             { label: "Ceremony", value: rsvpBadge(g.ceremonyRsvp) },
             { label: "Lunch", value: rsvpBadge(g.lunchRsvp) },
@@ -837,6 +839,8 @@ const Guests = ({ guests, setGuests }) => {
             <div style={{ fontSize: 12, fontWeight: 700, color: T.carbon, marginBottom: 14, borderBottom: `1px solid ${T.linen}`, paddingBottom: 8 }}>Identity</div>
             <EditField label="First Name" field="firstName" />
             <EditField label="Last Name" field="lastName" />
+            <EditField label="Email" field="email" />
+            <EditField label="Phone" field="phone" />
             <EditField label="Side" field="side" options={["Groom", "Bride", "Both"]} />
             <EditField label="Category" field="category" options={["Immediate Family", "Extended Family", "Cousins", "Wedding Party", "Friends", "VIP", "Buffer"]} />
             <EditField label="Group" field="group" options={groupOptions} />
@@ -878,6 +882,8 @@ const Guests = ({ guests, setGuests }) => {
             {[
               { label: "First Name *", key: "firstName" },
               { label: "Last Name", key: "lastName" },
+              { label: "Email", key: "email" },
+              { label: "Phone", key: "phone" },
               { label: "Relationship", key: "relationship" },
             ].map(f => (
               <div key={f.key} style={{ marginBottom: 12 }}>
@@ -1857,22 +1863,238 @@ const Events = () => {
 };
 
 // ============================================================
-// MODULE: ACTIVITIES
+// MODULE: EVENTS
 // ============================================================
-const Activities = ({ activities }) => {
-  const catColor = { Sport: "rosso", Culture: "olive", Dining: "gold", Transport: "info" };
+const emptyEvent = () => ({ id: "", name: "", type: "Ceremony", date: "", start: "", end: "", venue: "", capacity: "", cost: "", notes: "" });
+
+const Events = () => {
+  const savedSettings = JSON.parse(localStorage.getItem("wedding_settings") || "{}");
+  const buddhistTime = savedSettings.buddhistCeremonyTime || "09:00";
+  const lunchTime = savedSettings.lunchReceptionTime || "11:30";
+  const churchTime = savedSettings.churchWeddingTime || "14:00";
+
+  const [events, setEvents] = useState([
+    { id: "e000", name: "Buddhist Ceremony", type: "Ceremony", date: "2026-11-07", start: buddhistTime, end: lunchTime, venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. +66 93 124 7730" },
+    { id: "e001", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: lunchTime, end: "15:00", venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. Parking available. thegardenspalace.com · +66 93 124 7730" },
+    { id: "e002", name: "Church Wedding", type: "Ceremony", date: "2026-11-08", start: churchTime, end: "16:00", venue: "Holy Redeemer Church, Ruam Rudi 5 Alley, Lumphini, Pathum Wan, Bangkok 10330, Thailand", capacity: 200, cost: 0, notes: "Closest MRT is Phloen Chit, 15 min walk (1km). Parking available. holyredeemerbangkok.org" },
+  ]);
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState(emptyEvent());
+  const setF = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const typeColor = { Ceremony: "rosso", Reception: "gold", Social: "olive", Sport: "info", Wedding: "rosso" };
+
+  const openAdd = () => { setForm(emptyEvent()); setEditId(null); setShowModal(true); };
+  const openEdit = (ev) => { setForm({ ...ev, capacity: String(ev.capacity), cost: String(ev.cost) }); setEditId(ev.id); setShowModal(true); };
+  const save = () => {
+    if (!form.name.trim()) return;
+    const record = { ...form, id: form.id || "e" + Date.now(), capacity: parseInt(form.capacity) || 0, cost: parseFloat(form.cost) || 0 };
+    if (editId) setEvents(prev => prev.map(e => e.id === editId ? record : e));
+    else setEvents(prev => [...prev, record]);
+    setShowModal(false);
+  };
+  const del = (id) => { setEvents(prev => prev.filter(e => e.id !== id)); setShowModal(false); };
+
   return (
     <div>
-      <SectionHeader title="Activities" subtitle="Optional activities for guests" action={<Btn small>+ Add Activity</Btn>} />
+      <SectionHeader title="Events" subtitle="All events within the Bangkok Wedding project" action={<Btn small onClick={openAdd}>+ Add Event</Btn>} />
+
+      {showModal && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "flex-end", justifyContent: "center" }}
+          onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
+          <div style={{ background: T.white, borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, maxHeight: "92vh", overflowY: "auto", padding: 24, boxSizing: "border-box" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Event" : "New Event"}</h3>
+              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Event Name *</div>
+                <Input value={form.name} onChange={v => setF("name", v)} placeholder="e.g. Welcome Dinner" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Type</div>
+                <Select value={form.type} onChange={v => setF("type", v)} options={["Ceremony", "Reception", "Social", "Sport", "Dining", "Other"]} />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Date</div>
+                <input type="date" value={form.date} onChange={e => setF("date", e.target.value)} style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box" }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Start Time</div>
+                <Input value={form.start} onChange={v => setF("start", v)} placeholder="e.g. 09:00" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>End Time</div>
+                <Input value={form.end} onChange={v => setF("end", v)} placeholder="e.g. 12:00" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Capacity</div>
+                <Input value={form.capacity} onChange={v => setF("capacity", v)} placeholder="e.g. 200" />
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Venue / Location</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <Input value={form.venue} onChange={v => setF("venue", v)} placeholder="Full venue address" />
+                  {form.venue && <MapPin location={form.venue} />}
+                </div>
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Notes</div>
+                <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} rows={3} placeholder="Transport, dress code, special instructions…"
+                  style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6 }} />
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 10, paddingTop: 8, borderTop: `1px solid ${T.linen}` }}>
+              <Btn onClick={save} disabled={!form.name.trim()}>{editId ? "Save" : "Add Event"}</Btn>
+              <Btn variant="secondary" onClick={() => setShowModal(false)}>Cancel</Btn>
+              {editId && <Btn variant="secondary" onClick={() => del(editId)}>Delete</Btn>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
+        {events.map(ev => (
+          <Card key={ev.id} style={{ cursor: "pointer" }} onClick={() => openEdit(ev)}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+              <Badge label={ev.type} color={typeColor[ev.type] || "mist"} />
+              <span style={{ fontSize: 12, color: T.mist }}>{fmtDate(ev.date)}</span>
+            </div>
+            <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: T.carbon }}>{ev.name}</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <span style={{ fontSize: 13, color: T.slate, flex: 1 }}>{ev.venue}</span>
+              {ev.venue && <MapPin location={ev.venue} />}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+              {[
+                { label: "Start", value: ev.start },
+                { label: "End", value: ev.end },
+                { label: "Capacity", value: ev.capacity },
+              ].map(d => (
+                <div key={d.label} style={{ background: T.linen, borderRadius: 8, padding: "8px 10px" }}>
+                  <div style={{ fontSize: 10, color: T.mist, textTransform: "uppercase", letterSpacing: "0.06em" }}>{d.label}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: T.carbon }}>{d.value}</div>
+                </div>
+              ))}
+            </div>
+            {ev.notes && <p style={{ fontSize: 12, color: T.slate, margin: "12px 0 0", lineHeight: 1.5 }}>{ev.notes}</p>}
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// MODULE: ACTIVITIES
+// ============================================================
+const emptyActivity = () => ({ id: "", name: "", category: "Social", date: "", location: "", capacity: "", cost: "", rsvpRequired: false, description: "", assignedGroups: "", notes: "" });
+
+const Activities = ({ activities: seedActivities }) => {
+  const [activities, setActivities] = useState(seedActivities || []);
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState(emptyActivity());
+  const setF = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const catColor = { Sport: "rosso", Culture: "olive", Dining: "gold", Social: "info", Wedding: "rosso", Transport: "mist" };
+
+  const openAdd = () => { setForm(emptyActivity()); setEditId(null); setShowModal(true); };
+  const openEdit = (a) => { setForm({ ...a, capacity: String(a.capacity || ""), cost: String(a.cost || ""), assignedGroups: Array.isArray(a.assignedGroups) ? a.assignedGroups.join(", ") : a.assignedGroups || "" }); setEditId(a.id); setShowModal(true); };
+  const save = () => {
+    if (!form.name.trim()) return;
+    const record = { ...form, id: form.id || "a" + Date.now(), capacity: parseInt(form.capacity) || 0, cost: parseFloat(form.cost) || 0, assignedGroups: form.assignedGroups.split(",").map(s => s.trim()).filter(Boolean) };
+    if (editId) setActivities(prev => prev.map(a => a.id === editId ? record : a));
+    else setActivities(prev => [...prev, record]);
+    setShowModal(false);
+  };
+  const del = (id) => { setActivities(prev => prev.filter(a => a.id !== id)); setShowModal(false); };
+
+  return (
+    <div>
+      <SectionHeader title="Activities" subtitle="Optional activities for guests" action={<Btn small onClick={openAdd}>+ Add Activity</Btn>} />
+
+      {showModal && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "flex-end", justifyContent: "center" }}
+          onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
+          <div style={{ background: T.white, borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, maxHeight: "92vh", overflowY: "auto", padding: 24, boxSizing: "border-box" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Activity" : "New Activity"}</h3>
+              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Activity Name *</div>
+                <Input value={form.name} onChange={v => setF("name", v)} placeholder="e.g. Golf Day" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Category</div>
+                <Select value={form.category} onChange={v => setF("category", v)} options={["Sport", "Culture", "Dining", "Social", "Transport", "Other"]} />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Date</div>
+                <input type="date" value={form.date} onChange={e => setF("date", e.target.value)} style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "8px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box" }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Capacity</div>
+                <Input value={form.capacity} onChange={v => setF("capacity", v)} placeholder="e.g. 20" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Cost ($)</div>
+                <Input value={form.cost} onChange={v => setF("cost", v)} placeholder="0" />
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <Input value={form.location || ""} onChange={v => setF("location", v)} placeholder="Venue or address" />
+                  {form.location && <MapPin location={form.location} />}
+                </div>
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Groups (comma separated)</div>
+                <Input value={form.assignedGroups} onChange={v => setF("assignedGroups", v)} placeholder="e.g. Groomsmen, Close Friends" />
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 14, fontWeight: 600, color: T.carbon }}>
+                  <input type="checkbox" checked={form.rsvpRequired} onChange={e => setF("rsvpRequired", e.target.checked)} style={{ width: 16, height: 16, accentColor: T.rosso }} />
+                  RSVP Required
+                </label>
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Description</div>
+                <textarea value={form.description} onChange={e => setF("description", e.target.value)} rows={2} placeholder="What is this activity?"
+                  style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6 }} />
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Notes</div>
+                <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} rows={2} placeholder="Additional notes"
+                  style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6 }} />
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 10, paddingTop: 8, borderTop: `1px solid ${T.linen}` }}>
+              <Btn onClick={save} disabled={!form.name.trim()}>{editId ? "Save" : "Add Activity"}</Btn>
+              <Btn variant="secondary" onClick={() => setShowModal(false)}>Cancel</Btn>
+              {editId && <Btn variant="secondary" onClick={() => del(editId)}>Delete</Btn>}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
         {activities.map(a => (
-          <Card key={a.id}>
+          <Card key={a.id} style={{ cursor: "pointer" }} onClick={() => openEdit(a)}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
               <Badge label={a.category} color={catColor[a.category] || "mist"} />
               {a.rsvpRequired && <Badge label="RSVP Required" color="warning" />}
             </div>
             <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 800, color: T.carbon }}>{a.name}</h3>
-            <div style={{ fontSize: 12, color: T.mist, marginBottom: 10 }}>{fmtDate(a.date)}</div>
+            <div style={{ fontSize: 12, color: T.mist, marginBottom: 6 }}>{fmtDate(a.date)}</div>
+            {a.location && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                <span style={{ fontSize: 12, color: T.slate, flex: 1 }}>{a.location}</span>
+                <MapPin location={a.location} />
+              </div>
+            )}
             <p style={{ fontSize: 13, color: T.slate, margin: "0 0 12px", lineHeight: 1.5 }}>{a.description}</p>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
               <div style={{ background: T.linen, borderRadius: 8, padding: "6px 12px" }}>
@@ -1884,7 +2106,7 @@ const Activities = ({ activities }) => {
                 <div style={{ fontSize: 15, fontWeight: 800, color: T.carbon }}>{fmtCurrency(a.cost)}</div>
               </div>
             </div>
-            <div style={{ fontSize: 12, color: T.slate }}><strong>Groups:</strong> {a.assignedGroups.join(", ")}</div>
+            <div style={{ fontSize: 12, color: T.slate }}><strong>Groups:</strong> {Array.isArray(a.assignedGroups) ? a.assignedGroups.join(", ") : a.assignedGroups}</div>
             {a.notes && <div style={{ fontSize: 12, color: T.mist, marginTop: 6 }}>{a.notes}</div>}
           </Card>
         ))}
@@ -2906,25 +3128,116 @@ If a field is not visible, use empty string.`
 // ============================================================
 // MODULE: VENDORS
 // ============================================================
-const Vendors = ({ vendors }) => {
+const emptyVendor = () => ({ id: "", name: "", service: "Photography", contact: "", phone: "", email: "", website: "", location: "", cost: "", depositStatus: "Pending", paymentStatus: "Unpaid", contractStatus: "Pending", notes: "" });
+
+const Vendors = ({ vendors: seedVendors, canEdit }) => {
+  const [vendors, setVendors] = useState(seedVendors || []);
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState(emptyVendor());
+  const setF = (k, v) => setForm(p => ({ ...p, [k]: v }));
   const statusColor = { Paid: "success", Partial: "warning", Unpaid: "danger", Pending: "mist", Signed: "success", "N/A": "mist" };
+
+  const openAdd = () => { setForm(emptyVendor()); setEditId(null); setShowModal(true); };
+  const openEdit = (v) => { setForm({ ...v, cost: String(v.cost || "") }); setEditId(v.id); setShowModal(true); };
+  const save = () => {
+    if (!form.name.trim()) return;
+    const record = { ...form, id: form.id || "v" + Date.now(), cost: parseFloat(form.cost) || 0 };
+    if (editId) setVendors(prev => prev.map(v => v.id === editId ? record : v));
+    else setVendors(prev => [...prev, record]);
+    setShowModal(false);
+  };
+  const del = (id) => { setVendors(prev => prev.filter(v => v.id !== id)); setShowModal(false); };
+
   return (
     <div>
-      <SectionHeader title="Vendor CRM" subtitle={`${vendors.length} vendors`} action={<Btn small>+ Add Vendor</Btn>} />
+      <SectionHeader title="Vendor CRM" subtitle={`${vendors.length} vendors`} action={canEdit !== false ? <Btn small onClick={openAdd}>+ Add Vendor</Btn> : null} />
+
+      {showModal && canEdit !== false && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "flex-end", justifyContent: "center" }}
+          onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
+          <div style={{ background: T.white, borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, maxHeight: "92vh", overflowY: "auto", padding: 24, boxSizing: "border-box" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: T.carbon }}>{editId ? "Edit Vendor" : "New Vendor"}</h3>
+              <button onClick={() => setShowModal(false)} style={{ background: T.linen, border: "none", borderRadius: 8, padding: "6px 12px", fontWeight: 700, cursor: "pointer" }}>✕</button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Vendor Name *</div>
+                <Input value={form.name} onChange={v => setF("name", v)} placeholder="e.g. Studio Siam" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Service</div>
+                <Select value={form.service} onChange={v => setF("service", v)} options={["Photography", "Videography", "Venue", "Catering", "Florist", "Music", "Transport", "Attire", "Stationery", "Hair & Makeup", "Other"]} />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Cost ($)</div>
+                <Input value={form.cost} onChange={v => setF("cost", v)} placeholder="0" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Contact Name</div>
+                <Input value={form.contact} onChange={v => setF("contact", v)} placeholder="Contact person" />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Phone</div>
+                <Input value={form.phone} onChange={v => setF("phone", v)} placeholder="+66 xx xxx xxxx" />
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Email</div>
+                <Input value={form.email} onChange={v => setF("email", v)} placeholder="vendor@email.com" />
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Location / Address</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <Input value={form.location || ""} onChange={v => setF("location", v)} placeholder="Vendor address" />
+                  {form.location && <MapPin location={form.location} />}
+                </div>
+              </div>
+              {[
+                { label: "Deposit Status", key: "depositStatus", options: ["Pending", "Paid", "N/A"] },
+                { label: "Payment Status", key: "paymentStatus", options: ["Unpaid", "Partial", "Paid"] },
+                { label: "Contract Status", key: "contractStatus", options: ["Pending", "Signed", "N/A"] },
+              ].map(f => (
+                <div key={f.key}>
+                  <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>{f.label}</div>
+                  <Select value={form[f.key]} onChange={v => setF(f.key, v)} options={f.options} />
+                </div>
+              ))}
+              <div style={{ gridColumn: "1/-1" }}>
+                <div style={{ fontSize: 11, color: T.slate, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Notes</div>
+                <textarea value={form.notes} onChange={e => setF("notes", e.target.value)} rows={3} placeholder="Contract details, deliverables, deadlines…"
+                  style={{ border: `1.5px solid ${T.linenDark}`, borderRadius: 8, padding: "10px 12px", fontSize: 14, color: T.carbon, background: T.white, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", fontFamily: "inherit", lineHeight: 1.6 }} />
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 10, paddingTop: 8, borderTop: `1px solid ${T.linen}` }}>
+              <Btn onClick={save} disabled={!form.name.trim()}>{editId ? "Save" : "Add Vendor"}</Btn>
+              <Btn variant="secondary" onClick={() => setShowModal(false)}>Cancel</Btn>
+              {editId && <Btn variant="secondary" onClick={() => del(editId)}>Delete</Btn>}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
         {vendors.map(v => (
-          <Card key={v.id}>
+          <Card key={v.id} style={{ cursor: canEdit !== false ? "pointer" : "default" }} onClick={() => canEdit !== false && openEdit(v)}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
               <Badge label={v.service} color="olive" />
               <span style={{ fontSize: 13, fontWeight: 800, color: T.carbon }}>{fmtCurrency(v.cost)}</span>
             </div>
             <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 800, color: T.carbon }}>{v.name}</h3>
-            <div style={{ fontSize: 13, color: T.slate, marginBottom: 10 }}>{v.contact}</div>
-            <div style={{ display: "flex", gap: 6, fontSize: 12, color: T.mist, marginBottom: 12, flexWrap: "wrap" }}>
-              <span>{v.phone}</span>
-              <span>·</span>
-              <span>{v.email}</span>
+            <div style={{ fontSize: 13, color: T.slate, marginBottom: 6 }}>{v.contact}</div>
+            <div style={{ display: "flex", gap: 6, fontSize: 12, color: T.mist, marginBottom: 8, flexWrap: "wrap" }}>
+              {v.phone && <span>{v.phone}</span>}
+              {v.phone && v.email && <span>·</span>}
+              {v.email && <span>{v.email}</span>}
             </div>
+            {v.location && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                <span style={{ fontSize: 12, color: T.slate, flex: 1 }}>{v.location}</span>
+                <MapPin location={v.location} />
+              </div>
+            )}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <div><span style={{ fontSize: 11, color: T.mist }}>Deposit: </span><Badge label={v.depositStatus} color={statusColor[v.depositStatus]} /></div>
               <div><span style={{ fontSize: 11, color: T.mist }}>Payment: </span><Badge label={v.paymentStatus} color={statusColor[v.paymentStatus]} /></div>
@@ -3120,6 +3433,7 @@ const Import = ({ guests, setGuests }) => {
       const dietary = row[colMap.dietaryNotes] || "";
       const notes = row[colMap.notes] || "";
       const email = row[colMap.email] || "";
+      const phone = row[colMap.phone] || "";
 
       // Exact name match
       const existing = guests.find(g =>
@@ -3142,7 +3456,7 @@ const Import = ({ guests, setGuests }) => {
           updated.push({ id: existing.id, firstName: first, lastName: last, rsvp, dietary, notes, email, changes });
         }
       } else {
-        added.push({ firstName: first, lastName: last, rsvp, dietary, notes, email, side: importSide, group: "Unassigned", category: "Friends", relationship: "Guest", travelLikelihood: "Likely", ceremonyRsvp: rsvp, lunchRsvp: rsvp });
+        added.push({ firstName: first, lastName: last, rsvp, dietary, notes, email, phone, side: importSide, group: "Unassigned", category: "Friends", relationship: "Guest", travelLikelihood: "Likely", ceremonyRsvp: rsvp, lunchRsvp: rsvp });
       }
     });
     setDiffResult({ added, updated, dupes, errors });
@@ -4738,7 +5052,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v2.2.0 · A Kleinman Creation
+            Wedding HQ v2.4.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4778,7 +5092,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v2.2.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v2.4.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4810,7 +5124,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.2.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.4.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
