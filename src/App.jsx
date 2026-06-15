@@ -514,16 +514,17 @@ const Dashboard = ({ guests, tasks, budget, weddingDate }) => {
           {(() => {
             const s = JSON.parse(localStorage.getItem("wedding_settings") || "{}");
             return (
-              <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 8, marginTop: 16 }}>
                 {[
                   { label: "Sat 7 Nov · Buddhist Ceremony", time: s.buddhistCeremonyTime || "09:00" },
                   { label: "Sat 7 Nov · Lunch Reception", time: s.lunchReceptionTime || "11:30" },
                   { label: "Sun 8 Nov · Church Wedding", time: s.churchWeddingTime || "14:00" },
                 ].map(item => (
-                  <div key={item.label} style={{ background: "rgba(255,255,255,0.07)", borderRadius: 8, padding: "8px 14px" }}>
+                  <button key={item.label} onClick={() => navigate("events")}
+                    style={{ background: "rgba(255,255,255,0.07)", borderRadius: 8, padding: "10px 14px", border: "none", cursor: "pointer", textAlign: "left", width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div style={{ fontSize: 10, color: T.mist, letterSpacing: "0.06em", textTransform: "uppercase" }}>{item.label}</div>
-                    <div style={{ fontSize: 14, color: "#fff", fontWeight: 800 }}>{item.time}</div>
-                  </div>
+                    <div style={{ fontSize: 14, color: "#fff", fontWeight: 800, flexShrink: 0, marginLeft: 12 }}>{item.time}</div>
+                  </button>
                 ))}
               </div>
             );
@@ -4737,7 +4738,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v2.0.0 · A Kleinman Creation
+            Wedding HQ v2.1.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -4777,7 +4778,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v2.0.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v2.1.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -4809,7 +4810,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.0.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.1.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
