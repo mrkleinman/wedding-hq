@@ -1814,53 +1814,6 @@ const MapPin = ({ location }) => {
   );
 };
 
-// ============================================================
-const Events = () => {
-  const savedSettings = JSON.parse(localStorage.getItem("wedding_settings") || "{}");
-  const buddhistTime = savedSettings.buddhistCeremonyTime || "09:00";
-  const lunchTime = savedSettings.lunchReceptionTime || "11:30";
-  const churchTime = savedSettings.churchWeddingTime || "14:00";
-
-  const events = [
-    { id: "e000", name: "Buddhist Ceremony", type: "Ceremony", date: "2026-11-07", start: buddhistTime, end: lunchTime, venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "Ceremony time can be updated in Settings. 8–10 min walk from BTS Ekkamai Exit 1. +66 93 124 7730" },
-    { id: "e001", name: "Lunch Reception", type: "Reception", date: "2026-11-07", start: lunchTime, end: "15:00", venue: "The Gardens of Dinsor Palace, ซอย ซุมพล Khlong Tan Nuea, Watthana, Bangkok, Thailand", capacity: 200, cost: 0, notes: "8–10 min walk from BTS Ekkamai Exit 1. Parking available. thegardenspalace.com · +66 93 124 7730" },
-    { id: "e002", name: "Church Wedding", type: "Ceremony", date: "2026-11-08", start: churchTime, end: "16:00", venue: "Holy Redeemer Church, Ruam Rudi 5 Alley, Lumphini, Pathum Wan, Bangkok 10330, Thailand", capacity: 200, cost: 0, notes: "Closest MRT is Phloen Chit, 15 min walk (1km). Parking available. holyredeemerbangkok.org" },
-  ];
-  const typeColor = { Ceremony: "rosso", Reception: "gold", Social: "olive", Sport: "info" };
-  return (
-    <div>
-      <SectionHeader title="Events" subtitle="All events within the Bangkok Wedding project" action={<Btn small>+ Add Event</Btn>} />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
-        {events.map(ev => (
-          <Card key={ev.id}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-              <Badge label={ev.type} color={typeColor[ev.type] || "mist"} />
-              <span style={{ fontSize: 12, color: T.mist }}>{fmtDate(ev.date)}</span>
-            </div>
-            <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: T.carbon }}>{ev.name}</h3>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <span style={{ fontSize: 13, color: T.slate, flex: 1 }}>{ev.venue}</span>
-              <MapPin location={ev.venue} />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-              {[
-                { label: "Start", value: ev.start },
-                { label: "End", value: ev.end },
-                { label: "Capacity", value: ev.capacity },
-              ].map(d => (
-                <div key={d.label} style={{ background: T.linen, borderRadius: 8, padding: "8px 10px" }}>
-                  <div style={{ fontSize: 10, color: T.mist, textTransform: "uppercase", letterSpacing: "0.06em" }}>{d.label}</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: T.carbon }}>{d.value}</div>
-                </div>
-              ))}
-            </div>
-            {ev.notes && <p style={{ fontSize: 12, color: T.slate, margin: "12px 0 0", lineHeight: 1.5 }}>{ev.notes}</p>}
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 // ============================================================
 // MODULE: EVENTS
@@ -5052,7 +5005,7 @@ function AppInner() {
             }}>Back to Wedding HQ</button>
           </div>
           <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: T.asphalt, letterSpacing: "0.06em" }}>
-            Wedding HQ v2.4.0 · A Kleinman Creation
+            Wedding HQ v2.5.0 · A Kleinman Creation
           </div>
         </div>
       )}
@@ -5092,7 +5045,7 @@ function AppInner() {
             </button>
           )}
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.success }} />
-          <span style={{ color: T.mist, fontSize: 11 }}>v2.4.0</span>
+          <span style={{ color: T.mist, fontSize: 11 }}>v2.5.0</span>
           {role && <div style={{ background: ROLE_COLORS[role], color: "#fff", borderRadius: 6, padding: "2px 7px", fontSize: 10, fontWeight: 800, letterSpacing: "0.04em" }}>L{role}</div>}
         </div>
       </div>
@@ -5124,7 +5077,7 @@ function AppInner() {
             ))}
           </div>
           <div style={{ marginTop: "auto", padding: "12px 16px", borderTop: `1px solid ${T.linen}`, fontSize: 11, color: T.mist }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.4.0</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>SIRALEONWEDDINGHQ v2.5.0</div>
             <div>Production · 2026-06-14</div>
           </div>
         </div>
